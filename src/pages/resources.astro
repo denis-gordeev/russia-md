@@ -336,6 +336,34 @@ const mindmapData = JSON.stringify({ nodes: mindmapNodes, edges: mindmapEdges })
         <span class="current">資源</span>
       </nav>
 
+      <!-- 核心精選 Section (來自心智圖) -->
+      <div class="core-header">
+        <h2 class="NotoSerif">🏆 核心精選</h2>
+        <p class="section-desc">心智圖中展示的最重要台灣權威資源</p>
+      </div>
+      
+      {heroData.categories.map(category => (
+        <section class="resource-section">
+          <h3>{category.label}</h3>
+          <div class="site-grid">
+            {category.sites.map(site => (
+              <a href={site.url} target="_blank" rel="noopener noreferrer" class="site-card">
+                <img src={`https://www.google.com/s2/favicons?domain=${site.domain}&sz=64`} alt="" class="site-favicon" loading="lazy" onerror="this.onerror=null;this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌐</text></svg>';" />
+                <div class="site-info">
+                  <div class="site-name">{site.name}</div>
+                  <div class="site-domain">{site.domain}</div>
+                </div>
+              </a>
+            ))}
+          </div>
+        </section>
+      ))}
+
+      <div class="more-header">
+        <h2 class="NotoSerif">🔍 更多分類</h2>
+        <p class="section-desc">涵蓋地方政府、大學及各領域詳細資源</p>
+      </div>
+
       <!-- 地方政府 Section -->
       <section class="resource-section">
         <h2>🏙️ 地方政府</h2>
@@ -343,7 +371,7 @@ const mindmapData = JSON.stringify({ nodes: mindmapNodes, edges: mindmapEdges })
         <div class="site-grid">
           {sectionData.localGov.sites.map(site => (
             <a href={site.url} target="_blank" rel="noopener noreferrer" class="site-card">
-              <img src={`https://www.google.com/s2/favicons?domain=${site.domain}&sz=20`} alt="" class="site-favicon" loading="lazy" />
+              <img src={`https://www.google.com/s2/favicons?domain=${site.domain}&sz=64`} alt="" class="site-favicon" loading="lazy" onerror="this.onerror=null;this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌐</text></svg>';" />
               <div class="site-info">
                 <div class="site-name">{site.name}</div>
                 <div class="site-domain">{site.domain}</div>
@@ -360,7 +388,7 @@ const mindmapData = JSON.stringify({ nodes: mindmapNodes, edges: mindmapEdges })
         <div class="site-grid">
           {sectionData.universities.sites.map(site => (
             <a href={site.url} target="_blank" rel="noopener noreferrer" class="site-card">
-              <img src={`https://www.google.com/s2/favicons?domain=${site.domain}&sz=20`} alt="" class="site-favicon" loading="lazy" />
+              <img src={`https://www.google.com/s2/favicons?domain=${site.domain}&sz=64`} alt="" class="site-favicon" loading="lazy" onerror="this.onerror=null;this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌐</text></svg>';" />
               <div class="site-info">
                 <div class="site-name">{site.name}</div>
                 <div class="site-domain">{site.domain}</div>
@@ -377,7 +405,7 @@ const mindmapData = JSON.stringify({ nodes: mindmapNodes, edges: mindmapEdges })
         <div class="site-grid">
           {sectionData.nationalParks.sites.map(site => (
             <a href={site.url} target="_blank" rel="noopener noreferrer" class="site-card">
-              <img src={`https://www.google.com/s2/favicons?domain=${site.domain}&sz=20`} alt="" class="site-favicon" loading="lazy" />
+              <img src={`https://www.google.com/s2/favicons?domain=${site.domain}&sz=64`} alt="" class="site-favicon" loading="lazy" onerror="this.onerror=null;this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌐</text></svg>';" />
               <div class="site-info">
                 <div class="site-name">{site.name}</div>
                 <div class="site-domain">{site.domain}</div>
@@ -394,7 +422,7 @@ const mindmapData = JSON.stringify({ nodes: mindmapNodes, edges: mindmapEdges })
         <div class="site-grid">
           {sectionData.artsCulture.sites.map(site => (
             <a href={site.url} target="_blank" rel="noopener noreferrer" class="site-card">
-              <img src={`https://www.google.com/s2/favicons?domain=${site.domain}&sz=20`} alt="" class="site-favicon" loading="lazy" />
+              <img src={`https://www.google.com/s2/favicons?domain=${site.domain}&sz=64`} alt="" class="site-favicon" loading="lazy" onerror="this.onerror=null;this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌐</text></svg>';" />
               <div class="site-info">
                 <div class="site-name">{site.name}</div>
                 <div class="site-domain">{site.domain}</div>
@@ -411,7 +439,7 @@ const mindmapData = JSON.stringify({ nodes: mindmapNodes, edges: mindmapEdges })
         <div class="site-grid">
           {sectionData.healthcare.sites.map(site => (
             <a href={site.url} target="_blank" rel="noopener noreferrer" class="site-card">
-              <img src={`https://www.google.com/s2/favicons?domain=${site.domain}&sz=20`} alt="" class="site-favicon" loading="lazy" />
+              <img src={`https://www.google.com/s2/favicons?domain=${site.domain}&sz=64`} alt="" class="site-favicon" loading="lazy" onerror="this.onerror=null;this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌐</text></svg>';" />
               <div class="site-info">
                 <div class="site-name">{site.name}</div>
                 <div class="site-domain">{site.domain}</div>
@@ -428,7 +456,7 @@ const mindmapData = JSON.stringify({ nodes: mindmapNodes, edges: mindmapEdges })
         <div class="site-grid">
           {sectionData.ngoSociety.sites.map(site => (
             <a href={site.url} target="_blank" rel="noopener noreferrer" class="site-card">
-              <img src={`https://www.google.com/s2/favicons?domain=${site.domain}&sz=20`} alt="" class="site-favicon" loading="lazy" />
+              <img src={`https://www.google.com/s2/favicons?domain=${site.domain}&sz=64`} alt="" class="site-favicon" loading="lazy" onerror="this.onerror=null;this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌐</text></svg>';" />
               <div class="site-info">
                 <div class="site-name">{site.name}</div>
                 <div class="site-domain">{site.domain}</div>
@@ -445,7 +473,7 @@ const mindmapData = JSON.stringify({ nodes: mindmapNodes, edges: mindmapEdges })
         <div class="site-grid">
           {sectionData.ministries.sites.map(site => (
             <a href={site.url} target="_blank" rel="noopener noreferrer" class="site-card">
-              <img src={`https://www.google.com/s2/favicons?domain=${site.domain}&sz=20`} alt="" class="site-favicon" loading="lazy" />
+              <img src={`https://www.google.com/s2/favicons?domain=${site.domain}&sz=64`} alt="" class="site-favicon" loading="lazy" onerror="this.onerror=null;this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌐</text></svg>';" />
               <div class="site-info">
                 <div class="site-name">{site.name}</div>
                 <div class="site-domain">{site.domain}</div>
@@ -462,7 +490,7 @@ const mindmapData = JSON.stringify({ nodes: mindmapNodes, edges: mindmapEdges })
         <div class="site-grid">
           {sectionData.companies.sites.map(site => (
             <a href={site.url} target="_blank" rel="noopener noreferrer" class="site-card">
-              <img src={`https://www.google.com/s2/favicons?domain=${site.domain}&sz=20`} alt="" class="site-favicon" loading="lazy" />
+              <img src={`https://www.google.com/s2/favicons?domain=${site.domain}&sz=64`} alt="" class="site-favicon" loading="lazy" onerror="this.onerror=null;this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌐</text></svg>';" />
               <div class="site-info">
                 <div class="site-name">{site.name}</div>
                 <div class="site-domain">{site.domain}</div>
@@ -479,7 +507,7 @@ const mindmapData = JSON.stringify({ nodes: mindmapNodes, edges: mindmapEdges })
         <div class="site-grid">
           {sectionData.mediaExtra.sites.map(site => (
             <a href={site.url} target="_blank" rel="noopener noreferrer" class="site-card">
-              <img src={`https://www.google.com/s2/favicons?domain=${site.domain}&sz=20`} alt="" class="site-favicon" loading="lazy" />
+              <img src={`https://www.google.com/s2/favicons?domain=${site.domain}&sz=64`} alt="" class="site-favicon" loading="lazy" onerror="this.onerror=null;this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌐</text></svg>';" />
               <div class="site-info">
                 <div class="site-name">{site.name}</div>
                 <div class="site-domain">{site.domain}</div>
@@ -496,7 +524,7 @@ const mindmapData = JSON.stringify({ nodes: mindmapNodes, edges: mindmapEdges })
         <div class="site-grid">
           {sectionData.transportation.sites.map(site => (
             <a href={site.url} target="_blank" rel="noopener noreferrer" class="site-card">
-              <img src={`https://www.google.com/s2/favicons?domain=${site.domain}&sz=20`} alt="" class="site-favicon" loading="lazy" />
+              <img src={`https://www.google.com/s2/favicons?domain=${site.domain}&sz=64`} alt="" class="site-favicon" loading="lazy" onerror="this.onerror=null;this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌐</text></svg>';" />
               <div class="site-info">
                 <div class="site-name">{site.name}</div>
                 <div class="site-domain">{site.domain}</div>
@@ -513,7 +541,7 @@ const mindmapData = JSON.stringify({ nodes: mindmapNodes, edges: mindmapEdges })
         <div class="site-grid">
           {sectionData.digitalCulture.sites.map(site => (
             <a href={site.url} target="_blank" rel="noopener noreferrer" class="site-card">
-              <img src={`https://www.google.com/s2/favicons?domain=${site.domain}&sz=20`} alt="" class="site-favicon" loading="lazy" />
+              <img src={`https://www.google.com/s2/favicons?domain=${site.domain}&sz=64`} alt="" class="site-favicon" loading="lazy" onerror="this.onerror=null;this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌐</text></svg>';" />
               <div class="site-info">
                 <div class="site-name">{site.name}</div>
                 <div class="site-domain">{site.domain}</div>
@@ -565,6 +593,8 @@ const mindmapData = JSON.stringify({ nodes: mindmapNodes, edges: mindmapEdges })
   #resources-graph {
     overflow: visible;
     width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
     height: auto;
     min-height: 700px;
     border-radius: 12px;
@@ -623,6 +653,23 @@ const mindmapData = JSON.stringify({ nodes: mindmapNodes, edges: mindmapEdges })
   }
 
   /* Section Styling */
+  .core-header, .more-header {
+    margin: 4rem 0 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid #e2e8f0;
+  }
+  .core-header h2, .more-header h2 {
+    font-size: 2rem;
+    color: #065f46;
+    margin-bottom: 0.5rem;
+  }
+  .resource-section h3 {
+    font-size: 1.25rem;
+    color: #475569;
+    margin-bottom: 1.5rem;
+    padding-left: 0.75rem;
+    border-left: 4px solid #065f46;
+  }
   .resource-section {
     margin-bottom: 4rem;
   }
@@ -826,8 +873,8 @@ const mindmapData = JSON.stringify({ nodes: mindmapNodes, edges: mindmapEdges })
     const leftRoot = { id: 'l', label: '', children: leftCats };
 
     // Layout params
-    const dx = 20;
-    const dy = 200;
+    const dx = 22; // vertical spacing
+    const dy = 160; // horizontal spacing - reduced to prevent stretching
     const treeLayout = d3.tree().nodeSize([dx, dy]);
 
     // Layout right tree
@@ -967,15 +1014,6 @@ const mindmapData = JSON.stringify({ nodes: mindmapNodes, edges: mindmapEdges })
       .attr('font-weight', d => (d.depth || 0) <= 1 ? '700' : '400')
       .attr('fill', d => (d.depth || 0) === 0 ? '#065f46' : (d.depth || 0) === 1 ? '#1a1a1a' : '#555')
       .text(d => d.data.label || d.data.name || '');
-
-    // Root label above
-    g.append('text')
-      .attr('x', 0).attr('y', -20)
-      .attr('text-anchor', 'middle')
-      .attr('font-size', '15px')
-      .attr('font-weight', '700')
-      .attr('fill', '#065f46')
-      .text('🇹🇼 台灣資源');
 
     // Click to navigate
     nodeG.on('click', (event, d) => {
