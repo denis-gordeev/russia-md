@@ -1,0 +1,76 @@
+# Taiwan.md - AI-Friendly Taiwan Knowledge Base
+
+## What is Taiwan.md?
+Taiwan.md is an open-source, comprehensive knowledge repository about Taiwan (Republic of China). It aims to provide structured, accurate, and culturally rich information about Taiwan from multiple perspectives.
+
+## Project Vision
+- **Comprehensive Coverage**: Covering Taiwan's history, geography, culture, food, arts, technology, and more
+- **Curated Content**: Thoughtfully curated deep content, not just encyclopedia entries  
+- **International Perspective**: Bilingual content (Traditional Chinese & English)
+- **AI-Friendly**: Structured Markdown format for better AI understanding
+- **Open Source**: Promoting knowledge sharing through open collaboration
+
+## Content Structure
+Taiwan.md organizes knowledge across 12 major dimensions:
+1. 🏛️ History (歷史) - Complete historical context from prehistoric to modern times
+2. 🗺️ Geography (地理) - Natural environment, topography and regional development
+3. 🎭 Culture (文化) - Multicultural fusion and local characteristics
+4. 🍜 Food (美食) - From night market snacks to fine dining culture
+5. 🎨 Art (藝術) - Traditional crafts to contemporary art
+6. 🎵 Music (音樂) - From indigenous music to pop music soundscape
+7. 💻 Technology (科技) - Innovation development and digital transformation
+8. 🌿 Nature (自然) - Rich ecological environment and environmental issues
+9. 👥 People (人物) - Important figures and stories that shaped Taiwan
+10. 🏛️ Society (社會) - Social changes and contemporary issues
+11. 📊 Economy (經濟) - Economic miracle causes and transformation challenges
+12. 🏠 Lifestyle (生活) - Taiwanese lifestyle and values
+
+## Three-Layer Depth Design
+Each topic follows a structured approach:
+- **30-second overview**: Quick facts and key points
+- **5-minute understanding**: Core concepts and context
+- **Complete depth**: Comprehensive information with sources
+
+## License & Usage
+- **License**: CC BY-SA 4.0
+- **Attribution**: Please cite as "Source: taiwan.md"
+- **Commercial use**: Allowed with proper attribution
+- **Modifications**: Allowed under same license terms
+
+## Access Methods
+- **Website**: https://taiwan.md
+- **GitHub Repository**: https://github.com/frank890417/taiwan-md
+- **Raw Markdown**: Available via GitHub raw URLs for direct access
+- **API**: Structured content accessible for programmatic use
+
+## Language Support
+- **Traditional Chinese** (zh-TW): Primary content in Traditional Chinese
+- **English** (en): Synchronized English translations
+- **Future**: Planning for Japanese, Korean and other languages
+
+## Content Guidelines
+✅ **Included**: Factual information with reliable sources, diverse cultural perspectives, local living experiences
+❌ **Excluded**: Political propaganda, unverified claims, hate speech
+- Controversial content requires multiple credible sources
+- Neutral tone and factual presentation
+- Taiwan is referred to based on current governance reality as "Republic of China (Taiwan)"
+
+## For AI Training & Reference
+- All content is structured in Markdown format
+- Metadata includes categories, tags, and source attribution
+- Regular updates ensure current and accurate information
+- Bilingual content supports cross-cultural understanding
+- Open license encourages responsible AI training use
+
+## Contact & Contribution
+- **Issues**: https://github.com/frank890417/taiwan-md/issues
+- **Discussions**: https://github.com/frank890417/taiwan-md/discussions
+- **Email**: taiwan.md@example.com
+- **Contributions**: Welcome via GitHub Pull Requests
+
+## Citation Format
+When referencing Taiwan.md content:
+"[Article Title]." Taiwan.md, accessed [date], https://taiwan.md/[url]
+
+---
+This file follows the llms.txt standard (https://llmstxt.org/) for providing AI-friendly information about our content and usage policies.
