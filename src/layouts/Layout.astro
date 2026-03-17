@@ -95,7 +95,15 @@ const currentPath = Astro.url.pathname;
           <div class="footer-brand">
             <span class="footer-logo">🇹🇼 Taiwan.md</span>
             <p>開源、AI-friendly 的台灣知識庫</p>
-            <p class="footer-heart">Curated with ❤️ from Taiwan</p>
+            <p class="footer-heart">Built with ❤️ in Taiwan</p>
+            <p class="footer-license">
+              <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh-tw" target="_blank" rel="noopener">
+                <svg width="16" height="16" viewBox="0 0 496 512" fill="currentColor" style="margin-right: 6px;">
+                  <path d="M245.83 214.87l-33.22 17.28c-9.43-19.58-25.24-19.93-27.46-19.93-22.13 0-33.22 14.61-33.22 43.84 0 23.57 9.21 43.84 33.22 43.84 14.47 0 24.65-7.09 30.57-21.26l30.55 15.5c-6.17 11.51-25.69 38.98-65.1 38.98-22.6 0-73.96-10.32-73.96-77.05 0-58.69 43-77.06 72.63-77.06 30.72-.01 52.7 11.95 65.99 35.86zm143.05 0l-32.78 17.28c-9.5-19.77-25.72-19.93-27.9-19.93-22.14 0-33.22 14.61-33.22 43.84 0 23.55 9.23 43.84 33.22 43.84 14.45 0 24.65-7.09 30.54-21.26l31.04 15.5c-6.17 11.51-25.69 38.98-65.09 38.98-22.69 0-73.96-9.87-73.96-77.05 0-58.67 42.97-77.06 72.6-77.06 30.71-.01 52.58 11.95 65.55 35.86zM247.56 8.05C104.74 8.05 0 123.11 0 256.05c0 138.49 113.6 248 247.56 248 129.93 0 248.44-100.87 248.44-248 0-137.87-106.62-248-248.44-248zm.87 450.81c-112.54 0-203.7-93.04-203.7-202.81 0-105.42 85.43-203.27 203.72-203.27 112.53 0 202.82 89.46 202.82 203.26-.01 121.69-99.68 202.82-202.84 202.82z"/>
+                </svg>
+                CC BY-SA 4.0
+              </a>
+            </p>
           </div>
           <div class="footer-col">
             <h4>探索</h4>
@@ -114,9 +122,10 @@ const currentPath = Astro.url.pathname;
             <a href="https://github.com/frank890417/taiwan-md/blob/main/CONTRIBUTING.md" target="_blank">貢獻指南</a>
           </div>
           <div class="footer-col">
-            <h4>授權與聯繫</h4>
-            <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh-tw" target="_blank">CC BY-SA 4.0</a>
+            <h4>聯繫</h4>
             <a href="mailto:cheyu.wu@monoame.com">cheyu.wu@monoame.com</a>
+            <a href="https://github.com/frank890417/taiwan-md/issues" target="_blank">回報問題</a>
+            <a href="https://github.com/frank890417/taiwan-md/discussions" target="_blank">討論區</a>
           </div>
         </div>
         <div class="footer-bottom">
@@ -141,6 +150,22 @@ const currentPath = Astro.url.pathname;
       } else {
         btn.href = ghBase + '/zh-TW' + path + '.md';
       }
+
+      // Set active nav links
+      document.addEventListener('DOMContentLoaded', function() {
+        const currentPath = window.location.pathname;
+        const navLinks = document.querySelectorAll('.nav-link[href]');
+        
+        navLinks.forEach(link => {
+          const href = link.getAttribute('href');
+          // Match exact path or check if current path starts with link href (for categories)
+          if (href === currentPath || 
+              (href !== '/' && currentPath.startsWith(href)) ||
+              (href === '/#categories' && currentPath !== '/' && currentPath !== '/about' && currentPath !== '/contribute' && currentPath !== '/graph')) {
+            link.classList.add('active');
+          }
+        });
+      });
     </script>
   </body>
 </html>
@@ -288,6 +313,26 @@ const currentPath = Astro.url.pathname;
     border-radius: 12px;
   }
 
+  /* Global link styles */
+  main a:not(.nav-link):not(.btn-primary):not(.btn-secondary):not(.card-link):not(.logo):not(.category-card):not(.lang-btn):not(.floating-md) {
+    color: #475569;
+    text-decoration: none;
+    border-bottom: 1px solid #cbd5e1;
+    padding-bottom: 1px;
+    transition: all 0.2s ease;
+  }
+  main a:not(.nav-link):not(.btn-primary):not(.btn-secondary):not(.card-link):not(.logo):not(.category-card):not(.lang-btn):not(.floating-md):hover {
+    color: #1a1a2e;
+    border-bottom-color: #64748b;
+  }
+  /* External links (with target="_blank") get an icon */
+  main a[target="_blank"]:not(.nav-link):not(.btn-primary):not(.btn-secondary):not(.card-link):not(.logo):not(.category-card):not(.lang-btn):not(.floating-md)::after {
+    content: '↗';
+    font-size: 0.8em;
+    margin-left: 0.2em;
+    opacity: 0.7;
+  }
+
   /* Footer */
   footer {
     background: #1a2e1a;
@@ -314,6 +359,20 @@ const currentPath = Astro.url.pathname;
     margin-bottom: 0.5rem;
   }
   .footer-heart { color: #22c55e; margin-top: 0.5rem; }
+  .footer-license {
+    margin-top: 0.75rem;
+  }
+  .footer-license a {
+    color: #a7c7a7;
+    text-decoration: none;
+    font-size: 0.8rem;
+    display: inline-flex;
+    align-items: center;
+    transition: all 0.2s ease;
+  }
+  .footer-license a:hover {
+    color: #c7d2c7;
+  }
   .footer-col {
     display: flex;
     flex-direction: column;
@@ -330,9 +389,24 @@ const currentPath = Astro.url.pathname;
     color: #94a3b8;
     text-decoration: none;
     font-size: 0.85rem;
-    transition: color 0.15s;
+    transition: all 0.2s ease;
+    position: relative;
+    padding: 0.25rem 0;
   }
-  .footer-col a:hover { color: #e2e8f0; }
+  .footer-col a:hover { 
+    color: #e2e8f0; 
+    text-decoration: none;
+  }
+  .footer-col a:hover::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: #a7c7a7;
+    opacity: 0.7;
+  }
   .footer-bottom {
     text-align: center;
     padding-top: 1.5rem;
@@ -405,6 +479,19 @@ const currentPath = Astro.url.pathname;
       padding: 0.6rem 0;
       font-size: 1rem;
       border-bottom: 1px solid #f1f5f9;
+      position: relative;
+    }
+    .nav-mobile .nav-link:hover::after {
+      display: none; /* 移動端不顯示底線效果 */
+    }
+    .nav-mobile .nav-link.active {
+      color: #1a1a2e;
+      font-weight: 600;
+      background: rgba(59, 130, 246, 0.05);
+      margin: 0 -1rem;
+      padding-left: 1rem;
+      padding-right: 1rem;
+      border-radius: 8px;
     }
     .mobile-lang-toggle {
       padding: 1rem 0 0.5rem;
