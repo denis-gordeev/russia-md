@@ -1,8 +1,8 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 
-// https://astro.build/config
 export default defineConfig({
+  site: 'https://taiwan.md',
   i18n: {
     defaultLocale: 'zh-TW',
     locales: ['zh-TW', 'en'],
@@ -15,6 +15,5 @@ export default defineConfig({
       theme: 'github-light',
       wrap: true
     }
-  },
-  site: 'https://taiwan.md'
+  }
 });

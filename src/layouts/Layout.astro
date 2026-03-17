@@ -16,6 +16,14 @@ const { title, description = '讓全世界完整認識台灣', lang = 'zh-TW' } 
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>{title} | Taiwan.md</title>
+    <!-- Google Analytics -->
+    <script is:inline async src="https://www.googletagmanager.com/gtag/js?id=G-TAIWANMD"></script>
+    <script is:inline>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-TAIWANMD');
+    </script>
     <style>
       * {
         box-sizing: border-box;
@@ -130,7 +138,7 @@ const { title, description = '讓全世界完整認識台灣', lang = 'zh-TW' } 
         <div class="footer-content">
           <p>&copy; 2024 Taiwan.md - 開源台灣知識庫</p>
           <div class="footer-links">
-            <a href="https://github.com/your-username/taiwan-md" target="_blank">GitHub</a>
+            <a href="https://github.com/frank890417/taiwan-md" target="_blank">GitHub</a>
             <a href="/contributing">貢獻指南</a>
             <a href="/license">授權條款</a>
           </div>
