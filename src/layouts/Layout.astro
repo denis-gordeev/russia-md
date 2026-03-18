@@ -98,7 +98,7 @@ if (currentPath.startsWith('/en')) {
     <header>
       <div class="header-inner">
         <a href={isEn ? "/en" : "/"} class="logo">
-          <span class="logo-icon">🇹🇼</span>
+          <img src="/favicon.png" alt="🇹🇼" class="logo-icon" width="24" height="24" />
           <span class="logo-text">Taiwan<span class="logo-dot">.md</span></span>
         </a>
         <button class="menu-toggle" aria-label="選單" onclick="document.querySelector('.nav-mobile').classList.toggle('open')">☰</button>
@@ -323,7 +323,7 @@ if (currentPath.startsWith('/en')) {
     font-weight: 700;
     color: #1a1a2e;
   }
-  .logo-icon { font-size: 1.4rem; }
+  .logo-icon { width: 1.4rem; height: 1.4rem; vertical-align: middle; }
   .logo-dot { color: #3b82f6; }
   nav {
     display: flex;
