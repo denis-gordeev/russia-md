@@ -105,7 +105,7 @@ if (currentPath.startsWith('/en')) {
         <nav class="nav-desktop">
           <a href={isEn ? "/en#categories" : "/#categories"} class="nav-link">{i18n.nav.explore}</a>
           <a href={isEn ? "/en/graph" : "/graph"} class="nav-link">{i18n.nav.graph}</a>
-          <a href={isEn ? "/en/map" : "/map"} class="nav-link">{i18n.nav.map}</a>
+          <!-- Map hidden temporarily -->
           <a href={isEn ? "/en/about" : "/about"} class="nav-link">{i18n.nav.about}</a>
           <a href={isEn ? "/en/contribute" : "/contribute"} class="nav-link">{i18n.nav.contribute}</a>
           <a href={isEn ? "/en/resources" : "/resources"} class="nav-link">{i18n.nav.resources}</a>
@@ -117,7 +117,7 @@ if (currentPath.startsWith('/en')) {
         <nav class="nav-mobile">
           <a href={isEn ? "/en#categories" : "/#categories"} class="nav-link" onclick="document.querySelector('.nav-mobile').classList.remove('open')">{i18n.nav.explore}</a>
           <a href={isEn ? "/en/graph" : "/graph"} class="nav-link" onclick="document.querySelector('.nav-mobile').classList.remove('open')">{i18n.nav.graph}</a>
-          <a href={isEn ? "/en/map" : "/map"} class="nav-link" onclick="document.querySelector('.nav-mobile').classList.remove('open')">{i18n.nav.map}</a>
+          <!-- Map hidden temporarily -->
           <a href={isEn ? "/en/about" : "/about"} class="nav-link" onclick="document.querySelector('.nav-mobile').classList.remove('open')">{i18n.nav.about}</a>
           <a href={isEn ? "/en/contribute" : "/contribute"} class="nav-link" onclick="document.querySelector('.nav-mobile').classList.remove('open')">{i18n.nav.contribute}</a>
           <a href={isEn ? "/en/resources" : "/resources"} class="nav-link" onclick="document.querySelector('.nav-mobile').classList.remove('open')">{i18n.nav.resources}</a>
