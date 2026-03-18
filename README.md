@@ -184,6 +184,8 @@ Help Taiwan's story reach the world. → [taiwan.md/about#sponsors](https://taiw
 ## 📢 Follow
 
 - 𝕏 Twitter: [@taiwandotmd](https://x.com/taiwandotmd)
+- Threads: [@taiwandotmd](https://www.threads.com/@taiwandotmd)
+- Instagram: [@taiwandotmd](https://www.instagram.com/taiwandotmd)
 - GitHub: [frank890417/taiwan-md](https://github.com/frank890417/taiwan-md)
 
 ---
