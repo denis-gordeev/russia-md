@@ -171,18 +171,23 @@ Thanks to these wonderful people ([emoji key](https://allcontributors.org/docs/e
 <!-- prettier-ignore-start -->
 <!-- markdownlint-disable -->
 <table>
-  <tbody>
-    <tr>
-      <td align="center" valign="top" width="12.5%"><a href="https://cheyuwu.com"><img src="https://avatars.githubusercontent.com/u/4727572?v=4" width="80px;" alt="Che-Yu Wu"/><br /><sub><b>Che-Yu Wu</b></sub></a><br /><a href="#code-frank890417" title="Code">💻</a> <a href="#content-frank890417" title="Content">🖋</a> <a href="#design-frank890417" title="Design">🎨</a> <a href="#ideas-frank890417" title="Ideas">🤔</a> <a href="#projectManagement-frank890417" title="Project Management">📆</a> <a href="#doc-frank890417" title="Documentation">📖</a></td>
-      <td align="center" valign="top" width="12.5%"><a href="https://github.com/bugnimusic"><img src="https://avatars.githubusercontent.com/u/260387338?v=4" width="80px;" alt="Bugni"/><br /><sub><b>Bugni</b></sub></a><br /><a href="#content-bugnimusic" title="Content">🖋</a></td>
-      <td align="center" valign="top" width="12.5%"><a href="https://github.com/Ray0907"><img src="https://avatars.githubusercontent.com/u/29456968?v=4" width="80px;" alt="Ray Tien"/><br /><sub><b>Ray Tien</b></sub></a><br /><a href="#content-Ray0907" title="Content">🖋</a> <a href="#code-Ray0907" title="Code">💻</a></td>
-    </tr>
-  </tbody>
+  <tr>
+    <td align="center"><a href="https://cheyuwu.com"><img src="https://avatars.githubusercontent.com/u/4727572?v=4" width="80px;" alt="frank890417"/><br /><sub><b>frank890417</b></sub></a><br />💻 🖋 🎨 🤔 📆 📖</td>
+    <td align="center"><a href="https://github.com/bugnimusic"><img src="https://avatars.githubusercontent.com/u/260387338?v=4" width="80px;" alt="bugnimusic"/><br /><sub><b>bugnimusic</b></sub></a><br />🖋</td>
+    <td align="center"><a href="https://github.com/Ray0907"><img src="https://avatars.githubusercontent.com/u/29456968?v=4" width="80px;" alt="Ray0907"/><br /><sub><b>Ray0907</b></sub></a><br />🖋 💻</td>
+    <td align="center"><a href="https://github.com/number053"><img src="https://avatars.githubusercontent.com/u/269151044?v=4" width="80px;" alt="number053"/><br /><sub><b>number053</b></sub></a><br />🖋</td>
+    <td align="center"><a href="https://github.com/jekyll530"><img src="https://avatars.githubusercontent.com/u/150101610?v=4" width="80px;" alt="jekyll530"/><br /><sub><b>jekyll530</b></sub></a><br />🖋 🌍</td>
+    <td align="center"><a href="https://github.com/ro9er117911"><img src="https://avatars.githubusercontent.com/u/127029993?v=4" width="80px;" alt="ro9er117911"/><br /><sub><b>ro9er117911</b></sub></a><br />🖋</td>
+    <td align="center"><a href="https://github.com/jacky1822"><img src="https://avatars.githubusercontent.com/u/94786796?v=4" width="80px;" alt="jacky1822"/><br /><sub><b>jacky1822</b></sub></a><br />🖋</td>
+  </tr>
+  <tr>
+    <td align="center"><a href="https://github.com/hansai-art"><img src="https://avatars.githubusercontent.com/u/132933660?v=4" width="80px;" alt="hansai-art"/><br /><sub><b>hansai-art</b></sub></a><br />🖋</td>
+    <td align="center"><a href="https://github.com/luofreddy"><img src="https://avatars.githubusercontent.com/u/85281073?v=4" width="80px;" alt="luofreddy"/><br /><sub><b>luofreddy</b></sub></a><br />💻</td>
+  </tr>
 </table>
 
 <!-- markdownlint-restore -->
 <!-- prettier-ignore-end -->
-
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors](https://allcontributors.org) specification. Contributions of any kind welcome!
