@@ -1,10 +1,61 @@
 ---
 import { readdir, readFile } from 'fs/promises';
 import { resolve, join, basename } from 'path';
+import { execSync } from 'child_process';
 import matter from 'gray-matter';
 import Layout from '../../../layouts/Layout.astro';
 import { marked } from 'marked';
 import { categoryConfig, getCategoryConfig, type CategoryKey } from '../../../utils/categoryConfig';
+
+let _gitCache: Record<string, { contributors: string[]; lastModified: string }> | null = null;
+function buildGitCache() {
+  if (_gitCache) return _gitCache;
+  _gitCache = {};
+  try {
+    const logOutput = execSync(
+      `git log --name-only --format="COMMIT_BY:%an" -- "knowledge/"`,
+      { encoding: 'utf-8', maxBuffer: 10 * 1024 * 1024 }
+    );
+    let currentAuthor = '';
+    for (const line of logOutput.split('\n')) {
+      if (line.startsWith('COMMIT_BY:')) {
+        currentAuthor = line.slice(10);
+      } else if (line.startsWith('knowledge/') && line.endsWith('.md')) {
+        const key = resolve(process.cwd(), line);
+        if (!_gitCache[key]) _gitCache[key] = { contributors: [], lastModified: '' };
+        if (!_gitCache[key].contributors.includes(currentAuthor)) {
+          _gitCache[key].contributors.push(currentAuthor);
+        }
+      }
+    }
+    const dateOutput = execSync(
+      `git log --format="COMMIT_DATE:%aI" --name-only -- "knowledge/"`,
+      { encoding: 'utf-8', maxBuffer: 10 * 1024 * 1024 }
+    );
+    let currentDate = '';
+    const seenFiles = new Set<string>();
+    for (const line of dateOutput.split('\n')) {
+      if (line.startsWith('COMMIT_DATE:')) {
+        currentDate = line.slice(12);
+      } else if (line.startsWith('knowledge/') && line.endsWith('.md')) {
+        const key = resolve(process.cwd(), line);
+        if (!seenFiles.has(key)) {
+          seenFiles.add(key);
+          if (_gitCache[key]) _gitCache[key].lastModified = currentDate;
+          else _gitCache[key] = { contributors: [], lastModified: currentDate };
+        }
+      }
+    }
+  } catch (e) {
+    console.log('Git cache build error:', (e as Error).message);
+  }
+  return _gitCache;
+}
+
+function getGitInfo(filePath: string) {
+  const cache = buildGitCache();
+  return cache[filePath] || { contributors: [], lastModified: '' };
+}
 
 export async function getStaticPaths() {
   const paths: any[] = [];
@@ -35,6 +86,7 @@ export async function getStaticPaths() {
         const { data: frontmatter, content } = matter(fileContent);
         const slug = basename(file, '.md');
 
+        const gitInfo = getGitInfo(filePath);
         paths.push({
           params: { category: categorySlug, slug },
           props: {
@@ -43,6 +95,8 @@ export async function getStaticPaths() {
             content,
             frontmatter,
             lang: 'en',
+            contributors: gitInfo.contributors,
+            lastModified: gitInfo.lastModified,
           },
         });
       }
@@ -52,7 +106,7 @@ export async function getStaticPaths() {
   return paths;
 }
 
-const { title, description, content, frontmatter, lang } = Astro.props;
+const { title, description, content, frontmatter, lang, contributors = [], lastModified = '' } = Astro.props;
 const { category, slug } = Astro.params;
 
 const categoryInfo = getCategoryConfig(category);
@@ -209,6 +263,27 @@ const processedContent = marked.parse(resolvedContent, { renderer });
             </div>
           )}
         </div>
+
+        {(contributors.length > 0 || lastModified) && (
+          <div class="article-contributors">
+            {contributors.length > 0 && (
+              <div class="contributors-list">
+                <span class="contributors-label">✏️ Contributors</span>
+                <div class="contributors-names">
+                  {contributors.map((name: string) => (
+                    <a href={`https://github.com/${name}`} target="_blank" rel="noopener noreferrer" class="contributor-chip">{name}</a>
+                  ))}
+                </div>
+              </div>
+            )}
+            {lastModified && (
+              <div class="last-modified">
+                <span class="modified-label">🔄 Last updated</span>
+                <span class="modified-date">{new Date(lastModified).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+              </div>
+            )}
+          </div>
+        )}
 
         <!-- Main Content -->
         <div class="content" set:html={processedContent}></div>
@@ -605,6 +680,62 @@ const processedContent = marked.parse(resolvedContent, { renderer });
     border-radius: 8px;
     font-size: 0.9rem;
     color: #6b7280;
+  }
+
+  .article-contributors {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    margin-bottom: 2rem;
+    background: #f8faf8;
+    border: 1px solid #e8ede8;
+    border-radius: 10px;
+    font-size: 0.88rem;
+    color: #64748b;
+  }
+  .contributors-list {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+  }
+  .contributors-label, .modified-label {
+    font-weight: 600;
+    color: #475569;
+    white-space: nowrap;
+  }
+  .contributors-names {
+    display: flex;
+    gap: 0.4rem;
+    flex-wrap: wrap;
+  }
+  .contributor-chip {
+    padding: 0.2rem 0.6rem;
+    background: #fff;
+    border: 1px solid #d5dbe3;
+    border-radius: 20px;
+    color: #2d5016;
+    text-decoration: none;
+    font-size: 0.82rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+  }
+  .contributor-chip:hover {
+    background: #2d5016;
+    color: #fff;
+    border-color: #2d5016;
+  }
+  .last-modified {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    white-space: nowrap;
+  }
+  .modified-date {
+    color: #64748b;
   }
 
   /* Content Styling */
