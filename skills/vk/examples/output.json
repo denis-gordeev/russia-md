@@ -1,0 +1,10 @@
+{
+  "scope": "community",
+  "actor": "group",
+  "requested_permissions": ["wall", "messages"],
+  "suggested_actions": [
+    "Draft a community post for operator review.",
+    "Summarize inbound messages into a support queue."
+  ],
+  "requires_human_approval": true
+}

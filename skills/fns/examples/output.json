@@ -1,0 +1,7 @@
+{
+  "query_type": "inn",
+  "official_match": true,
+  "entity_status": "active",
+  "freshness_note": "Registry data confirmed against the official tax-service source.",
+  "risk_note": "Registration status alone is not sufficient for counterparty approval."
+}

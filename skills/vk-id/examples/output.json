@@ -1,0 +1,7 @@
+{
+  "identity_goal": "signup",
+  "requested_scopes": ["basic_profile"],
+  "required_after_auth": ["link_internal_account"],
+  "account_linking_strategy": "Create a provisional local account, then offer explicit linking for existing users.",
+  "requires_human_approval": false
+}

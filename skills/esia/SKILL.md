@@ -55,3 +55,8 @@ Return a compact machine-readable summary like:
 
 - [Gosuslugi](https://www.gosuslugi.ru/)
 - [ESIA](https://esia.gosuslugi.ru/)
+
+## Bundled Resources
+
+- See `references/integration-notes.md` for practical integration boundaries and handoff patterns.
+- See `examples/output.json` for a minimal result shape.

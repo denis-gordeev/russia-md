@@ -1,0 +1,10 @@
+{
+  "platform": "ozon",
+  "surface": "catalog",
+  "suggested_actions": [
+    "Draft a tighter product title within marketplace limits.",
+    "Flag missing attributes blocking conversion."
+  ],
+  "requires_human_approval": true,
+  "change_log_required": true
+}

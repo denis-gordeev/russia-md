@@ -1,0 +1,10 @@
+{
+  "bank_surface": "statements",
+  "requested_actions": [
+    "Fetch the latest statement lines.",
+    "Match incoming payments to open invoices."
+  ],
+  "read_only_first": true,
+  "requires_human_approval": true,
+  "audit_log_required": true
+}

@@ -51,3 +51,8 @@ Use this skill for VK platform operations outside pure identity.
 ## Official Entry Points
 
 - [VK API methods](https://dev.vk.com/ru/method)
+
+## Bundled Resources
+
+- See `references/integration-notes.md` for permission and moderation guidance.
+- See `examples/output.json` for a minimal result shape.

@@ -1,0 +1,8 @@
+{
+  "input_type": "company",
+  "raw_input": "Т-Банк",
+  "normalized_value": "АО «ТБанк»",
+  "confidence": 0.92,
+  "alternatives": ["Т-Банк", "Тинькофф Банк"],
+  "needs_official_verification": true
+}

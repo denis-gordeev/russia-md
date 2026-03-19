@@ -44,3 +44,8 @@ Use this skill for low-friction authentication and identity workflows built on V
 
 - [VK ID for business](https://id.vk.com/about/business)
 - [VK ID documentation](https://id.vk.com/about/business/go/docs/ru/vkid/latest/oauth-vk)
+
+## Bundled Resources
+
+- See `references/integration-notes.md` for scope and account-linking guidance.
+- See `examples/output.json` for a minimal result shape.

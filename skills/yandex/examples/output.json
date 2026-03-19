@@ -1,0 +1,11 @@
+{
+  "task_type": "route",
+  "input": "Москва, Тверская 7 -> Москва, Варшавское шоссе 1",
+  "resolved_location": {
+    "origin": "Moscow, Tverskaya St 7",
+    "destination": "Moscow, Varshavskoye Hwy 1"
+  },
+  "alternatives": [],
+  "confidence": 0.97,
+  "business_warning": "Use ETA as an estimate, not a guaranteed arrival promise."
+}

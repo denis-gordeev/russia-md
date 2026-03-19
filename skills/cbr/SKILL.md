@@ -42,3 +42,8 @@ Use this skill for official central-bank reference data in finance workflows.
 ## Official Entry Points
 
 - [CBR developer resources](https://cbr.ru/development/)
+
+## Bundled Resources
+
+- See `references/integration-notes.md` for timestamping and finance-reporting notes.
+- See `examples/output.json` for a minimal result shape.

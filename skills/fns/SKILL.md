@@ -43,3 +43,8 @@ Use this skill for official entity verification and registration-aware checks.
 ## Official Entry Points
 
 - [Federal Tax Service](https://www.nalog.gov.ru/)
+
+## Bundled Resources
+
+- See `references/integration-notes.md` for freshness and verification guidance.
+- See `examples/output.json` for a minimal result shape.

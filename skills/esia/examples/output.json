@@ -1,0 +1,8 @@
+{
+  "auth_required": true,
+  "flow_stage": "precheck",
+  "required_fields": ["full_name", "date_of_birth", "snils"],
+  "missing_fields": ["snils"],
+  "next_step": "Request the missing identity field, then redirect the user into the official ESIA flow.",
+  "official_entrypoint": "https://esia.gosuslugi.ru/"
+}

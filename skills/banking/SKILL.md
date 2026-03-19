@@ -47,3 +47,8 @@ Use this skill for contract-backed bank integrations in Russian business workflo
 - Sber business APIs
 - Alfa business APIs
 - Other contract-backed acquiring or treasury integrations
+
+## Bundled Resources
+
+- See `references/integration-notes.md` for approval boundaries and reconciliation patterns.
+- See `examples/output.json` for a minimal result shape.

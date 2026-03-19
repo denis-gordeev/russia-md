@@ -1,0 +1,10 @@
+{
+  "dataset": "fx",
+  "published_at": "2026-03-19",
+  "retrieved_at": "2026-03-19T15:00:00Z",
+  "values": {
+    "USD_RUB": 91.23,
+    "EUR_RUB": 99.74
+  },
+  "advice_disclaimer": true
+}

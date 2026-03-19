@@ -44,3 +44,8 @@ Use this skill for location-heavy workflows built on Yandex APIs.
 ## Official Entry Points
 
 - [Yandex Maps JavaScript API](https://yandex.com/maps-api/docs/js-api/index.html)
+
+## Bundled Resources
+
+- See `references/integration-notes.md` for routing and geocoding cautions.
+- See `examples/output.json` for a minimal result shape.

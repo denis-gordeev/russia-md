@@ -47,3 +47,8 @@ Use this skill for seller-side marketplace operations across the main Russian pl
 - Ozon seller APIs
 - Wildberries seller APIs
 - Yandex Market seller APIs
+
+## Bundled Resources
+
+- See `references/integration-notes.md` for mutation logging and policy boundaries.
+- See `examples/output.json` for a minimal result shape.

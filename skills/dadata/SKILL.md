@@ -44,3 +44,8 @@ Use this skill for high-leverage normalization and suggestion workflows in Russi
 ## Official Entry Points
 
 - [DaData](https://dadata.ru/)
+
+## Bundled Resources
+
+- See `references/integration-notes.md` for normalization and verification guidance.
+- See `examples/output.json` for a minimal result shape.
