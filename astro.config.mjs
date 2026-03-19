@@ -4,15 +4,8 @@ import sitemap from '@astrojs/sitemap';
 import rehypeExternalLinks from 'rehype-external-links';
 
 export default defineConfig({
-  site: 'https://taiwan.md',
+  site: 'https://russia-md.ru',
   integrations: [sitemap()],
-  i18n: {
-    defaultLocale: 'zh-TW',
-    locales: ['zh-TW', 'en'],
-    routing: {
-      prefixDefaultLocale: false
-    }
-  },
   markdown: {
     shikiConfig: {
       theme: 'github-light',

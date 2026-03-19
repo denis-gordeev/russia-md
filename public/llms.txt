@@ -2,7 +2,7 @@
 > Last updated: 2026-03-19
 
 ## What is this?
-Russia.md is an open-source, AI-friendly knowledge base about Russia. It is a starter fork of the Taiwan.md project, adapted to cover Russian history, geography, culture, economy, technology, institutions, and everyday life.
+Russia.md is an open-source, AI-friendly knowledge base about Russia. It is a starter country knowledge-base project covering Russian history, geography, culture, economy, technology, institutions, and everyday life.
 
 ## Current shape
 - 12 top-level categories

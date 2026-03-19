@@ -1,6 +1,6 @@
 # Russia.md
 
-An AI-friendly, open-source knowledge atlas about Russia, forked from [`frank890417/taiwan-md`](https://github.com/frank890417/taiwan-md) and rebuilt as a Russia-focused starter project.
+An AI-friendly, open-source knowledge atlas about Russia, rebuilt as a Russia-focused starter project.
 
 ## Scope
 
@@ -11,7 +11,7 @@ An AI-friendly, open-source knowledge atlas about Russia, forked from [`frank890
 
 ## Status
 
-This is a foundation fork, not a finished editorial project. The inherited Taiwan-specific content has been bypassed in favor of a clean Russia corpus under `russia-knowledge/`.
+This is a foundation project, not a finished editorial product. The active site is driven by a clean Russia corpus under `russia-knowledge/`.
 
 ## Development
 
@@ -28,7 +28,7 @@ npm run build
 
 ## Next work
 
-- Replace remaining inherited Taiwan-only auxiliary pages and datasets
+- Add Russia-specific charts, maps, and supporting datasets
 - Add Russia-specific charts and maps
 - Expand each category beyond the single starter essay
 - Configure a real GitHub remote, domain, and deployment target
