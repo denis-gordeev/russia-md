@@ -713,18 +713,43 @@ const processedContent = marked.parse(resolvedContent, { renderer });
 
   .content table {
     width: 100%;
-    border-collapse: collapse;
-    margin: 1.5rem 0;
-    font-size: 0.95rem;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin: 2.5rem 0;
+    font-size: 0.92rem;
+    line-height: 1.7;
+    border: 1.5px solid #c5ccd6;
+    border-radius: 8px;
+    overflow: hidden;
   }
   .content th, .content td {
-    padding: 0.75rem 1rem;
-    border: 1px solid #e5e7eb;
+    padding: 0.9rem 1.15rem;
+    border-bottom: 1px solid #d5dbe3;
+    border-right: 1px solid #e8ecf0;
     text-align: left;
   }
+  .content th:last-child, .content td:last-child {
+    border-right: none;
+  }
+  .content tr:last-child td {
+    border-bottom: none;
+  }
   .content th {
-    background: #f9fafb;
-    font-weight: 600;
+    background: #f0f3f6;
+    font-weight: 700;
+    color: #1a1a1a;
+    border-bottom: 2px solid #c5ccd6;
+    font-size: 0.88rem;
+    letter-spacing: 0.02em;
+  }
+  .content tbody tr:hover {
+    background: rgba(74, 124, 89, 0.04);
+  }
+  .content tbody tr:nth-child(even) {
+    background: #fafbfc;
+  }
+  .content tbody tr:nth-child(even):hover {
+    background: rgba(74, 124, 89, 0.06);
   }
 
   .content p {
