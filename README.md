@@ -40,13 +40,15 @@ This is still a foundation fork, not a finished editorial product. The active si
 - [x] Add shared schemas and per-skill output schemas for current skills
 - [x] Add automatic validation for example payloads against skill schemas
 - [x] Run skill validation in the GitHub Pages build workflow
+- [x] Add a dedicated CI workflow for skill validation outside deploys
+- [x] Add cross-skill composition guides for identity, onboarding, and marketplace workflows
 - [ ] Finish DNS propagation for `www.russia-md.ru` and enable HTTPS
 - [ ] Add skills for telecom, document-signature, and marketplace ops beyond the first wave
 - [ ] Add icons/assets for high-value skills in `agents/openai.yaml`
 - [ ] Add scripts/templates for high-friction integration workflows
-- [ ] Add cross-skill composition guides for identity, onboarding, and marketplace workflows
 - [ ] Add richer schema coverage for nested objects and stricter cross-field validation
-- [ ] Add a dedicated CI workflow for skill validation outside deploys
+- [ ] Add pull-request checks for content quality and editorial consistency
+- [ ] Add machine-readable composition manifests for multi-skill orchestration
 - [ ] Add Russia-specific charts, maps, and supporting datasets
 - [ ] Expand each category beyond the single starter essay
 - [ ] Add a stronger editorial policy and sourcing checklist
@@ -66,11 +68,13 @@ npm run build
 - `skills/` repo-local agent skills, one integration per folder
 - `.agents/skills` symlink target for Codex repository skill discovery
 - `skills/shared/` cross-skill schema guidance and shared validation patterns
+- `skills/shared/references/` composition guides spanning multiple skills
 - `skills/*/agents/openai.yaml` UI metadata and invocation defaults for skills
 - `skills/*/references/` per-skill implementation notes
 - `skills/*/examples/` example payloads and output contracts
 - `skills/*/schemas/` per-skill JSON schema definitions for output contracts
 - `scripts/validate-skill-examples.mjs` local and CI validator for skill examples
+- `.github/workflows/skills.yml` standalone CI workflow for skill validation
 - `legacy-content/` archived upstream content kept for reference
 - `legacy-pages/` archived upstream routes kept out of the active build
 - `public/llms.txt` AI-oriented project summary
