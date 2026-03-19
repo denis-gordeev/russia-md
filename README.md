@@ -51,6 +51,7 @@ This is still a foundation fork, not a finished editorial product. The active si
 - [ ] Add machine-readable composition manifests for multi-skill orchestration
 - [ ] Add scenario templates for OTP recovery, signature packets, and marketplace incident response
 - [ ] Add validation that every skill ships metadata, references, schemas, and examples together
+- [ ] Update GitHub Actions dependencies for Node 24 compatibility before the June 2026 runner switch
 - [ ] Add higher-level operator playbooks that connect skills to site content and category pages
 - [ ] Add Russia-specific charts, maps, and supporting datasets
 - [ ] Expand each category beyond the single starter essay
