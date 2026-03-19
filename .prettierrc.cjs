@@ -5,16 +5,16 @@
  */
 
 module.exports = {
-    plugins: [require.resolve('prettier-plugin-astro')],
-    overrides: [
-        {
-            files: '*.astro',
-            options: {
-                parser: 'astro',
-            },
-        },
-    ],
-    singleQuote: true,
-    semi: true,
-    tabWidth: 2,
+  plugins: [require.resolve('prettier-plugin-astro')],
+  overrides: [
+    {
+      files: '*.astro',
+      options: {
+        parser: 'astro',
+      },
+    },
+  ],
+  singleQuote: true,
+  semi: true,
+  tabWidth: 2,
 };
