@@ -23,7 +23,7 @@ Taiwan.md is an open-source, curated, AI-friendly knowledge base that helps the 
 
 ## ✨ Features
 
-- 📖 **240+ curated articles** across 12 categories (188 zh-TW + 53 en)
+- 📖 **260+ curated articles** across 12 categories (213 zh-TW + 53 en)
 - 🌐 **Bilingual** — 繁體中文 (SSOT) + English (100% i18n coverage)
 - 🤖 **AI-native** — [`llms.txt`](https://taiwan.md/llms.txt), [`robots.txt`](https://taiwan.md/robots.txt), structured Markdown SSOT
 - 🕸️ **Interactive knowledge graph** — D3.js force simulation with zoom, drag, cross-category bridges
@@ -44,7 +44,7 @@ Taiwan.md is an open-source, curated, AI-friendly knowledge base that helps the 
 | Metric | Count |
 |--------|-------|
 | 📄 Total pages built | 269 |
-| 🇹🇼 Chinese articles | 188 |
+| 🇹🇼 Chinese articles | 213 |
 | 🇺🇸 English articles | 53 |
 | 📂 Categories | 12 |
 | 🏛️ Hub pages | 12 |
@@ -183,7 +183,7 @@ Thanks to these wonderful people ([emoji key](https://allcontributors.org/docs/e
   <tr>
     <td align="center"><a href="https://github.com/hansai-art"><img src="https://avatars.githubusercontent.com/u/132933660?v=4" width="80px;" alt="hansai-art"/><br /><sub><b>hansai-art</b></sub></a><br />🖋 💻 🔍</td>
     <td align="center"><a href="https://github.com/luofreddy"><img src="https://avatars.githubusercontent.com/u/85281073?v=4" width="80px;" alt="luofreddy"/><br /><sub><b>luofreddy</b></sub></a><br />💻</td>
-    <td align="center"><a href="https://github.com/fredchu"><img src="https://avatars.githubusercontent.com/u/282984?v=4" width="80px;" alt="fredchu"/><br /><sub><b>fredchu</b></sub></a><br />🔍 🐛</td>
+    <td align="center"><a href="https://github.com/fredchu"><img src="https://avatars.githubusercontent.com/u/282984?v=4" width="80px;" alt="fredchu"/><br /><sub><b>fredchu</b></sub></a><br />🔍 🐛 🖋 📖</td>
     <td align="center"><a href="https://github.com/Rushyuheng"><img src="https://avatars.githubusercontent.com/u/82425707?v=4" width="80px;" alt="Rushyuheng"/><br /><sub><b>Rushyuheng</b></sub></a><br />🖋</td>
     <td align="center"><a href="https://github.com/f312213213"><img src="https://avatars.githubusercontent.com/u/71749524?v=4" width="80px;" alt="f312213213"/><br /><sub><b>f312213213</b></sub></a><br />💻 🌍</td>
     <td align="center"><a href="https://github.com/siansiansu"><img src="https://avatars.githubusercontent.com/u/33390878?v=4" width="80px;" alt="siansiansu"/><br /><sub><b>siansiansu</b></sub></a><br />🖋</td>
