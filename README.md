@@ -32,6 +32,7 @@ This is still a foundation fork, not a finished editorial product. The active si
 - [x] Connect the custom domain `russia-md.ru` in GitHub Pages
 - [x] Restore visible attribution that this project is a fork of `taiwan-md`
 - [x] Replace placeholder GitHub links on the site with the real fork URL
+- [x] Split the monolithic `SKILLS.md` brief into repository skill folders
 - [ ] Finish DNS propagation for `www.russia-md.ru` and enable HTTPS
 - [ ] Add Russia-specific charts, maps, and supporting datasets
 - [ ] Expand each category beyond the single starter essay
@@ -48,6 +49,8 @@ npm run build
 
 - `src/` site shell and Astro pages
 - `russia-knowledge/` active source markdown used by category and article pages
+- `skills/` repo-local agent skills, one integration per folder
+- `.agents/skills` symlink target for Codex repository skill discovery
 - `legacy-content/` archived upstream content kept for reference
 - `legacy-pages/` archived upstream routes kept out of the active build
 - `public/llms.txt` AI-oriented project summary

@@ -2,6 +2,8 @@
 
 This document lists practical integration targets for LLM agents operating in the Russian market. It is written as an engineering brief rather than a marketing catalog: what the system is useful for, how access usually works, what an agent can do safely, and where the hard edges are.
 
+The brief now has a repository-skill implementation under `skills/`, with Codex discovery exposed through `.agents/skills` as a symlink to that folder. Treat this file as the high-level overview and prioritization note; treat each `skills/*/SKILL.md` file as the executable skill entry.
+
 ## Design Principles
 
 - Prefer official APIs and documented partner programs over scraping.
