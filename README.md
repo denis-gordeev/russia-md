@@ -38,12 +38,15 @@ This is still a foundation fork, not a finished editorial product. The active si
 - [x] Add second-wave skills for banking and marketplaces
 - [x] Add references and example payloads for each current skill
 - [x] Add shared schemas and per-skill output schemas for current skills
+- [x] Add automatic validation for example payloads against skill schemas
+- [x] Run skill validation in the GitHub Pages build workflow
 - [ ] Finish DNS propagation for `www.russia-md.ru` and enable HTTPS
 - [ ] Add skills for telecom, document-signature, and marketplace ops beyond the first wave
-- [ ] Add automatic validation for example payloads against skill schemas
 - [ ] Add icons/assets for high-value skills in `agents/openai.yaml`
 - [ ] Add scripts/templates for high-friction integration workflows
 - [ ] Add cross-skill composition guides for identity, onboarding, and marketplace workflows
+- [ ] Add richer schema coverage for nested objects and stricter cross-field validation
+- [ ] Add a dedicated CI workflow for skill validation outside deploys
 - [ ] Add Russia-specific charts, maps, and supporting datasets
 - [ ] Expand each category beyond the single starter essay
 - [ ] Add a stronger editorial policy and sourcing checklist
@@ -52,6 +55,7 @@ This is still a foundation fork, not a finished editorial product. The active si
 
 ```bash
 npm install
+npm run check:skills
 npm run build
 ```
 
@@ -66,6 +70,7 @@ npm run build
 - `skills/*/references/` per-skill implementation notes
 - `skills/*/examples/` example payloads and output contracts
 - `skills/*/schemas/` per-skill JSON schema definitions for output contracts
+- `scripts/validate-skill-examples.mjs` local and CI validator for skill examples
 - `legacy-content/` archived upstream content kept for reference
 - `legacy-pages/` archived upstream routes kept out of the active build
 - `public/llms.txt` AI-oriented project summary

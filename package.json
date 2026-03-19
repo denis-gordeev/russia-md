@@ -9,6 +9,7 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
+    "check:skills": "node scripts/validate-skill-examples.mjs",
     "sync": "bash scripts/sync.sh",
     "sync:build": "bash scripts/sync.sh && astro build",
     "check-images": "node scripts/check-images.mjs",

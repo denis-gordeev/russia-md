@@ -26,6 +26,8 @@ jobs:
           node-version: 22
       - name: Install dependencies
         run: npm install
+      - name: Validate skill examples
+        run: npm run check:skills
       - name: Build
         run: npm run build
       - name: Upload artifact
