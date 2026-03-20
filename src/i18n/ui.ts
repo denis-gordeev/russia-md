@@ -8,7 +8,7 @@ export const languages: Record<Lang, string> = {
 export const defaultLang: Lang = 'zh-TW';
 export const showDefaultLang = false;
 
-export const ui: Record<Lang, Record<string, string>> = {
+export const ui = {
   en: {
     'nav.home': 'Home',
     'nav.about': 'About',
