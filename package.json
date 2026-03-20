@@ -10,6 +10,8 @@
     "build": "astro build",
     "preview": "astro preview",
     "check:skills": "node scripts/validate-skill-examples.mjs",
+    "check:skills:changed": "node scripts/validate-skill-examples.mjs --changed",
+    "check:skills:fixtures": "node scripts/test-validate-skill-examples.mjs",
     "sync": "bash scripts/sync.sh",
     "sync:build": "bash scripts/sync.sh && astro build",
     "check-images": "node scripts/check-images.mjs",
@@ -23,7 +25,8 @@
     "astro": "^6.0.5",
     "gray-matter": "^4.0.3",
     "marked": "^17.0.4",
-    "rehype-external-links": "^3.0.0"
+    "rehype-external-links": "^3.0.0",
+    "yaml": "^2.8.2"
   },
   "devDependencies": {
     "husky": "^9.1.7",

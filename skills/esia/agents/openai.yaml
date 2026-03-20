@@ -1,3 +1,4 @@
+name: esia
 interface:
   display_name: "ESIA"
   short_description: "Verified state identity and Gosuslugi flow planning"

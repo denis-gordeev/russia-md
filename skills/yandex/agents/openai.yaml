@@ -1,3 +1,4 @@
+name: yandex
 interface:
   display_name: "Yandex"
   short_description: "Yandex Maps geocoding, routing, and serviceability"

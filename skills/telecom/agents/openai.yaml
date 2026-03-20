@@ -1,3 +1,4 @@
+name: telecom
 interface:
   display_name: "Telecom"
   short_description: "Russian SMS, voice OTP, routing, and failover workflows"

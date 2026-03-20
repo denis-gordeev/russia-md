@@ -1,3 +1,4 @@
+name: banking
 interface:
   display_name: "Banking"
   short_description: "Russian bank APIs for payments, statements, and payouts"

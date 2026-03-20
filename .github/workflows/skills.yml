@@ -5,6 +5,8 @@ on:
     branches: [main]
     paths:
       - "skills/**"
+      - "docs/**"
+      - "README.md"
       - ".agents/**"
       - "scripts/validate-skill-examples.mjs"
       - "package.json"
@@ -12,6 +14,8 @@ on:
   pull_request:
     paths:
       - "skills/**"
+      - "docs/**"
+      - "README.md"
       - ".agents/**"
       - "scripts/validate-skill-examples.mjs"
       - "package.json"
@@ -27,8 +31,10 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 24
       - name: Install dependencies
         run: npm install
-      - name: Validate skill examples
+      - name: Validate skills and markdown links
         run: npm run check:skills
+      - name: Validate skill fixtures
+        run: npm run check:skills:fixtures

@@ -200,10 +200,11 @@ const navConfig = [
       </div>
     </div>
     <script is:inline define:vars={{ searchIndex, isEn }}>
-      (function() {
+      function initSearch() {
         var idx = searchIndex;
-        var lang = 'en';
+        var lang = isEn ? 'en' : 'zh-TW';
         var input = document.getElementById('search-input');
+        if (!input) return;
         var results = document.getElementById('search-results');
         var modal = document.getElementById('search-modal');
 
@@ -216,7 +217,7 @@ const navConfig = [
           var matches = idx.filter(function(item) {
             return item.t.toLowerCase().indexOf(q) !== -1 ||
                    item.d.toLowerCase().indexOf(q) !== -1 ||
-                   item.tags.some(function(tag) { return tag.toLowerCase().indexOf(q) !== -1; });
+                   item.tags.some(function(tag) { return String(tag).toLowerCase().indexOf(q) !== -1; });
           });
           // Prefer current language, then show others
           matches.sort(function(a, b) {
@@ -258,7 +259,21 @@ const navConfig = [
             }
           }
         });
-      })();
+      }
+
+      function tryInitSearch() {
+        if (document.getElementById('search-input')) {
+          initSearch();
+        } else {
+          setTimeout(tryInitSearch, 50);
+        }
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', tryInitSearch);
+      } else {
+        tryInitSearch();
+      }
     </script>
 
     <main role="main">

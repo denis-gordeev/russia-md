@@ -14,7 +14,7 @@ Original upstream:
 - Rebrand the active site as `Russia.md` while explicitly keeping fork lineage visible
 - Replace active Taiwan-specific content with a clean Russia starter corpus under `russia-knowledge/`
 - Keep archived upstream material under `legacy-content/` and `legacy-pages/` instead of deleting provenance
-- Ship [`SKILLS.md`](./SKILLS.md) covering Gosuslugi, VK, Yandex, DaData, CBR, FNS, banks, and marketplace integrations for LLM agents
+- Ship repo-local skill bundles under `skills/` covering Gosuslugi, VK, Yandex, DaData, CBR, FNS, banking, telecom, document-signature, and marketplace integrations for LLM agents
 
 ## Status
 
@@ -50,20 +50,44 @@ This is still a foundation fork, not a finished editorial product. The active si
 - [ ] Add pull-request checks for content quality and editorial consistency
 - [ ] Add machine-readable composition manifests for multi-skill orchestration
 - [ ] Add scenario templates for OTP recovery, signature packets, and marketplace incident response
-- [ ] Add validation that every skill ships metadata, references, schemas, and examples together
-- [ ] Update GitHub Actions dependencies for Node 24 compatibility before the June 2026 runner switch
+- [x] Add validation that every skill ships metadata, references, schemas, and examples together
+- [x] Update GitHub Actions dependencies for Node 24 compatibility before the June 2026 runner switch
 - [ ] Add higher-level operator playbooks that connect skills to site content and category pages
 - [ ] Add Russia-specific charts, maps, and supporting datasets
 - [ ] Expand each category beyond the single starter essay
 - [ ] Add a stronger editorial policy and sourcing checklist
+- [x] Add schema-level validation for `agents/openai.yaml` metadata fields and allowed UI keys
+- [ ] Add scenario template bundles under skills for ready-to-run operator handoffs
+- [x] Add CI checks for broken local links inside `README.md`, `SKILL.md`, and docs pages
+- [x] Add schema fixtures and negative tests for invalid skill bundles to harden the validator
+- [x] Add incremental `check:skills` support for changed skill folders to speed up local iteration
+- [x] Add linting for referenced asset paths in `agents/openai.yaml` before icons land
+- [x] Add anchor-aware link validation for local markdown references with `#fragment` checks
+- [x] Add support for validating shared schemas and validator inputs separately from changed skill folders in `check:skills:changed`
+- [ ] Add first local icon asset set and wire it into `agents/openai.yaml`
+- [x] Add negative tests for broken markdown anchors and invalid metadata/icon paths
+- [x] Add front-matter-aware markdown validation for docs and skill references
+- [x] Add fixture coverage for missing bundle files and shared-schema regression cases
+- [ ] Run `check:skills:changed` in CI for pull requests alongside the full validation pass
+- [ ] Add diff-aware markdown validation that can re-check inbound links when shared docs or anchors change
+- [ ] Add fixture coverage for malformed front matter and invalid markdown link syntax edge cases
+- [ ] Teach the validator to report all markdown-link failures in one pass instead of failing on the first error
 
 ## Development
 
 ```bash
 npm install
 npm run check:skills
+npm run check:skills:changed
+npm run check:skills:fixtures
 npm run build
 ```
+
+`npm run check:skills` now validates that every repo-local skill ships its core bundle together: `SKILL.md`, `agents/openai.yaml`, `references/integration-notes.md`, `examples/output.json`, and `schemas/output.schema.json`. It also validates `agents/openai.yaml` against a shared metadata schema, rejects unknown UI keys, checks that each default prompt explicitly mentions the matching `$skill-name`, verifies local markdown links across `README.md`, `skills/**/SKILL.md`, and docs/reference pages, ignores YAML front matter while scanning markdown bodies, validates local markdown `#fragment` anchors against headings and explicit `id=""` anchors, and lints local `interface.icon` asset paths when icons are present.
+
+`npm run check:skills:changed` validates only skill folders currently changed in git status, but automatically falls back to validating all skills when shared schema inputs or validator wiring change. It still runs the repository markdown-link pass so local iteration stays faster without dropping shared-document checks.
+
+`npm run check:skills:fixtures` runs a small fixture suite for the validator itself, including front-matter-aware markdown regression coverage plus negative cases for broken markdown anchors, missing shared metadata schema files, and invalid `interface.icon` metadata.
 
 ## Key Paths
 
@@ -72,12 +96,16 @@ npm run build
 - `skills/` repo-local agent skills, one integration per folder
 - `.agents/skills` symlink target for Codex repository skill discovery
 - `skills/shared/` cross-skill schema guidance and shared validation patterns
+- `skills/shared/schemas/agent-metadata.schema.json` shared schema for `skills/*/agents/openai.yaml`
 - `skills/shared/references/` composition guides spanning multiple skills
 - `skills/*/agents/openai.yaml` UI metadata and invocation defaults for skills
 - `skills/*/references/` per-skill implementation notes
 - `skills/*/examples/` example payloads and output contracts
 - `skills/*/schemas/` per-skill JSON schema definitions for output contracts
-- `scripts/validate-skill-examples.mjs` local and CI validator for skill examples
+- `scripts/validate-skill-examples.mjs` local and CI validator for skill bundle completeness, metadata schema checks, markdown-link and anchor validation, optional icon asset path linting, and changed-skill filtering
+- `scripts/test-validate-skill-examples.mjs` validator fixture runner covering valid and negative bundle cases
+- `scripts/fixtures/skill-validator/` minimal fixture repositories for validator regression checks
+- GitHub Actions skill validation and deploy workflows now run on Node 24
 - `.github/workflows/skills.yml` standalone CI workflow for skill validation
 - `skills/telecom/`, `skills/document-signature/`, and `skills/marketplace-ops/` third-wave operational skills
 - `legacy-content/` archived upstream content kept for reference

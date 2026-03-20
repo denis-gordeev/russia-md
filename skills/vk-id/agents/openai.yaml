@@ -1,3 +1,4 @@
+name: vk-id
 interface:
   display_name: "VK ID"
   short_description: "VK ID authentication, scopes, and account linking"

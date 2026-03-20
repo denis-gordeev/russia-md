@@ -1,3 +1,4 @@
+name: marketplace-ops
 interface:
   display_name: "Marketplace Ops"
   short_description: "Incident handling, returns, claims, and seller support queues"

@@ -23,11 +23,13 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 24
       - name: Install dependencies
         run: npm install
-      - name: Validate skill examples
+      - name: Validate skills and markdown links
         run: npm run check:skills
+      - name: Validate skill fixtures
+        run: npm run check:skills:fixtures
       - name: Build
         run: npm run build
       - name: Upload artifact

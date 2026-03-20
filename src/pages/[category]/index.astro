@@ -4,7 +4,11 @@ import { resolve, join, basename } from 'path';
 import matter from 'gray-matter';
 import Layout from '../../layouts/Layout.astro';
 import { marked } from 'marked';
-import { categoryConfig, getCategoryConfig, type CategoryKey } from '../../utils/categoryConfig';
+import {
+  categoryConfig,
+  getCategoryConfig,
+  type CategoryKey,
+} from '../../utils/categoryConfig';
 
 export async function getStaticPaths() {
   const categories = Object.keys(categoryConfig);
@@ -30,9 +34,15 @@ export async function getStaticPaths() {
     const articles = [];
 
     try {
-      const zhFolderPath = resolve(process.cwd(), 'russia-knowledge', folderName);
+      const zhFolderPath = resolve(
+        process.cwd(),
+        'russia-knowledge',
+        folderName,
+      );
       const zhFiles = await readdir(zhFolderPath);
-      const zhMarkdownFiles = zhFiles.filter((file) => file.endsWith('.md') && !file.startsWith('_'));
+      const zhMarkdownFiles = zhFiles.filter(
+        (file) => file.endsWith('.md') && !file.startsWith('_'),
+      );
 
       for (const file of zhMarkdownFiles) {
         const filePath = join(zhFolderPath, file);
@@ -57,7 +67,9 @@ export async function getStaticPaths() {
     try {
       const hubFolder = resolve(process.cwd(), 'russia-knowledge', folderName);
       const hubFiles = await readdir(hubFolder);
-      const hubFile = hubFiles.find((f) => f.startsWith('_') && f.includes('Hub'));
+      const hubFile = hubFiles.find(
+        (f) => f.startsWith('_') && f.includes('Hub'),
+      );
       if (hubFile) {
         const hubPath = join(hubFolder, hubFile);
         const hubRaw = await readFile(hubPath, 'utf-8');
@@ -88,21 +100,34 @@ const { categoryInfo, category, hubContent, articles } = Astro.props;
 
 function resolveWikilinks(md: string, currentCategory: string) {
   if (!md) return md;
-  return md.replace(/\[\[([^\]|]+?)(?:\|([^\]]+?))?\]\]/g, (_, target, display) => {
-    const label = display || target;
-    if (target.startsWith('_')) {
-      const catName = target.replace(/^_/, '').replace(/ Hub$/, '').toLowerCase();
-      return `[${label}](/${catName})`;
-    }
-    const matchArticle = articles.find((a: any) => a.title === target || a.slug === target || a.slug === encodeURIComponent(target));
-    if (matchArticle) {
-      return `[${label}](/${currentCategory}/${matchArticle.slug})`;
-    }
-    return `**${label}**`;
-  });
+  return md.replace(
+    /\[\[([^\]|]+?)(?:\|([^\]]+?))?\]\]/g,
+    (_, target, display) => {
+      const label = display || target;
+      if (target.startsWith('_')) {
+        const catName = target
+          .replace(/^_/, '')
+          .replace(/ Hub$/, '')
+          .toLowerCase();
+        return `[${label}](/${catName})`;
+      }
+      const matchArticle = articles.find(
+        (a: any) =>
+          a.title === target ||
+          a.slug === target ||
+          a.slug === encodeURIComponent(target),
+      );
+      if (matchArticle) {
+        return `[${label}](/${currentCategory}/${matchArticle.slug})`;
+      }
+      return `**${label}**`;
+    },
+  );
 }
 
-const resolvedContent = hubContent ? resolveWikilinks(hubContent, category) : '';
+const resolvedContent = hubContent
+  ? resolveWikilinks(hubContent, category)
+  : '';
 
 // Broken image fallback for hub pages
 const hubRenderer = new marked.Renderer();
@@ -111,25 +136,32 @@ hubRenderer.image = ({ href, title, text }) => {
   const altText = text || '';
   return `<img src="${href}" alt="${altText}"${titleAttr} loading="lazy" onerror="this.onerror=null;this.classList.add('img-broken')" />`;
 };
-const hubHtml = resolvedContent ? marked.parse(resolvedContent, { renderer: hubRenderer }) : '';
+const hubHtml = resolvedContent
+  ? marked.parse(resolvedContent, { renderer: hubRenderer })
+  : '';
 
 // 其他分類（跨分類導航用）
 const otherCategories = Object.keys(categoryConfig)
-  .filter(cat => cat !== category)
+  .filter((cat) => cat !== category)
   .slice(0, 5) // 只顯示5個
-  .map(cat => ({
+  .map((cat) => ({
     key: cat,
-    ...categoryConfig[cat as CategoryKey]
+    ...categoryConfig[cat as CategoryKey],
   }));
 ---
 
-<Layout 
+<Layout
   title={`${categoryInfo.name} - Russia.md`}
   description={`${categoryInfo.description} - Russia knowledge base`}
+  category={categoryInfo.name}
+  categoryPath={category}
 >
   <main class="category-page">
     <!-- Hero Banner -->
-    <section class="hero-banner" style={`background: ${categoryInfo.gradient};`}>
+    <section
+      class="hero-banner"
+      style={`background: ${categoryInfo.gradient};`}
+    >
       <div class="hero-content">
         <div class="hero-icon">{categoryInfo.icon}</div>
         <h1 class="hero-title">{categoryInfo.name}</h1>
@@ -150,91 +182,120 @@ const otherCategories = Object.keys(categoryConfig)
       </nav>
 
       <!-- Hub Content (curated overview) -->
-      {hubHtml && (
-        <section class="hub-content">
-          <div class="hub-prose" set:html={hubHtml} />
-        </section>
-      )}
+      {
+        hubHtml && (
+          <section class="hub-content">
+            <div class="hub-prose" set:html={hubHtml} />
+          </section>
+        )
+      }
 
       <!-- Articles Section -->
       <h2 class="articles-heading">📖 Further Reading</h2>
-      {articles.length > 0 ? (
-        <section class="articles-section">
-          <div class="articles-grid">
-            {articles.map((article, index) => (
-              <article class={`article-card ${index === 0 && article.featured ? 'featured-card' : ''}`}>
-                <a href={`/${category}/${article.slug}`} class="card-link">
-                  <div class="card-image-placeholder" style={`background: ${categoryInfo.gradient};`}>
-                    <div class="card-image-icon">{categoryInfo.icon}</div>
-                  </div>
-                  
-                  <div class="card-content">
-                    <div class="card-header">
-                      <div class="article-meta">
-                        {article.status && (
-                          <span class="status-tag">{article.status}</span>
-                        )}
-                        {article.lang && (
-                          <span class="lang-tag">EN</span>
+      {
+        articles.length > 0 ? (
+          <section class="articles-section">
+            <div class="articles-grid">
+              {articles.map((article, index) => (
+                <article
+                  class={`article-card ${index === 0 && article.featured ? 'featured-card' : ''}`}
+                >
+                  <a href={`/${category}/${article.slug}`} class="card-link">
+                    <div
+                      class="card-image-placeholder"
+                      style={`background: ${categoryInfo.gradient};`}
+                    >
+                      <div class="card-image-icon">{categoryInfo.icon}</div>
+                    </div>
+
+                    <div class="card-content">
+                      <div class="card-header">
+                        <div class="article-meta">
+                          {article.status && (
+                            <span class="status-tag">{article.status}</span>
+                          )}
+                          {article.lang && <span class="lang-tag">EN</span>}
+                        </div>
+                        {article.featured && (
+                          <div class="featured-badge">⭐ Featured</div>
                         )}
                       </div>
-                      {article.featured && (
-                        <div class="featured-badge">⭐ Featured</div>
-                      )}
+
+                      <h3 class="article-title">{article.title}</h3>
+
+                      <p class="article-excerpt">{article.description}</p>
+
+                      <div class="article-info">
+                        {article.readingTime && (
+                          <span class="info-item">
+                            📖 {article.readingTime} min
+                          </span>
+                        )}
+                      </div>
                     </div>
-                    
-                    <h3 class="article-title">{article.title}</h3>
-                    
-                    <p class="article-excerpt">{article.description}</p>
-                    
-                    <div class="article-info">
-                      {article.readingTime && (
-                        <span class="info-item">
-                          📖 {article.readingTime} min
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                </a>
-              </article>
-            ))}
-          </div>
-        </section>
-      ) : (
-        <section class="coming-soon">
-          <div class="coming-soon-content">
-            <div class="coming-soon-icon">{categoryInfo.icon}</div>
-            <h2>More content is coming</h2>
-            <p>This category is still being rebuilt for the Russia fork of taiwan-md.</p>
-            <p class="category-desc">Planned scope: {categoryInfo.description}</p>
-            
-            <div class="action-buttons">
-              <a href="/" class="btn-primary">Back home</a>
-              <a href="https://github.com/denis-gordeev/russia-md" target="_blank" class="btn-secondary">
-                Contribute
-              </a>
+                  </a>
+                </article>
+              ))}
             </div>
-          </div>
-        </section>
-      )}
+          </section>
+        ) : (
+          <section class="coming-soon">
+            <div class="coming-soon-content">
+              <div class="coming-soon-icon">{categoryInfo.icon}</div>
+              <h2>More content is coming</h2>
+              <p>
+                This category is still being rebuilt for the Russia fork of
+                taiwan-md.
+              </p>
+              <p class="category-desc">
+                Planned scope: {categoryInfo.description}
+              </p>
+
+              <div class="action-buttons">
+                <a href="/" class="btn-primary">
+                  Back home
+                </a>
+                <a
+                  href="https://github.com/denis-gordeev/russia-md"
+                  target="_blank"
+                  class="btn-secondary"
+                >
+                  Contribute
+                </a>
+              </div>
+            </div>
+          </section>
+        )
+      }
 
       <!-- Explore other categories -->
       <section class="explore-more">
         <h2 class="explore-title">Explore other categories</h2>
         <div class="categories-grid">
-          {otherCategories.map(cat => (
-            <a href={`/${cat.key}`} class="category-card" style={`border-color: ${cat.color}; color: ${cat.color};`}>
-              <div class="category-card-icon">{cat.icon}</div>
-              <div class="category-card-name">{cat.name}</div>
-            </a>
-          ))}
+          {
+            otherCategories.map((cat) => (
+              <a
+                href={`/${cat.key}`}
+                class="category-card"
+                style={`border-color: ${cat.color}; color: ${cat.color};`}
+              >
+                <div class="category-card-icon">{cat.icon}</div>
+                <div class="category-card-name">{cat.name}</div>
+              </a>
+            ))
+          }
         </div>
       </section>
     </div>
   </main>
 </Layout>
 
-<style define:vars={{ categoryColor: categoryInfo.color, categoryColorLight: categoryInfo.colorLight }}>
+<style
+  define:vars={{
+    categoryColor: categoryInfo.color,
+    categoryColorLight: categoryInfo.colorLight,
+  }}
+>
   .category-page {
     min-height: 100vh;
   }
@@ -263,8 +324,13 @@ const otherCategories = Object.keys(categoryConfig)
   }
 
   @keyframes float {
-    0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-10px); }
+    0%,
+    100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
   }
 
   .hero-title {
@@ -272,7 +338,11 @@ const otherCategories = Object.keys(categoryConfig)
     font-weight: 800;
     margin-bottom: 1rem;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-    background: linear-gradient(45deg, rgba(255,255,255,1), rgba(255,255,255,0.8));
+    background: linear-gradient(
+      45deg,
+      rgba(255, 255, 255, 1),
+      rgba(255, 255, 255, 0.8)
+    );
     background-clip: text;
     -webkit-background-clip: text;
   }
@@ -307,7 +377,11 @@ const otherCategories = Object.keys(categoryConfig)
     right: -10%;
     width: 50%;
     height: 100%;
-    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+    background: radial-gradient(
+      circle,
+      rgba(255, 255, 255, 0.1) 0%,
+      transparent 70%
+    );
     border-radius: 50%;
   }
 
@@ -411,7 +485,8 @@ const otherCategories = Object.keys(categoryConfig)
     margin: 1.2rem 0;
     text-align: justify;
   }
-  .hub-prose ul, .hub-prose ol {
+  .hub-prose ul,
+  .hub-prose ol {
     padding-left: 2rem;
     margin: 1rem 0;
     list-style-position: inside;
@@ -438,7 +513,7 @@ const otherCategories = Object.keys(categoryConfig)
     border-radius: 12px;
     margin: 2rem auto;
     display: block;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   }
   .hub-prose img.img-broken {
     min-height: 120px;
@@ -446,7 +521,10 @@ const otherCategories = Object.keys(categoryConfig)
     background: #f8f9fa;
     border: 1.5px dashed #d0d5dd;
     box-shadow: none;
-    font-family: system-ui, -apple-system, sans-serif;
+    font-family:
+      system-ui,
+      -apple-system,
+      sans-serif;
     font-size: 0.85rem;
     color: #667085;
     text-align: center;
@@ -468,7 +546,8 @@ const otherCategories = Object.keys(categoryConfig)
     margin: 1.5rem 0;
     font-size: 0.95rem;
   }
-  .hub-prose th, .hub-prose td {
+  .hub-prose th,
+  .hub-prose td {
     padding: 0.75rem 1rem;
     border: 1px solid #e2e8f0;
     text-align: left;
@@ -478,8 +557,12 @@ const otherCategories = Object.keys(categoryConfig)
     font-weight: 600;
     color: #1e293b;
   }
-  .hub-prose tr:hover { background: #f8fafc; }
-  .hub-prose strong { color: #1e293b; }
+  .hub-prose tr:hover {
+    background: #f8fafc;
+  }
+  .hub-prose strong {
+    color: #1e293b;
+  }
   .hub-prose hr {
     border: none;
     border-top: 1px solid #e2e8f0;
@@ -511,7 +594,10 @@ const otherCategories = Object.keys(categoryConfig)
     border-radius: 22px;
     overflow: hidden;
     box-shadow: var(--shadow-soft);
-    transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
+    transition:
+      transform 0.22s ease,
+      box-shadow 0.22s ease,
+      border-color 0.22s ease;
     border: 1px solid rgba(0, 0, 0, 0.08);
     backdrop-filter: blur(10px);
   }
@@ -689,7 +775,8 @@ const otherCategories = Object.keys(categoryConfig)
     flex-wrap: wrap;
   }
 
-  .btn-primary, .btn-secondary {
+  .btn-primary,
+  .btn-secondary {
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
@@ -699,7 +786,11 @@ const otherCategories = Object.keys(categoryConfig)
     font-weight: 600;
     font-size: 0.95rem;
     justify-content: center;
-    transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+    transition:
+      transform 0.2s ease,
+      box-shadow 0.2s ease,
+      background 0.2s ease,
+      border-color 0.2s ease;
   }
 
   .btn-primary {
@@ -760,7 +851,9 @@ const otherCategories = Object.keys(categoryConfig)
     border: 1px solid;
     border-radius: 22px;
     text-decoration: none;
-    transition: transform 0.22s ease, box-shadow 0.22s ease;
+    transition:
+      transform 0.22s ease,
+      box-shadow 0.22s ease;
     text-align: center;
     box-shadow: var(--shadow-soft);
   }

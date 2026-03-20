@@ -1,3 +1,4 @@
+name: dadata
 interface:
   display_name: "DaData"
   short_description: "Russian-language enrichment for addresses and companies"

@@ -1,0 +1,9 @@
+name: test-skill
+interface:
+  display_name: Test Skill
+  short_description: Fixture skill bundle used by validator tests.
+  brand_color: "#0055AA"
+  default_prompt: Use $test-skill to validate fixture bundles in tests.
+  icon: assets/test-icon.txt
+policy:
+  allow_implicit_invocation: true

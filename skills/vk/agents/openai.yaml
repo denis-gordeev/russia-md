@@ -1,3 +1,4 @@
+name: vk
 interface:
   display_name: "VK"
   short_description: "VK community, content, moderation, and support workflows"

@@ -1,3 +1,4 @@
+name: document-signature
 interface:
   display_name: "Document Signature"
   short_description: "Signing workflows, approval gates, and evidence capture"

@@ -1,3 +1,4 @@
+name: fns
 interface:
   display_name: "FNS"
   short_description: "Official Russian entity verification and registry checks"

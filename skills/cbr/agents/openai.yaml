@@ -1,3 +1,4 @@
+name: cbr
 interface:
   display_name: "CBR"
   short_description: "Central Bank reference rates and official finance data"

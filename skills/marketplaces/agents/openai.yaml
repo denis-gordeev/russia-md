@@ -1,3 +1,4 @@
+name: marketplaces
 interface:
   display_name: "Marketplaces"
   short_description: "Seller ops for Ozon, Wildberries, and Yandex Market"
