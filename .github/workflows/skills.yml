@@ -9,7 +9,10 @@ on:
       - "README.md"
       - ".agents/**"
       - "scripts/validate-skill-examples.mjs"
+      - "scripts/test-validate-skill-examples.mjs"
+      - "scripts/fixtures/skill-validator/**"
       - "package.json"
+      - "package-lock.json"
       - ".github/workflows/skills.yml"
   pull_request:
     paths:
@@ -18,12 +21,32 @@ on:
       - "README.md"
       - ".agents/**"
       - "scripts/validate-skill-examples.mjs"
+      - "scripts/test-validate-skill-examples.mjs"
+      - "scripts/fixtures/skill-validator/**"
       - "package.json"
+      - "package-lock.json"
       - ".github/workflows/skills.yml"
   workflow_dispatch:
 
 jobs:
-  validate:
+  validate-changed:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Install dependencies
+        run: npm install
+      - name: Validate changed skills and repository markdown links
+        run: npm run check:skills:changed
+
+  validate-full:
+    needs: validate-changed
+    if: always() && (github.event_name != 'pull_request' || needs.validate-changed.result == 'success')
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -36,5 +59,19 @@ jobs:
         run: npm install
       - name: Validate skills and markdown links
         run: npm run check:skills
+
+  validate-fixtures:
+    needs: validate-full
+    if: always() && needs.validate-full.result == 'success'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Install dependencies
+        run: npm install
       - name: Validate skill fixtures
         run: npm run check:skills:fixtures
