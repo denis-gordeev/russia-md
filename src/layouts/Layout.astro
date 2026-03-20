@@ -95,7 +95,10 @@ for (const [slug, folder] of Object.entries(categoryMapping)) {
 const currentPath = Astro.url.pathname;
 const isEn = lang === 'en';
 const categorySlug = category?.toLowerCase() || '';
-const jfClass = categorySlug ? `jf-${categorySlug}` : '';
+// justfont requires CSS classes on elements to trigger font loading
+// Add all font classes to body so all fonts are loaded
+const jfFontClasses = 'jf-jinxuanlatte-regular jf-lanyangming-book jf-kamabit jf-lanyanghei-extrabold jf-lanyanghei-extraheavy jf-jinxuan-medium rixingsong-semibold';
+const jfClass = [categorySlug ? `jf-${categorySlug}` : '', jfFontClasses].filter(Boolean).join(' ');
 
 const i18n = {
   nav: {
