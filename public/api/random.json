@@ -1,343 +1,282 @@
 [
   {
-    "title": "Chi Cheng: The Flying Antelope",
-    "description": "The Flying Antelope, bronze medalist in 80m hurdles at 1968 Mexico Olympics",
+    "title": "Local Street Food Map of Taiwan",
+    "description": "From Keelung temple mouths ding-bian-hu to Pingtung Wanluan pig knuckles, from Hsinchu meatballs to Taitung custard apples, every city has its unique culinary DNA. Follow the footsteps of locals to explore the most representative local delicacies of Taiwan's 22 counties and cities, savoring the most authentic folk culture of this island.",
     "category": "en",
     "tags": [
-      "sports",
-      "track and field",
-      "Olympics",
-      "hurdles"
+      "local delicacies",
+      "indigenous cuisine",
+      "regional specialties",
+      "Taiwan food map",
+      "folk culture"
     ],
-    "url": "https://taiwan.md/en/People/chi-cheng-flying-antelope",
-    "readingTime": 34,
-    "featured": false,
+    "url": "https://taiwan.md/en/Food/local-street-food-map-of-taiwan",
+    "readingTime": 73,
+    "featured": true,
     "date": "2026-03-20",
-    "path": "en/People/chi-cheng-flying-antelope.md"
+    "path": "en/Food/local-street-food-map-of-taiwan.md"
   },
   {
-    "title": "創辦人 — 吳哲宇 Che-Yu Wu",
-    "description": "新媒體藝術家、MonoLab 創辦人、Taiwan.md 發起人",
-    "category": "About",
+    "title": "Threads 在台灣：從現象級爆紅到日常「脆」文化",
+    "description": "Meta 的 Threads 在台灣發展出全球罕見的高黏著度——被暱稱為「脆」，成為 Z 世代碎碎念、政治人物「下凡」、迷因發酵的新公共廣場",
+    "category": "Technology",
     "tags": [
-      "about",
-      "founder",
-      "artist"
+      "社群媒體",
+      "數位文化",
+      "Threads",
+      "Z世代",
+      "政治傳播"
     ],
-    "url": "https://taiwan.md/About/%E5%89%B5%E8%BE%A6%E4%BA%BA",
-    "readingTime": 4,
-    "featured": false,
-    "date": "2026-03-17",
-    "path": "About/創辦人.md"
-  },
-  {
-    "title": "翁啟惠",
-    "description": "醣化學世界權威，中研院前院長，諾貝爾獎候選人",
-    "category": "People",
-    "tags": [
-      "學者",
-      "化學",
-      "中研院",
-      "醣化學",
-      "浩鼎案"
-    ],
-    "url": "https://taiwan.md/People/%E7%BF%81%E5%95%9F%E6%83%A0",
+    "url": "https://taiwan.md/Technology/Threads%E5%9C%A8%E5%8F%B0%E7%81%A3",
     "readingTime": 6,
+    "featured": true,
+    "date": "2026-03-19",
+    "path": "Technology/Threads在台灣.md"
+  },
+  {
+    "title": "Century of Taiwanese Watercolor Painting",
+    "description": "From the enlightenment of Ishikawa Kin'ichiro during the Japanese colonial period to Chien Chung-Wei's international acclaim today, Taiwanese watercolor painting has flourished for a century, becoming Asia's most vibrant watercolor creative hub.",
+    "category": "en",
+    "tags": [
+      "Art",
+      "watercolor",
+      "painting",
+      "水彩",
+      "art history"
+    ],
+    "url": "https://taiwan.md/en/Art/century-of-taiwanese-watercolor-painting",
+    "readingTime": 35,
     "featured": false,
     "date": "2026-03-19",
-    "path": "People/翁啟惠.md"
+    "path": "en/Art/century-of-taiwanese-watercolor-painting.md"
   },
   {
-    "title": "地形與地質",
-    "description": "台灣島複雜多樣的地形地貌，板塊運動造就的五大山脈與豐富地質景觀",
-    "category": "Geography",
-    "tags": [
-      "地理",
-      "地質",
-      "山脈",
-      "板塊運動",
-      "地震",
-      "溫泉"
-    ],
-    "url": "https://taiwan.md/Geography/%E5%9C%B0%E5%BD%A2%E8%88%87%E5%9C%B0%E8%B3%AA",
-    "readingTime": 12,
-    "featured": false,
-    "date": "2026-03-17",
-    "path": "Geography/地形與地質.md"
-  },
-  {
-    "title": "朱宗慶",
-    "description": "台灣打擊樂之父，將冷門藝術帶入主流的音樂教育推手",
-    "category": "People",
-    "tags": [
-      "人物",
-      "音樂家",
-      "打擊樂",
-      "教育",
-      "表演藝術"
-    ],
-    "url": "https://taiwan.md/People/%E6%9C%B1%E5%AE%97%E6%85%B6",
-    "readingTime": 12,
+    "title": "Chen Shu-chu",
+    "description": "A vegetable vendor from Taitung whose ordinary acts of kindness define what true wealth means",
+    "category": "en",
+    "tags": [],
+    "url": "https://taiwan.md/en/People/chen-shu-chu-vegetable-vendor-philanthropist",
+    "readingTime": 26,
     "featured": false,
     "date": "2026-03-19",
-    "path": "People/朱宗慶.md"
+    "path": "en/People/chen-shu-chu-vegetable-vendor-philanthropist.md"
   },
   {
-    "title": "客家飲食文化",
-    "description": "客家人豐富多元的飲食文化，從擂茶的醇厚香味到野薑花粽的山林風情，展現客家族群勤儉持家與就地取材的生活智慧",
-    "category": "Food",
-    "tags": [
-      "Food",
-      "客家",
-      "擂茶",
-      "野薑花粽",
-      "傳統美食",
-      "族群文化"
-    ],
-    "url": "https://taiwan.md/Food/%E5%AE%A2%E5%AE%B6%E9%A3%B2%E9%A3%9F%E6%96%87%E5%8C%96",
-    "readingTime": 14,
-    "featured": false,
-    "date": "2026-03-19",
-    "path": "Food/客家飲食文化.md"
-  },
-  {
-    "title": "張明正",
-    "description": "趨勢科技創辦人，全球資安產業先驅，台灣軟體業國際化典範",
-    "category": "People",
-    "tags": [
-      "趨勢科技",
-      "資安產業",
-      "軟體業",
-      "國際化"
-    ],
-    "url": "https://taiwan.md/People/%E5%BC%B5%E6%98%8E%E6%AD%A3",
-    "readingTime": 7,
-    "featured": false,
-    "date": "2026-03-19",
-    "path": "People/張明正.md"
-  },
-  {
-    "title": "江振誠",
-    "description": "台灣國際名廚，世界 50 大餐廳主廚，RAW 創辦人，以「八角哲學」聞名全球",
-    "category": "People",
-    "tags": [
-      "人物",
-      "江振誠",
-      "名廚",
-      "米其林",
-      "RAW",
-      "餐飲",
-      "台灣"
-    ],
-    "url": "https://taiwan.md/People/%E6%B1%9F%E6%8C%AF%E8%AA%A0",
-    "readingTime": 10,
-    "featured": false,
-    "date": "2026-03-19",
-    "path": "People/江振誠.md"
-  },
-  {
-    "title": "林義傑",
-    "description": "極地超馬傳奇，用雙腳征服地球最極端環境的台灣跑者",
-    "category": "People",
-    "tags": [
-      "人物",
-      "超級馬拉松",
-      "極地探險",
-      "運動員",
-      "撒哈拉沙漠"
-    ],
-    "url": "https://taiwan.md/People/%E6%9E%97%E7%BE%A9%E5%82%91",
-    "readingTime": 12,
-    "featured": false,
-    "date": "2026-03-19",
-    "path": "People/林義傑.md"
-  },
-  {
-    "title": "看見台灣 — 歷史上的台灣印象",
-    "description": "從大航海時代到當代，各時代各民族如何看見這座島嶼",
-    "category": "About",
+    "title": "Seeing Taiwan — Historical Impressions of the Island",
+    "description": "How different eras and peoples have seen this island, from the Age of Exploration to the contemporary period",
+    "category": "en",
     "tags": [
       "quotes",
       "history",
       "literature",
       "culture"
     ],
-    "url": "https://taiwan.md/About/%E7%9C%8B%E8%A6%8B%E5%8F%B0%E7%81%A3%E5%BC%95%E8%A8%80%E9%9B%86",
-    "readingTime": 14,
+    "url": "https://taiwan.md/en/About/seeing-taiwan-quotes",
+    "readingTime": 41,
     "featured": true,
     "date": "2026-03-17",
-    "path": "About/看見台灣引言集.md"
+    "path": "en/About/seeing-taiwan-quotes.md"
   },
   {
-    "title": "李登輝",
-    "description": "台灣民主化推手，被譽為「民主先生」",
-    "category": "People",
-    "tags": [
-      "人物",
-      "政治",
-      "民主化",
-      "總統"
-    ],
-    "url": "https://taiwan.md/People/%E6%9D%8E%E7%99%BB%E8%BC%9D",
-    "readingTime": 7,
+    "title": "Du Congming: Founder of Modern Medicine in Taiwan",
+    "description": "Taiwan's first medical doctor and father of modern medicine in Taiwan",
+    "category": "en",
+    "tags": [],
+    "url": "https://taiwan.md/en/People/du-congming-founder-of-modern-medicine-in-taiwan",
+    "readingTime": 30,
     "featured": false,
     "date": "2026-03-19",
-    "path": "People/李登輝.md"
+    "path": "en/People/du-congming-founder-of-modern-medicine-in-taiwan.md"
   },
   {
-    "title": "教育制度與升學文化",
-    "description": "從聯考制度到十二年國教，台灣教育如何在競爭與多元之間尋求平衡",
-    "category": "Society",
+    "title": "Chi-Huey Wong: Pioneer of Glycoscience",
+    "description": "World-renowned authority in carbohydrate chemistry, former president of Academia Sinica, and Nobel Prize candidate",
+    "category": "en",
+    "tags": [],
+    "url": "https://taiwan.md/en/People/chi-huey-wong-glycoscience-pioneer",
+    "readingTime": 21,
+    "featured": false,
+    "date": "2026-03-20",
+    "path": "en/People/chi-huey-wong-glycoscience-pioneer.md"
+  },
+  {
+    "title": "Stan Shih (施振榮)",
+    "description": "Founder of Acer and the thinker behind the ‘Smiling Curve’—a key strategist of Taiwan’s technology transformation",
+    "category": "en",
     "tags": [
-      "教育",
-      "升學",
-      "十二年國教",
-      "技職教育",
-      "教育改革",
-      "競爭文化"
+      "entrepreneur",
+      "technology",
+      "management",
+      "Acer",
+      "Smiling Curve"
     ],
-    "url": "https://taiwan.md/Society/%E6%95%99%E8%82%B2%E5%88%B6%E5%BA%A6%E8%88%87%E5%8D%87%E5%AD%B8%E6%96%87%E5%8C%96",
-    "readingTime": 16,
+    "url": "https://taiwan.md/en/People/stan-shih",
+    "readingTime": 24,
+    "featured": false,
+    "date": "2026-03-19",
+    "path": "en/People/stan-shih.md"
+  },
+  {
+    "title": "Emerging Religions and Spiritual Culture in Taiwan",
+    "description": "Exploring the rise and development of Taiwan's post-war new religious movements, including the profound social and cultural impact of the Buddhist 'Four Great Mountains' and Yiguandao religious groups",
+    "category": "en",
+    "tags": [],
+    "url": "https://taiwan.md/en/Culture/emerging-religions-and-spiritual-culture",
+    "readingTime": 90,
     "featured": true,
     "date": "2026-03-18",
-    "path": "Society/教育制度與升學文化.md"
+    "path": "en/Culture/emerging-religions-and-spiritual-culture.md"
   },
   {
-    "title": "夜市文化",
-    "description": "夜市文化是台灣最獨特的文化符號之一，它不僅保存了台灣傳統小吃的精髓，更是庶民生活文化的縮影。夜市提供了一個平民化、親民的社交空間，讓不同階層、不同年齡的人都能在此享受美食、購物娛樂。對外國觀光客而言，夜市更是體驗「真正台灣味」最直接的方式。",
+    "title": "February 28 Incident and White Terror: Trauma and Memory under Taiwan's Authoritarian Rule",
+    "description": "From the February 28 Incident of 1947 to 38 years of martial law, Taiwan experienced state violence under authoritarian rule, only beginning to confront historical trauma and pursue transitional justice after the lifting of martial law.",
+    "category": "en",
+    "tags": [],
+    "url": "https://taiwan.md/en/History/february-28-incident-and-white-terror-taiwan-authoritarian-rule-trauma-and-memory",
+    "readingTime": 64,
+    "featured": true,
+    "date": "2026-03-19",
+    "path": "en/History/february-28-incident-and-white-terror-taiwan-authoritarian-rule-trauma-and-memory.md"
+  },
+  {
+    "title": "FinTech Development in Taiwan",
+    "description": "From regulatory sandboxes to digital banks: The evolution and innovation of Taiwan's FinTech ecosystem.",
+    "category": "en",
+    "tags": [],
+    "url": "https://taiwan.md/en/Economy/taiwan-fintech-development",
+    "readingTime": 57,
+    "featured": false,
+    "date": "2026-03-20",
+    "path": "en/Economy/taiwan-fintech-development.md"
+  },
+  {
+    "title": "台灣電子商務與數位支付生態系：從PC家到蝦皮的數位商業進化",
+    "description": "探索台灣電子商務20年發展歷程，以及數位支付如何重塑消費生活",
+    "category": "Technology",
+    "tags": [],
+    "url": "https://taiwan.md/Technology/%E9%9B%BB%E5%AD%90%E5%95%86%E5%8B%99%E8%88%87%E6%95%B8%E4%BD%8D%E6%94%AF%E4%BB%98%E7%94%9F%E6%85%8B%E7%B3%BB",
+    "readingTime": 20,
+    "featured": true,
+    "date": "2026-03-18",
+    "path": "Technology/電子商務與數位支付生態系.md"
+  },
+  {
+    "title": "Taiwan Incense-Making Culture and Heritage Villages",
+    "description": "From the century-old incense stick craft in Chiayi's Yunxiao Community to Taiwan's island-wide incense industry—an ancient trade about devotion, craftsmanship, and perseverance",
+    "category": "en",
+    "tags": [],
+    "url": "https://taiwan.md/en/Culture/taiwan-incense-making-culture-and-heritage",
+    "readingTime": 49,
+    "featured": false,
+    "date": "2026-03-18",
+    "path": "en/Culture/taiwan-incense-making-culture-and-heritage.md"
+  },
+  {
+    "title": "台灣原住民飲食文化",
+    "description": "從小米到野菜，探索台灣原住民族傳統飲食智慧與文化傳承",
     "category": "Food",
     "tags": [
-      "美食",
-      "夜市",
-      "小吃",
-      "文化",
-      "觀光"
-    ],
-    "url": "https://taiwan.md/Food/%E5%A4%9C%E5%B8%82%E6%96%87%E5%8C%96",
-    "readingTime": 12,
-    "featured": true,
-    "date": "2026-03-17",
-    "path": "Food/夜市文化.md"
-  },
-  {
-    "title": "許倬雲",
-    "description": "史學大師，《萬古江河》作者，匹茲堡大學榮休教授",
-    "category": "People",
-    "tags": [
-      "歷史學家",
-      "史學",
-      "中國史",
-      "文化史",
-      "學者"
-    ],
-    "url": "https://taiwan.md/People/%E8%A8%B1%E5%80%AC%E9%9B%B2",
-    "readingTime": 8,
-    "featured": false,
-    "date": "2026-03-19",
-    "path": "People/許倬雲.md"
-  },
-  {
-    "title": "紀政",
-    "description": "飛躍的羚羊，1968墨西哥奧運80公尺跨欄銅牌得主",
-    "category": "People",
-    "tags": [
-      "體育",
-      "田徑",
-      "奧運",
-      "跨欄"
-    ],
-    "url": "https://taiwan.md/People/%E7%B4%80%E6%94%BF",
-    "readingTime": 5,
-    "featured": false,
-    "date": "2026-03-19",
-    "path": "People/紀政.md"
-  },
-  {
-    "title": "李安",
-    "description": "從台灣到好萊塢，征服世界的跨文化敘事大師與電影技術革新者",
-    "category": "People",
-    "tags": [
-      "人物",
-      "李安",
-      "導演",
-      "奧斯卡",
-      "電影",
-      "跨文化",
-      "好萊塢"
-    ],
-    "url": "https://taiwan.md/People/%E6%9D%8E%E5%AE%89",
-    "readingTime": 21,
-    "featured": true,
-    "date": "2026-03-17",
-    "path": "People/李安.md"
-  },
-  {
-    "title": "島嶼的山海之巔：台灣國家公園的生態與地景",
-    "description": "探索台灣九座國家公園的獨特生態系統與保育價值，從亞熱帶海岸到高山雪線的完整地景",
-    "category": "Nature",
-    "tags": [
-      "國家公園",
-      "生態保育",
-      "自然地景",
-      "生物多樣性",
-      "環境保護"
-    ],
-    "url": "https://taiwan.md/Nature/%E5%B3%B6%E5%B6%BC%E7%9A%84%E5%B1%B1%E6%B5%B7%E4%B9%8B%E5%B7%94%EF%BC%9A%E5%8F%B0%E7%81%A3%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E7%9A%84%E7%94%9F%E6%85%8B%E8%88%87%E5%9C%B0%E6%99%AF",
-    "readingTime": 12,
-    "featured": true,
-    "date": "2026-03-19",
-    "path": "Nature/島嶼的山海之巔：台灣國家公園的生態與地景.md"
-  },
-  {
-    "title": "張惠妹",
-    "description": "卑南族天后，華語流行音樂最高銷量天后之一，同志平權代言人",
-    "category": "People",
-    "tags": [
-      "音樂",
       "原住民",
-      "卑南族",
-      "天后",
-      "同志平權",
-      "流行音樂"
+      "飲食文化",
+      "小米",
+      "野菜",
+      "傳統料理",
+      "部落美食"
     ],
-    "url": "https://taiwan.md/People/%E5%BC%B5%E6%83%A0%E5%A6%B9",
-    "readingTime": 6,
+    "url": "https://taiwan.md/Food/%E5%8F%B0%E7%81%A3%E5%8E%9F%E4%BD%8F%E6%B0%91%E9%A3%B2%E9%A3%9F%E6%96%87%E5%8C%96",
+    "readingTime": 13,
     "featured": false,
-    "date": "2026-03-19",
-    "path": "People/張惠妹.md"
+    "date": "2026-03-18",
+    "path": "Food/台灣原住民飲食文化.md"
   },
   {
-    "title": "杜聰明",
-    "description": "台灣第一位醫學博士，台灣現代醫學之父",
+    "title": "陳水扁",
+    "description": "第十、十一任總統，2000年首次政黨輪替主角，台灣民主化重要人物",
     "category": "People",
     "tags": [
-      "醫學",
-      "醫學博士",
-      "台灣現代醫學",
-      "京都帝國大學",
-      "藥理學"
+      "總統",
+      "政黨輪替",
+      "民進黨",
+      "台北市長",
+      "貪污案"
     ],
-    "url": "https://taiwan.md/People/%E6%9D%9C%E8%81%B0%E6%98%8E",
-    "readingTime": 8,
+    "url": "https://taiwan.md/People/%E9%99%B3%E6%B0%B4%E6%89%81",
+    "readingTime": 10,
     "featured": false,
     "date": "2026-03-19",
-    "path": "People/杜聰明.md"
+    "path": "People/陳水扁.md"
   },
   {
-    "title": "莊智淵",
-    "description": "桌球教父，四屆奧運代表，獨自苦練的孤獨英雄",
-    "category": "People",
+    "title": "社會住宅與居住正義",
+    "description": "台灣如何透過社會住宅政策實現居住正義，讓每個人都有安身立命的地方",
+    "category": "Society",
     "tags": [
-      "體育",
-      "桌球",
-      "奧運",
-      "職業桌球",
-      "歐洲聯賽"
+      "社會住宅",
+      "居住正義",
+      "住宅政策",
+      "包租代管",
+      "都市更新"
     ],
-    "url": "https://taiwan.md/People/%E8%8E%8A%E6%99%BA%E6%B7%B5",
-    "readingTime": 7,
+    "url": "https://taiwan.md/Society/%E7%A4%BE%E6%9C%83%E4%BD%8F%E5%AE%85%E8%88%87%E5%B1%85%E4%BD%8F%E6%AD%A3%E7%BE%A9",
+    "readingTime": 23,
     "featured": false,
-    "date": "2026-03-19",
-    "path": "People/莊智淵.md"
+    "date": "2026-03-18",
+    "path": "Society/社會住宅與居住正義.md"
+  },
+  {
+    "title": "台灣海洋生態",
+    "description": "黑潮、珊瑚礁與海洋生物多樣性：台灣海域的生態奇蹟與保育挑戰",
+    "category": "Nature",
+    "tags": [],
+    "url": "https://taiwan.md/Nature/%E5%8F%B0%E7%81%A3%E6%B5%B7%E6%B4%8B%E7%94%9F%E6%85%8B",
+    "readingTime": 19,
+    "featured": false,
+    "date": "2026-03-18",
+    "path": "Nature/台灣海洋生態.md"
+  },
+  {
+    "title": "Literature During Japanese Rule",
+    "description": "",
+    "category": "en",
+    "tags": [
+      "literature",
+      "Japanese colonial period",
+      "colonial literature",
+      "modernism"
+    ],
+    "url": "https://taiwan.md/en/Art/literature-during-japanese-rule",
+    "readingTime": 62,
+    "featured": false,
+    "date": "2026-03-18",
+    "path": "en/Art/literature-during-japanese-rule.md"
+  },
+  {
+    "title": "台灣原住民族土地正義與傳統領域",
+    "description": "探討台灣原住民族土地權利的歷史脈絡、法律發展、傳統領域劃設爭議與原住民族轉型正義委員會的工作成果",
+    "category": "Society",
+    "tags": [
+      "原住民族",
+      "土地正義",
+      "傳統領域",
+      "轉型正義",
+      "原轉會",
+      "土地權利"
+    ],
+    "url": "https://taiwan.md/Society/%E5%8F%B0%E7%81%A3%E5%8E%9F%E4%BD%8F%E6%B0%91%E6%97%8F%E5%9C%9F%E5%9C%B0%E6%AD%A3%E7%BE%A9%E8%88%87%E5%82%B3%E7%B5%B1%E9%A0%98%E5%9F%9F",
+    "readingTime": 16,
+    "featured": false,
+    "date": "2026-03-20",
+    "path": "Society/台灣原住民族土地正義與傳統領域.md"
+  },
+  {
+    "title": "Lee Yuan-tseh",
+    "description": "",
+    "category": "en",
+    "tags": [],
+    "url": "https://taiwan.md/en/People/lee-yuan-tseh",
+    "readingTime": 59,
+    "featured": false,
+    "date": "2026-03-17",
+    "path": "en/People/lee-yuan-tseh.md"
   }
 ]

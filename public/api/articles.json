@@ -6733,6 +6733,23 @@
     "path": "en/Music/indigenous-music-traditions.md"
   },
   {
+    "title": "Indigenous Peoples' History and Naming Rights Movement",
+    "description": "From 'barbarians' to 'Indigenous peoples' - a centuries-long struggle for identity recognition and dignity",
+    "category": "en",
+    "tags": [
+      "Indigenous peoples",
+      "naming rights movement",
+      "identity",
+      "social movements",
+      "cultural preservation"
+    ],
+    "url": "https://taiwan.md/en/History/indigenous-peoples-history-and-naming-movement",
+    "readingTime": 33,
+    "featured": false,
+    "date": "2026-03-20",
+    "path": "en/History/indigenous-peoples-history-and-naming-movement.md"
+  },
+  {
     "title": "Island Summits and Seas: Taiwan’s National Parks as Living Ecological Archives",
     "description": "A cultural translation of Taiwan’s nine national parks—an island-scale conservation network that stretches from tropical coasts to alpine snowlines, protecting endemic species, Indigenous heritage, and world-class geology.",
     "category": "en",
@@ -7081,6 +7098,23 @@
     "featured": false,
     "date": "2026-03-18",
     "path": "en/Art/literature-during-japanese-rule.md"
+  },
+  {
+    "title": "Local Street Food Map of Taiwan",
+    "description": "From Keelung temple mouths ding-bian-hu to Pingtung Wanluan pig knuckles, from Hsinchu meatballs to Taitung custard apples, every city has its unique culinary DNA. Follow the footsteps of locals to explore the most representative local delicacies of Taiwan's 22 counties and cities, savoring the most authentic folk culture of this island.",
+    "category": "en",
+    "tags": [
+      "local delicacies",
+      "indigenous cuisine",
+      "regional specialties",
+      "Taiwan food map",
+      "folk culture"
+    ],
+    "url": "https://taiwan.md/en/Food/local-street-food-map-of-taiwan",
+    "readingTime": 73,
+    "featured": true,
+    "date": "2026-03-20",
+    "path": "en/Food/local-street-food-map-of-taiwan.md"
   },
   {
     "title": "Lu Yen-hsun (盧彥勳)",
@@ -9397,6 +9431,23 @@
     "featured": false,
     "date": "2026-03-20",
     "path": "en/Art/taiwanese-modern-poetry-island-lyricism.md"
+  },
+  {
+    "title": "Taiwanese New Immigrant Food Fusion",
+    "description": "When Thai sour-spicy meets Taiwan sweet-salty, when Vietnamese pho encounters Taiwanese braised dishes, when Indonesian spices embrace local ingredients, a cross-border culinary revolution is quietly happening in Taiwan. New immigrants bring not just their homeland cuisines, but brand new possibilities for enriching Taiwanese food culture.",
+    "category": "en",
+    "tags": [
+      "new immigrant cuisine",
+      "Southeast Asian food",
+      "cultural fusion",
+      "diverse dining",
+      "immigrant culture"
+    ],
+    "url": "https://taiwan.md/en/Food/taiwanese-new-immigrant-food-fusion",
+    "readingTime": 78,
+    "featured": true,
+    "date": "2026-03-20",
+    "path": "en/Food/taiwanese-new-immigrant-food-fusion.md"
   },
   {
     "title": "Taiwanese New Media Art: Island Creativity in the Digital Age",

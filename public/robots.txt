@@ -8,6 +8,12 @@ Allow: /
 User-agent: ClaudeBot
 Allow: /
 
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
 User-agent: Google-Extended
 Allow: /
 
@@ -17,4 +23,21 @@ Allow: /
 User-agent: Bingbot
 Allow: /
 
+User-agent: facebookexternalhit
+Allow: /
+
+User-agent: Twitterbot
+Allow: /
+
+# Additional AI/ML crawlers
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
 Sitemap: https://taiwan.md/sitemap-index.xml
+
+# Crawl-delay for heavy crawlers (optional)
+User-agent: *
+Crawl-delay: 1
