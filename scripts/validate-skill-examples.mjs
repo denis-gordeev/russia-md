@@ -199,6 +199,30 @@ function normalizeLinkTarget(rawTarget) {
   return targetWithoutHash.replace(/\\/g, '/');
 }
 
+function countLines(value) {
+  if (value.length === 0) {
+    return 0;
+  }
+
+  return value.split(/\r?\n/).length;
+}
+
+function getMarkdownBodyInfo(markdownRaw) {
+  const parsed = matter(markdownRaw);
+  const contentStartIndex = markdownRaw.indexOf(parsed.content);
+  const bodyStartLine = contentStartIndex === -1 ? 1 : countLines(markdownRaw.slice(0, contentStartIndex)) + 1;
+
+  return {
+    content: parsed.content,
+    bodyStartLine
+  };
+}
+
+function getLineNumberForIndex(content, index, bodyStartLine) {
+  const prefix = content.slice(0, index);
+  return bodyStartLine + countLines(prefix);
+}
+
 function extractLinkFragment(rawTarget) {
   const hashIndex = rawTarget.indexOf('#');
   if (hashIndex === -1) {
@@ -228,7 +252,7 @@ async function getMarkdownAnchors(markdownPath) {
   }
 
   const markdownRaw = await readFile(markdownPath, 'utf8');
-  const { content } = matter(markdownRaw);
+  const { content } = getMarkdownBodyInfo(markdownRaw);
   const anchors = new Set();
   const slugCounts = new Map();
   const lines = content.split(/\r?\n/);
@@ -277,12 +301,13 @@ async function getMarkdownAnchors(markdownPath) {
 
 async function validateMarkdownLinks(markdownPath) {
   const markdownRaw = await readFile(markdownPath, 'utf8');
-  const { content } = matter(markdownRaw);
+  const { content, bodyStartLine } = getMarkdownBodyInfo(markdownRaw);
   const matches = [...content.matchAll(markdownLinkPattern)];
   const errors = [];
 
   for (const match of matches) {
     const rawTarget = match[1];
+    const lineNumber = getLineNumberForIndex(content, match.index ?? 0, bodyStartLine);
 
     if (!rawTarget || shouldSkipLink(rawTarget)) {
       continue;
@@ -293,7 +318,7 @@ async function validateMarkdownLinks(markdownPath) {
     const resolvedTarget = normalizedTarget ? resolveRepoPath(markdownPath, normalizedTarget) : markdownPath;
 
     if (!(await pathExists(resolvedTarget))) {
-      errors.push(`${path.relative(root, markdownPath)}: broken local link ${JSON.stringify(rawTarget)}`);
+      errors.push(`${path.relative(root, markdownPath)}:${lineNumber}: broken local link ${JSON.stringify(rawTarget)}`);
       continue;
     }
 
@@ -310,7 +335,7 @@ async function validateMarkdownLinks(markdownPath) {
 
     if (!anchors.has(decodedFragment)) {
       errors.push(
-        `${path.relative(root, markdownPath)}: broken local anchor ${JSON.stringify(rawTarget)} (missing #${decodedFragment})`
+        `${path.relative(root, markdownPath)}:${lineNumber}: broken local anchor ${JSON.stringify(rawTarget)} (missing #${decodedFragment})`
       );
     }
   }

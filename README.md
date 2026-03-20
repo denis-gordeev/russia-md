@@ -72,9 +72,11 @@ This is still a foundation fork, not a finished editorial product. The active si
 - [ ] Add diff-aware markdown validation that can re-check inbound links when shared docs or anchors change
 - [ ] Add fixture coverage for malformed front matter and invalid markdown link syntax edge cases
 - [x] Teach the validator to report all markdown-link failures in one pass instead of failing on the first error
-- [ ] Add line-aware markdown diagnostics so broken links report the source line number
+- [x] Add line-aware markdown diagnostics so broken links report the source line number
 - [ ] Extend incremental validation to repository docs outside `skills/` when only shared references or `README.md` change
 - [ ] Add pull-request workflow split so PRs run `check:skills:changed` before the full fixture suite
+- [ ] Add nearest-anchor suggestions for broken markdown fragment diagnostics
+- [ ] Add a small validator unit for line-number handling in front-matter-heavy markdown files
 
 ## Development
 
@@ -86,11 +88,11 @@ npm run check:skills:fixtures
 npm run build
 ```
 
-`npm run check:skills` now validates that every repo-local skill ships its core bundle together: `SKILL.md`, `agents/openai.yaml`, `references/integration-notes.md`, `examples/output.json`, and `schemas/output.schema.json`. It also validates `agents/openai.yaml` against a shared metadata schema, rejects unknown UI keys, checks that each default prompt explicitly mentions the matching `$skill-name`, verifies local markdown links across `README.md`, `skills/**/SKILL.md`, and docs/reference pages, ignores YAML front matter while scanning markdown bodies, validates local markdown `#fragment` anchors against headings and explicit `id=""` anchors, and lints local `interface.icon` asset paths when icons are present.
+`npm run check:skills` now validates that every repo-local skill ships its core bundle together: `SKILL.md`, `agents/openai.yaml`, `references/integration-notes.md`, `examples/output.json`, and `schemas/output.schema.json`. It also validates `agents/openai.yaml` against a shared metadata schema, rejects unknown UI keys, checks that each default prompt explicitly mentions the matching `$skill-name`, verifies local markdown links across `README.md`, `skills/**/SKILL.md`, and docs/reference pages, ignores YAML front matter while scanning markdown bodies, validates local markdown `#fragment` anchors against headings and explicit `id=""` anchors, reports broken markdown references with source line numbers, and lints local `interface.icon` asset paths when icons are present.
 
 `npm run check:skills:changed` validates only skill folders currently changed in git status, but automatically falls back to validating all skills when shared schema inputs or validator wiring change. It still runs the repository markdown-link pass so local iteration stays faster without dropping shared-document checks.
 
-`npm run check:skills:fixtures` runs a small fixture suite for the validator itself, including front-matter-aware markdown regression coverage plus negative cases for broken markdown anchors, aggregated markdown-link failures, missing shared metadata schema files, and invalid `interface.icon` metadata.
+`npm run check:skills:fixtures` runs a small fixture suite for the validator itself, including front-matter-aware markdown regression coverage plus negative cases for broken markdown anchors, aggregated markdown-link failures with line-aware diagnostics, missing shared metadata schema files, and invalid `interface.icon` metadata.
 
 ## Key Paths
 

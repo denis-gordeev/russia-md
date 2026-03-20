@@ -56,13 +56,13 @@ async function main() {
 
   await runCase('broken-anchor', {
     expectSuccess: false,
-    expectedText: /broken local anchor/
+    expectedText: /skills\/test-skill\/SKILL\.md:4: broken local anchor/
   });
 
   await runCase('multiple-markdown-errors', {
     expectSuccess: false,
     expectedText:
-      /README\.md: broken local anchor .*missing #missing-anchor[\s\S]*docs\/guide\.md: broken local link "\.\.\/missing\.md"/
+      /README\.md:4: broken local anchor .*missing #missing-anchor[\s\S]*docs\/guide\.md:4: broken local link "\.\.\/missing\.md"/
   });
 
   await runCase('missing-shared-schema', {
