@@ -1,8 +1,8 @@
 {
-  "totalArticles": 686,
+  "totalArticles": 690,
   "totalCategories": 15,
   "estimatedContributors": 46,
-  "totalTags": 1598,
+  "totalTags": 1615,
   "categories": [
     {
       "name": "en",
@@ -22,7 +22,7 @@
     },
     {
       "name": "People",
-      "count": 104
+      "count": 108
     },
     {
       "name": "Art",
@@ -111,6 +111,10 @@
       "count": 10
     },
     {
+      "name": "教育",
+      "count": 10
+    },
+    {
       "name": "歷史",
       "count": 9
     },
@@ -141,15 +145,11 @@
     {
       "name": "Taiwan",
       "count": 8
-    },
-    {
-      "name": "history",
-      "count": 7
     }
   ],
   "languageDistribution": {
-    "zh-TW": 686,
+    "zh-TW": 690,
     "en": 0
   },
-  "lastUpdated": "2026-03-20T10:50:20.749Z"
+  "lastUpdated": "2026-03-20T13:17:10.092Z"
 }
