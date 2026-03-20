@@ -59,6 +59,12 @@ async function main() {
     expectedText: /broken local anchor/
   });
 
+  await runCase('multiple-markdown-errors', {
+    expectSuccess: false,
+    expectedText:
+      /README\.md: broken local anchor .*missing #missing-anchor[\s\S]*docs\/guide\.md: broken local link "\.\.\/missing\.md"/
+  });
+
   await runCase('missing-shared-schema', {
     expectSuccess: false,
     expectedText: /Missing required file: skills\/shared\/schemas\/agent-metadata\.schema\.json/

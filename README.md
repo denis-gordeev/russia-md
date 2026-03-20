@@ -71,7 +71,10 @@ This is still a foundation fork, not a finished editorial product. The active si
 - [ ] Run `check:skills:changed` in CI for pull requests alongside the full validation pass
 - [ ] Add diff-aware markdown validation that can re-check inbound links when shared docs or anchors change
 - [ ] Add fixture coverage for malformed front matter and invalid markdown link syntax edge cases
-- [ ] Teach the validator to report all markdown-link failures in one pass instead of failing on the first error
+- [x] Teach the validator to report all markdown-link failures in one pass instead of failing on the first error
+- [ ] Add line-aware markdown diagnostics so broken links report the source line number
+- [ ] Extend incremental validation to repository docs outside `skills/` when only shared references or `README.md` change
+- [ ] Add pull-request workflow split so PRs run `check:skills:changed` before the full fixture suite
 
 ## Development
 
@@ -87,7 +90,7 @@ npm run build
 
 `npm run check:skills:changed` validates only skill folders currently changed in git status, but automatically falls back to validating all skills when shared schema inputs or validator wiring change. It still runs the repository markdown-link pass so local iteration stays faster without dropping shared-document checks.
 
-`npm run check:skills:fixtures` runs a small fixture suite for the validator itself, including front-matter-aware markdown regression coverage plus negative cases for broken markdown anchors, missing shared metadata schema files, and invalid `interface.icon` metadata.
+`npm run check:skills:fixtures` runs a small fixture suite for the validator itself, including front-matter-aware markdown regression coverage plus negative cases for broken markdown anchors, aggregated markdown-link failures, missing shared metadata schema files, and invalid `interface.icon` metadata.
 
 ## Key Paths
 

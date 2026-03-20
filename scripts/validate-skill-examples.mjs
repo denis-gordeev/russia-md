@@ -279,6 +279,7 @@ async function validateMarkdownLinks(markdownPath) {
   const markdownRaw = await readFile(markdownPath, 'utf8');
   const { content } = matter(markdownRaw);
   const matches = [...content.matchAll(markdownLinkPattern)];
+  const errors = [];
 
   for (const match of matches) {
     const rawTarget = match[1];
@@ -292,7 +293,8 @@ async function validateMarkdownLinks(markdownPath) {
     const resolvedTarget = normalizedTarget ? resolveRepoPath(markdownPath, normalizedTarget) : markdownPath;
 
     if (!(await pathExists(resolvedTarget))) {
-      fail(`${path.relative(root, markdownPath)}: broken local link ${JSON.stringify(rawTarget)}`);
+      errors.push(`${path.relative(root, markdownPath)}: broken local link ${JSON.stringify(rawTarget)}`);
+      continue;
     }
 
     const fragment = extractLinkFragment(rawTarget);
@@ -307,11 +309,13 @@ async function validateMarkdownLinks(markdownPath) {
     const anchors = await getMarkdownAnchors(resolvedTarget);
 
     if (!anchors.has(decodedFragment)) {
-      fail(
+      errors.push(
         `${path.relative(root, markdownPath)}: broken local anchor ${JSON.stringify(rawTarget)} (missing #${decodedFragment})`
       );
     }
   }
+
+  return errors;
 }
 
 async function validateSkillIconPath(skillDir, agentMetadataPath, iconPath) {
@@ -426,6 +430,7 @@ async function resolveSkillDirsToValidate(allSkillDirs) {
 
 async function validateRepositoryDocs() {
   const markdownFiles = [];
+  const errors = [];
 
   for (const documentPath of documentPaths) {
     const documentStats = await stat(documentPath);
@@ -439,8 +444,10 @@ async function validateRepositoryDocs() {
   }
 
   for (const markdownPath of markdownFiles.sort()) {
-    await validateMarkdownLinks(markdownPath);
+    errors.push(...(await validateMarkdownLinks(markdownPath)));
   }
+
+  return errors;
 }
 
 async function validateSkillDir(skillDir) {
@@ -475,7 +482,7 @@ async function validateSkillDir(skillDir) {
 
   validateValue(example, schema, `${skillName}.output`);
   validateValue(agentMetadata, agentMetadataSchema, `${skillName}.agent`);
-  await validateMarkdownLinks(skillPath);
+  const markdownErrors = await validateMarkdownLinks(skillPath);
 
   if (!skillRaw.includes('schemas/output.schema.json')) {
     fail(`${path.relative(root, skillPath)}: missing bundled resource reference to schemas/output.schema.json`);
@@ -504,10 +511,13 @@ async function validateSkillDir(skillDir) {
   if (agentMetadata.interface.icon) {
     await validateSkillIconPath(skillDir, agentMetadataPath, agentMetadata.interface.icon);
   }
+
+  return markdownErrors;
 }
 
 async function main() {
   const skillDirs = await listSkillDirs(skillsDir);
+  const markdownErrors = [];
 
   if (skillDirs.length === 0) {
     fail('No skill directories found.');
@@ -516,10 +526,14 @@ async function main() {
   const skillDirsToValidate = await resolveSkillDirsToValidate(skillDirs);
 
   for (const skillDir of skillDirsToValidate) {
-    await validateSkillDir(skillDir);
+    markdownErrors.push(...(await validateSkillDir(skillDir)));
   }
 
-  await validateRepositoryDocs();
+  markdownErrors.push(...(await validateRepositoryDocs()));
+
+  if (markdownErrors.length > 0) {
+    fail(markdownErrors.join('\n'));
+  }
 
   console.log(`Validated ${skillDirsToValidate.length} skill example contract(s) and repository markdown links.`);
 }
