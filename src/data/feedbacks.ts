@@ -191,4 +191,24 @@ export const feedbacks = [
     name: 'Debra Sun',
     text: '真是太重要的一個創意與行動，感謝您',
   },
+  {
+    name: 'Edward Chen',
+    text: '極好的台灣群像，一如其創設理念 SSoT — Single Source of Truth。我們，都曾錯過真實的歷史、錯過了對家鄉的了解！何妨來去逛逛，信手一覽看得下去的主題⋯⋯一篇、半篇都好。也許，你會成為比自己想像的更有深度的人。',
+  },
+  {
+    name: 'Ying-Hsin Chang',
+    text: '這真棒！以前在國外，也常有外國友人問我，但真的很難說盡。有了這個資料庫，就很方便。',
+  },
+  {
+    name: '陳韋勝',
+    text: 'This is Taiwan!! 不愧是沒後悔買過課程的老師～謝謝哲宇老師～',
+  },
+  {
+    name: 'Wuddy Yang',
+    text: '一個～認識台灣的窗口！',
+  },
+  {
+    name: 'Ang Uijin',
+    text: '感動！讓臺灣人認識自己，讓世界了解臺灣。kám-tōng! hōo Tâi-uân-lâng jīn-bat ka-tī, hōo sè-kâi liáu-kái Tâi-uân.',
+  },
 ];
