@@ -1,8 +1,5 @@
 ---
 import SEO from '../components/SEO.astro';
-import { readdir, readFile } from 'fs/promises';
-import { resolve, join, basename } from 'path';
-import matter from 'gray-matter';
 
 interface Props {
   title: string;
@@ -18,53 +15,7 @@ interface Props {
 }
 
 const { title, description = 'Open-source, AI-friendly knowledge base about Russia and a visible fork of taiwan-md', lang = 'en', image, type, datePublished, dateModified, content, tags, category } = Astro.props;
-
-// Build search index at build time
-const categoryMapping: Record<string, string> = {
-  'history': 'History', 'geography': 'Geography', 'culture': 'Culture',
-  'food': 'Food', 'art': 'Art', 'music': 'Music', 'technology': 'Technology',
-  'nature': 'Nature', 'people': 'People', 'society': 'Society',
-  'economy': 'Economy', 'lifestyle': 'Lifestyle'
-};
-
-const searchIndex: Array<{t: string; d: string; u: string; tags: string[]; lang: string}> = [];
-
-for (const [slug, folder] of Object.entries(categoryMapping)) {
-  // Chinese articles
-  try {
-    const zhPath = resolve(process.cwd(), 'russia-knowledge', folder);
-    const files = await readdir(zhPath);
-    for (const file of files.filter(f => f.endsWith('.md') && !f.startsWith('_'))) {
-      const { data } = matter(await readFile(join(zhPath, file), 'utf-8'));
-      const name = basename(file, '.md');
-      searchIndex.push({
-        t: data.title || name,
-        d: data.description || '',
-        u: `/${slug}/${name}`,
-        tags: data.tags || [],
-        lang: 'en'
-      });
-    }
-  } catch {}
-  // English articles
-  try {
-    const enPath = resolve(process.cwd(), 'russia-knowledge', 'en', folder);
-    const files = await readdir(enPath);
-    for (const file of files.filter(f => f.endsWith('.md') && !f.startsWith('_'))) {
-      const { data } = matter(await readFile(join(enPath, file), 'utf-8'));
-      const name = basename(file, '.md');
-      searchIndex.push({
-        t: data.title || name,
-        d: data.description || '',
-        u: `/en/${slug}/${name}`,
-        tags: data.tags || [],
-        lang: 'en'
-      });
-    }
-  } catch {}
-}
 const currentPath = Astro.url.pathname;
-const isEn = true;
 
 const i18n = {
   nav: {
@@ -121,6 +72,7 @@ const navConfig = [
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/png" href="/favicon.png" />
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="alternate" type="application/rss+xml" title="Russia.md RSS" href="/feed.xml" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@400;600;700&display=swap" rel="stylesheet" />
@@ -199,21 +151,35 @@ const navConfig = [
         </div>
       </div>
     </div>
-    <script is:inline define:vars={{ searchIndex, isEn }}>
+    <script is:inline>
+      var _searchIdx = null;
+      async function _loadSearchIndex() {
+        if (_searchIdx) return _searchIdx;
+        try {
+          var res = await fetch('/api/search-index.json');
+          _searchIdx = res.ok ? await res.json() : [];
+        } catch (e) {
+          _searchIdx = [];
+        }
+        return _searchIdx;
+      }
+
       function initSearch() {
-        var idx = searchIndex;
-        var lang = isEn ? 'en' : 'zh-TW';
+        var lang = document.documentElement.lang === 'en' ? 'en' : 'zh-TW';
         var input = document.getElementById('search-input');
         if (!input) return;
         var results = document.getElementById('search-results');
         var modal = document.getElementById('search-modal');
 
-        input.addEventListener('input', function() {
+        _loadSearchIndex();
+
+        input.addEventListener('input', async function() {
           var q = this.value.trim().toLowerCase();
           if (!q) {
             results.innerHTML = '<div class="search-hint">Type to search across all articles</div>';
             return;
           }
+          var idx = await _loadSearchIndex();
           var matches = idx.filter(function(item) {
             return item.t.toLowerCase().indexOf(q) !== -1 ||
                    item.d.toLowerCase().indexOf(q) !== -1 ||

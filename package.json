@@ -9,6 +9,7 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
+    "check-links": "bash scripts/check-links.sh",
     "check:skills": "node scripts/validate-skill-examples.mjs",
     "check:skills:changed": "node scripts/validate-skill-examples.mjs --changed",
     "check:skills:staged": "node scripts/validate-skill-examples.mjs --staged",
