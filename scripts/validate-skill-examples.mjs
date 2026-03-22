@@ -540,6 +540,7 @@ async function resolveValidationTargets(allSkillDirs, cliOptions) {
   if (!changedRepoPaths) {
     return {
       changedRepoPaths: null,
+      noOpMessage: null,
       repositoryMarkdownPaths: null,
       skillDirsToValidate: allSkillDirs
     };
@@ -593,6 +594,7 @@ async function resolveValidationTargets(allSkillDirs, cliOptions) {
     console.log('Shared validation inputs changed; validating all skill folders.');
     return {
       changedRepoPaths,
+      noOpMessage: null,
       repositoryMarkdownPaths,
       skillDirsToValidate: allSkillDirs
     };
@@ -600,13 +602,24 @@ async function resolveValidationTargets(allSkillDirs, cliOptions) {
 
   if (changedSkillNames.size === 0) {
     if (repositoryMarkdownPaths.size === 0) {
-      console.log('No changed skill folders or tracked repository markdown docs detected; nothing to validate.');
+      const noOpMessage =
+        cliOptions.paths.length > 0
+          ? 'No skill folders or repository markdown docs matched the selected --paths input; nothing to validate.'
+          : 'No changed skill folders or tracked repository markdown docs detected; nothing to validate.';
+
+      return {
+        changedRepoPaths,
+        noOpMessage,
+        repositoryMarkdownPaths,
+        skillDirsToValidate: []
+      };
     } else {
       console.log('No changed skill folders detected; validating changed repository markdown links only.');
     }
 
     return {
       changedRepoPaths,
+      noOpMessage: null,
       repositoryMarkdownPaths,
       skillDirsToValidate: []
     };
@@ -614,6 +627,7 @@ async function resolveValidationTargets(allSkillDirs, cliOptions) {
 
   return {
     changedRepoPaths,
+    noOpMessage: null,
     repositoryMarkdownPaths,
     skillDirsToValidate: allSkillDirs.filter((skillDir) => changedSkillNames.has(path.basename(skillDir)))
   };
@@ -717,7 +731,15 @@ async function main() {
     fail('No skill directories found.');
   }
 
-  const { skillDirsToValidate, repositoryMarkdownPaths } = await resolveValidationTargets(skillDirs, cliOptions);
+  const { skillDirsToValidate, repositoryMarkdownPaths, noOpMessage } = await resolveValidationTargets(
+    skillDirs,
+    cliOptions
+  );
+
+  if (noOpMessage) {
+    console.log(noOpMessage);
+    return;
+  }
 
   for (const skillDir of skillDirsToValidate) {
     markdownErrors.push(...(await validateSkillDir(skillDir)));

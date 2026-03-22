@@ -62,6 +62,12 @@ async function main() {
       /No changed skill folders detected; validating changed repository markdown links only\.[\s\S]*Validated 0 skill example contract\(s\) and changed repository markdown links\./
   });
 
+  await runCase('valid-minimal', {
+    args: ['--paths', 'notes/todo.txt'],
+    expectSuccess: true,
+    expectedText: /No skill folders or repository markdown docs matched the selected --paths input; nothing to validate\./
+  });
+
   await runCase('invalid-icon-path', {
     expectSuccess: false,
     expectedText: /interface\.icon must point to \.svg, \.png, \.jpg, \.jpeg, \.webp/
