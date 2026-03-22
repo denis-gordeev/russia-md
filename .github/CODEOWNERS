@@ -1,0 +1,19 @@
+# Russia.md CODEOWNERS
+
+# Default owner
+* @denis-gordeev
+
+# Core repo settings and automation
+.github/ @denis-gordeev
+astro.config.mjs @denis-gordeev
+package.json @denis-gordeev
+
+# Site shell and frontend
+src/ @denis-gordeev
+
+# Active content corpus
+russia-knowledge/ @denis-gordeev
+
+# Repo-local agent skills and validators
+skills/ @denis-gordeev
+scripts/ @denis-gordeev

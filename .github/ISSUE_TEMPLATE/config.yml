@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Repository README
+    url: https://github.com/denis-gordeev/russia-md/blob/main/README.md
+    about: Start here for project scope, structure, and development commands.

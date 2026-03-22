@@ -1,0 +1,46 @@
+name: Article proposal
+description: Propose a new Russia.md article or share a draft with sources
+title: "[Article] "
+labels: ["content"]
+body:
+  - type: dropdown
+    id: category
+    attributes:
+      label: Category
+      options:
+        - Art
+        - Culture
+        - Economy
+        - Food
+        - Geography
+        - History
+        - Lifestyle
+        - Music
+        - Nature
+        - People
+        - Society
+        - Technology
+    validations:
+      required: true
+  - type: textarea
+    id: summary
+    attributes:
+      label: Proposal or draft
+      description: Share either a topic proposal or a near-ready draft article.
+      placeholder: |
+        Title:
+        Why this topic matters:
+        Suggested structure:
+        Key claims that need verification:
+    validations:
+      required: true
+  - type: textarea
+    id: sources
+    attributes:
+      label: Sources
+      description: Add primary or clearly attributable sources.
+      placeholder: |
+        - https://example.com
+        - Book / paper / dataset
+    validations:
+      required: true

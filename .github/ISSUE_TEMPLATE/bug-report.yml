@@ -1,0 +1,36 @@
+name: Bug report
+description: Report site bugs, broken links, rendering issues, or workflow regressions
+title: "[Bug] "
+labels: ["bug"]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: What is broken?
+      description: Describe the bug and the expected behavior.
+    validations:
+      required: true
+  - type: input
+    id: url
+    attributes:
+      label: Affected page or file
+      placeholder: "https://russia-md.ru/... or src/pages/..."
+    validations:
+      required: false
+  - type: textarea
+    id: steps
+    attributes:
+      label: Reproduction steps
+      placeholder: |
+        1. Open ...
+        2. Click ...
+        3. Observe ...
+    validations:
+      required: false
+  - type: textarea
+    id: context
+    attributes:
+      label: Extra context
+      description: Browser, device, screenshots, console errors, or related commit/PR links.
+    validations:
+      required: false

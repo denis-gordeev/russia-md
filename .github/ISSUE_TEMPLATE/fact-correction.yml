@@ -1,0 +1,25 @@
+name: Fact correction
+description: Report factual errors, outdated claims, or weak sourcing in Russia.md content
+title: "[Fact] "
+labels: ["needs-verification"]
+body:
+  - type: input
+    id: article
+    attributes:
+      label: Article
+      description: Page URL or source markdown path.
+      placeholder: "https://russia-md.ru/history/... or russia-knowledge/History/..."
+    validations:
+      required: true
+  - type: textarea
+    id: issue
+    attributes:
+      label: What needs correction?
+      description: Quote the current claim, explain the problem, and include a better-supported correction.
+      placeholder: |
+        Current claim:
+        Why it is incorrect or outdated:
+        Suggested correction:
+        Source:
+    validations:
+      required: true

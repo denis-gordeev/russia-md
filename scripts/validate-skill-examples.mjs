@@ -25,6 +25,57 @@ const documentPaths = [
 ];
 const execFile = promisify(execFileCallback);
 
+function parseCliArgs(argv) {
+  const options = {
+    changed: false,
+    staged: false,
+    paths: []
+  };
+
+  for (let index = 0; index < argv.length; index += 1) {
+    const arg = argv[index];
+
+    if (arg === '--changed') {
+      options.changed = true;
+      continue;
+    }
+
+    if (arg === '--staged') {
+      options.staged = true;
+      continue;
+    }
+
+    if (arg === '--paths') {
+      const value = argv[index + 1];
+
+      if (!value || value.startsWith('--')) {
+        fail('Expected a comma-separated path list after --paths');
+      }
+
+      options.paths.push(
+        ...value
+          .split(',')
+          .map((item) => item.trim())
+          .filter(Boolean)
+      );
+      index += 1;
+      continue;
+    }
+
+    fail(`Unknown argument: ${arg}`);
+  }
+
+  if (options.changed && options.staged) {
+    fail('Use either --changed or --staged, not both at once');
+  }
+
+  if (options.paths.length > 0 && (options.changed || options.staged)) {
+    fail('Use --paths by itself, without --changed or --staged');
+  }
+
+  return options;
+}
+
 async function listSkillDirs(dir) {
   const entries = await readdir(dir, { withFileTypes: true });
   return entries
@@ -405,6 +456,25 @@ async function getChangedRepoPaths() {
   return parseGitStatusPaths(stdout);
 }
 
+async function getStagedRepoPaths() {
+  let stdout = '';
+
+  try {
+    ({ stdout } = await execFile('git', ['diff', '--cached', '--name-only', '--diff-filter=ACMR', '--', '.'], {
+      cwd: root
+    }));
+  } catch (error) {
+    fail(`Unable to inspect staged files via git: ${error.message}`);
+  }
+
+  return new Set(
+    stdout
+      .split('\n')
+      .map((line) => line.trim().replace(/\\/g, '/'))
+      .filter(Boolean)
+  );
+}
+
 function shouldValidateAllSkillsForPath(changedPath) {
   return (
     changedPath.startsWith('skills/shared/schemas/') ||
@@ -412,14 +482,39 @@ function shouldValidateAllSkillsForPath(changedPath) {
   );
 }
 
-async function resolveSkillDirsToValidate(allSkillDirs) {
-  const changedOnly = process.argv.includes('--changed');
+function getRepoPathsFromCli(paths) {
+  return new Set(
+    paths
+      .map((candidatePath) => candidatePath.trim())
+      .filter(Boolean)
+      .map((candidatePath) => {
+        const absolutePath = path.resolve(root, candidatePath);
+        const relativePath = path.relative(root, absolutePath);
 
-  if (!changedOnly) {
+        if (relativePath.startsWith('..')) {
+          fail(`Path ${JSON.stringify(candidatePath)} is outside the repository root`);
+        }
+
+        return relativePath.replace(/\\/g, '/');
+      })
+  );
+}
+
+async function resolveSkillDirsToValidate(allSkillDirs, cliOptions) {
+  if (!cliOptions.changed && !cliOptions.staged && cliOptions.paths.length === 0) {
     return allSkillDirs;
   }
 
-  const changedRepoPaths = await getChangedRepoPaths();
+  let changedRepoPaths;
+
+  if (cliOptions.paths.length > 0) {
+    changedRepoPaths = getRepoPathsFromCli(cliOptions.paths);
+  } else if (cliOptions.staged) {
+    changedRepoPaths = await getStagedRepoPaths();
+  } else {
+    changedRepoPaths = await getChangedRepoPaths();
+  }
+
   const changedSkillNames = new Set();
   let validateAllSkills = false;
 
@@ -541,6 +636,7 @@ async function validateSkillDir(skillDir) {
 }
 
 async function main() {
+  const cliOptions = parseCliArgs(process.argv.slice(2));
   const skillDirs = await listSkillDirs(skillsDir);
   const markdownErrors = [];
 
@@ -548,7 +644,7 @@ async function main() {
     fail('No skill directories found.');
   }
 
-  const skillDirsToValidate = await resolveSkillDirsToValidate(skillDirs);
+  const skillDirsToValidate = await resolveSkillDirsToValidate(skillDirs, cliOptions);
 
   for (const skillDir of skillDirsToValidate) {
     markdownErrors.push(...(await validateSkillDir(skillDir)));

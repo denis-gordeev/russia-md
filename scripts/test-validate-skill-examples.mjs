@@ -8,11 +8,11 @@ const repoRoot = process.cwd();
 const validatorPath = path.join(repoRoot, 'scripts', 'validate-skill-examples.mjs');
 const fixturesRoot = path.join(repoRoot, 'scripts', 'fixtures', 'skill-validator');
 
-async function runCase(caseName, { expectSuccess, expectedText }) {
+async function runCase(caseName, { args = [], expectSuccess, expectedText }) {
   const fixtureRoot = path.join(fixturesRoot, caseName);
 
   try {
-    const { stdout, stderr } = await execFile('node', [validatorPath], {
+    const { stdout, stderr } = await execFile('node', [validatorPath, ...args], {
       cwd: repoRoot,
       env: {
         ...process.env,
@@ -45,6 +45,12 @@ async function main() {
   });
 
   await runCase('valid-frontmatter', {
+    expectSuccess: true,
+    expectedText: /Validated 1 skill example contract\(s\) and repository markdown links\./
+  });
+
+  await runCase('valid-minimal', {
+    args: ['--paths', 'skills/test-skill/SKILL.md,README.md'],
     expectSuccess: true,
     expectedText: /Validated 1 skill example contract\(s\) and repository markdown links\./
   });

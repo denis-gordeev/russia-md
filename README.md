@@ -78,7 +78,11 @@ This is still a foundation fork, not a finished editorial product. The active si
 - [ ] Add nearest-anchor suggestions for broken markdown fragment diagnostics
 - [ ] Add a small validator unit for line-number handling in front-matter-heavy markdown files
 - [ ] Reuse installed dependencies across skill-validation jobs to cut repeated `npm install` work in CI
-- [ ] Add a dedicated validator flag for staged-path or explicit-path validation outside git-status heuristics
+- [x] Add a dedicated validator flag for staged-path or explicit-path validation outside git-status heuristics
+- [x] Add repository community-health docs and contribution templates for issues, PRs, conduct, governance, and security
+- [ ] Scope repository markdown validation to explicit `--paths` / `--staged` inputs when only selected docs changed
+- [ ] Add automated dependency update policy for validator and site tooling
+- [ ] Add contributor-facing docs for how CODEOWNERS, issue forms, and review lanes map to content vs tooling changes
 
 ## Development
 
@@ -86,6 +90,7 @@ This is still a foundation fork, not a finished editorial product. The active si
 npm install
 npm run check:skills
 npm run check:skills:changed
+npm run check:skills:staged
 npm run check:skills:fixtures
 npm run build
 ```
@@ -93,6 +98,8 @@ npm run build
 `npm run check:skills` now validates that every repo-local skill ships its core bundle together: `SKILL.md`, `agents/openai.yaml`, `references/integration-notes.md`, `examples/output.json`, and `schemas/output.schema.json`. It also validates `agents/openai.yaml` against a shared metadata schema, rejects unknown UI keys, checks that each default prompt explicitly mentions the matching `$skill-name`, verifies local markdown links across `README.md`, `skills/**/SKILL.md`, and docs/reference pages, ignores YAML front matter while scanning markdown bodies, validates local markdown `#fragment` anchors against headings and explicit `id=""` anchors, reports broken markdown references with source line numbers, and lints local `interface.icon` asset paths when icons are present.
 
 `npm run check:skills:changed` validates only skill folders currently changed in git status, but automatically falls back to validating all skills when shared schema inputs or validator wiring change. It still runs the repository markdown-link pass so local iteration stays faster without dropping shared-document checks. Pull requests now run this incremental pass first in CI before the full validation and fixture jobs, while pushes to `main` continue running the full suite directly.
+
+`npm run check:skills:staged` applies the same incremental logic to the staged git index, which is useful before commits. For ad hoc path-scoped runs outside git-status heuristics, use `npm run check:skills -- --paths README.md,skills/esia/SKILL.md`.
 
 `npm run check:skills:fixtures` runs a small fixture suite for the validator itself, including front-matter-aware markdown regression coverage plus negative cases for broken markdown anchors, aggregated markdown-link failures with line-aware diagnostics, missing shared metadata schema files, and invalid `interface.icon` metadata.
 
@@ -114,6 +121,8 @@ npm run build
 - `scripts/fixtures/skill-validator/` minimal fixture repositories for validator regression checks
 - GitHub Actions skill validation and deploy workflows now run on Node 24
 - `.github/workflows/skills.yml` standalone CI workflow for incremental PR validation plus full skill and fixture validation
+- `.github/CODEOWNERS`, issue templates, and `pull_request_template.md` define review routing and contribution intake
+- `CODE_OF_CONDUCT.md`, `GOVERNANCE.md`, and `SECURITY.md` document repository participation and disclosure rules
 - `skills/telecom/`, `skills/document-signature/`, and `skills/marketplace-ops/` third-wave operational skills
 - `legacy-content/` archived upstream content kept for reference
 - `legacy-pages/` archived upstream routes kept out of the active build
