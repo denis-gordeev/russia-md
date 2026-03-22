@@ -500,19 +500,49 @@ function getRepoPathsFromCli(paths) {
   );
 }
 
-async function resolveSkillDirsToValidate(allSkillDirs, cliOptions) {
-  if (!cliOptions.changed && !cliOptions.staged && cliOptions.paths.length === 0) {
-    return allSkillDirs;
+async function getValidationInputPaths(cliOptions) {
+  if (cliOptions.paths.length > 0) {
+    return getRepoPathsFromCli(cliOptions.paths);
   }
 
-  let changedRepoPaths;
+  if (cliOptions.staged) {
+    return getStagedRepoPaths();
+  }
 
-  if (cliOptions.paths.length > 0) {
-    changedRepoPaths = getRepoPathsFromCli(cliOptions.paths);
-  } else if (cliOptions.staged) {
-    changedRepoPaths = await getStagedRepoPaths();
-  } else {
-    changedRepoPaths = await getChangedRepoPaths();
+  if (cliOptions.changed) {
+    return getChangedRepoPaths();
+  }
+
+  return null;
+}
+
+function collectMarkdownDocsWithin(basePath, repoPaths) {
+  const matchedDocs = new Set();
+  const normalizedBasePath = `${basePath.replace(/\\/g, '/')}/`;
+
+  for (const repoPath of repoPaths) {
+    if (repoPath === basePath && repoPath.endsWith('.md')) {
+      matchedDocs.add(path.join(root, repoPath));
+      continue;
+    }
+
+    if (repoPath.startsWith(normalizedBasePath) && repoPath.endsWith('.md')) {
+      matchedDocs.add(path.join(root, repoPath));
+    }
+  }
+
+  return matchedDocs;
+}
+
+async function resolveValidationTargets(allSkillDirs, cliOptions) {
+  const changedRepoPaths = await getValidationInputPaths(cliOptions);
+
+  if (!changedRepoPaths) {
+    return {
+      changedRepoPaths: null,
+      repositoryMarkdownPaths: null,
+      skillDirsToValidate: allSkillDirs
+    };
   }
 
   const changedSkillNames = new Set();
@@ -535,32 +565,75 @@ async function resolveSkillDirsToValidate(allSkillDirs, cliOptions) {
     }
   }
 
+  let repositoryMarkdownPaths;
+
+  if (validateAllSkills) {
+    repositoryMarkdownPaths = null;
+  } else {
+    repositoryMarkdownPaths = new Set();
+
+    for (const documentPath of documentPaths) {
+      const repoDocumentPath = path.relative(root, documentPath).replace(/\\/g, '/');
+      const documentStats = await stat(documentPath);
+
+      if (documentStats.isDirectory()) {
+        for (const markdownPath of collectMarkdownDocsWithin(repoDocumentPath, changedRepoPaths)) {
+          repositoryMarkdownPaths.add(markdownPath);
+        }
+        continue;
+      }
+
+      if (changedRepoPaths.has(repoDocumentPath)) {
+        repositoryMarkdownPaths.add(documentPath);
+      }
+    }
+  }
+
   if (validateAllSkills) {
     console.log('Shared validation inputs changed; validating all skill folders.');
-    return allSkillDirs;
+    return {
+      changedRepoPaths,
+      repositoryMarkdownPaths,
+      skillDirsToValidate: allSkillDirs
+    };
   }
 
   if (changedSkillNames.size === 0) {
-    console.log('No changed skill folders detected; validating repository markdown links only.');
-    return [];
-  }
-
-  return allSkillDirs.filter((skillDir) => changedSkillNames.has(path.basename(skillDir)));
-}
-
-async function validateRepositoryDocs() {
-  const markdownFiles = [];
-  const errors = [];
-
-  for (const documentPath of documentPaths) {
-    const documentStats = await stat(documentPath);
-
-    if (documentStats.isDirectory()) {
-      markdownFiles.push(...(await listMarkdownFiles(documentPath)));
-      continue;
+    if (repositoryMarkdownPaths.size === 0) {
+      console.log('No changed skill folders or tracked repository markdown docs detected; nothing to validate.');
+    } else {
+      console.log('No changed skill folders detected; validating changed repository markdown links only.');
     }
 
-    markdownFiles.push(documentPath);
+    return {
+      changedRepoPaths,
+      repositoryMarkdownPaths,
+      skillDirsToValidate: []
+    };
+  }
+
+  return {
+    changedRepoPaths,
+    repositoryMarkdownPaths,
+    skillDirsToValidate: allSkillDirs.filter((skillDir) => changedSkillNames.has(path.basename(skillDir)))
+  };
+}
+
+async function validateRepositoryDocs(markdownPaths = null) {
+  const markdownFiles = markdownPaths ? [...markdownPaths] : [];
+  const errors = [];
+
+  if (!markdownPaths) {
+    for (const documentPath of documentPaths) {
+      const documentStats = await stat(documentPath);
+
+      if (documentStats.isDirectory()) {
+        markdownFiles.push(...(await listMarkdownFiles(documentPath)));
+        continue;
+      }
+
+      markdownFiles.push(documentPath);
+    }
   }
 
   for (const markdownPath of markdownFiles.sort()) {
@@ -644,19 +717,20 @@ async function main() {
     fail('No skill directories found.');
   }
 
-  const skillDirsToValidate = await resolveSkillDirsToValidate(skillDirs, cliOptions);
+  const { skillDirsToValidate, repositoryMarkdownPaths } = await resolveValidationTargets(skillDirs, cliOptions);
 
   for (const skillDir of skillDirsToValidate) {
     markdownErrors.push(...(await validateSkillDir(skillDir)));
   }
 
-  markdownErrors.push(...(await validateRepositoryDocs()));
+  markdownErrors.push(...(await validateRepositoryDocs(repositoryMarkdownPaths)));
 
   if (markdownErrors.length > 0) {
     fail(markdownErrors.join('\n'));
   }
 
-  console.log(`Validated ${skillDirsToValidate.length} skill example contract(s) and repository markdown links.`);
+  const markdownScopeLabel = repositoryMarkdownPaths ? 'changed repository markdown links' : 'repository markdown links';
+  console.log(`Validated ${skillDirsToValidate.length} skill example contract(s) and ${markdownScopeLabel}.`);
 }
 
 main().catch((error) => {

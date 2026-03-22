@@ -52,7 +52,14 @@ async function main() {
   await runCase('valid-minimal', {
     args: ['--paths', 'skills/test-skill/SKILL.md,README.md'],
     expectSuccess: true,
-    expectedText: /Validated 1 skill example contract\(s\) and repository markdown links\./
+    expectedText: /Validated 1 skill example contract\(s\) and changed repository markdown links\./
+  });
+
+  await runCase('valid-minimal', {
+    args: ['--paths', 'README.md'],
+    expectSuccess: true,
+    expectedText:
+      /No changed skill folders detected; validating changed repository markdown links only\.[\s\S]*Validated 0 skill example contract\(s\) and changed repository markdown links\./
   });
 
   await runCase('invalid-icon-path', {
