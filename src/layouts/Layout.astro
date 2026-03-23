@@ -718,19 +718,19 @@ const navConfig = [
   }
 
   /* Global link styles */
-  main a:not(.nav-link):not(.btn-primary):not(.btn-secondary):not(.card-link):not(.logo):not(.category-card):not(.lang-btn):not(.floating-md):not(.search-item) {
+  main a:not(.nav-link):not([class*='btn']):not(.card-link):not(.logo):not(.category-card):not(.lang-btn):not(.floating-md):not(.search-item) {
     color: #475569;
     text-decoration: none;
     border-bottom: 1px solid #cbd5e1;
     padding-bottom: 1px;
     transition: all 0.2s ease;
   }
-  main a:not(.nav-link):not(.btn-primary):not(.btn-secondary):not(.card-link):not(.logo):not(.category-card):not(.lang-btn):not(.floating-md):not(.search-item):hover {
+  main a:not(.nav-link):not([class*='btn']):not(.card-link):not(.logo):not(.category-card):not(.lang-btn):not(.floating-md):not(.search-item):hover {
     color: #1a1a2e;
     border-bottom-color: #64748b;
   }
   /* External links (with target="_blank") get an icon */
-  main a[target="_blank"]:not(.nav-link):not(.btn-primary):not(.btn-secondary):not(.card-link):not(.logo):not(.category-card):not(.lang-btn):not(.floating-md)::after {
+  main a[target="_blank"]:not(.nav-link):not([class*='btn']):not(.card-link):not(.logo):not(.category-card):not(.lang-btn):not(.floating-md)::after {
     content: '↗';
     font-size: 0.8em;
     margin-left: 0.2em;

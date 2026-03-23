@@ -1,19 +1,71 @@
 # Russia.md
-> Last updated: 2026-03-19
+> Last updated: 2026-03-23 | 12 categories | 12 starter articles | 12 repo-local skills
 
 ## What is this?
-Russia.md is an open-source, AI-friendly knowledge base about Russia. It is a Russia-focused fork of the original `taiwan-md` country-knowledge project, keeping the upstream markdown-first site structure while replacing the active corpus with Russia-specific material.
+Russia.md is an open-source, AI-friendly knowledge base about Russia. It is a Russia-focused fork of `frank890417/taiwan-md` that keeps the upstream markdown-first site architecture, then replaces the active corpus with Russia-specific content, links, and agent-facing documentation.
 
-## Current shape
-- 12 top-level categories
-- 1 starter article per category
-- 1 agent-integration brief in `SKILLS.md`
+## Project shape
+- Active site content lives in `russia-knowledge/`
+- Archived upstream material is preserved under `legacy-content/` and `legacy-pages/`
+- Repo-local agent skills live in `skills/`
+- The active fork is `denis-gordeev/russia-md`
 
-## What makes it useful for LLMs
-- Markdown-first source material
-- Stable category structure
-- Searchable article pages
-- Explicit resource links for official portals and developer entry points
+## Why it is useful for LLMs
+- Markdown-first source material with predictable front matter
+- Stable 12-category country-atlas structure
+- Searchable article pages plus machine-readable search index
+- Repo-local skill bundles with references, schemas, and example outputs
+- Explicit fork provenance back to the original `taiwan-md` project
+
+## Active categories
+- History
+- Geography
+- Culture
+- Food
+- Art
+- Music
+- Technology
+- Nature
+- People
+- Society
+- Economy
+- Lifestyle
+
+## Repo-local skills
+- `esia`
+- `vk`
+- `vk-id`
+- `yandex`
+- `dadata`
+- `cbr`
+- `fns`
+- `banking`
+- `telecom`
+- `document-signature`
+- `marketplace`
+- `marketplace-ops`
+
+## Key paths
+- `russia-knowledge/` active article corpus
+- `skills/` repo-local integration skills for LLM agents
+- `skills/shared/` shared schemas and cross-skill references
+- `scripts/validate-skill-examples.mjs` bundle and markdown validator
+- `.github/workflows/skills.yml` skill validation workflow
+- `legacy-content/` and `legacy-pages/` archived upstream material
+
+## Development
+- Install: `npm install`
+- Build: `npm run build`
+- Validate skills: `npm run check:skills`
+- Validate only changed bundles/docs: `npm run check:skills:changed`
+- Validate staged changes: `npm run check:skills:staged`
+
+## Access
+- Website: https://russia-md.ru
+- GitHub Pages: https://denis-gordeev.github.io/russia-md/
+- Repository: https://github.com/denis-gordeev/russia-md
+- Upstream fork source: https://github.com/frank890417/taiwan-md
+- This file: https://russia-md.ru/llms.txt
 
 ## Caveat
-This fork is still in an early rebuild stage. It is useful as a structural base and a seed corpus, not yet as a complete reference work.
+This fork is still in a foundation stage. It is useful as a structural base, a starter Russia corpus, and an agent-integration sandbox, but not yet as a complete reference work about Russia.
