@@ -62,13 +62,7 @@ const jfClass = [
       as="style"
       onload="this.onload=null;this.rel='stylesheet'"
     />
-    <!-- LXGW WenKai TC: 霞鶩文楷 for reading content -->
-    <link
-      rel="preload"
-      href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-tc-web@latest/style.css"
-      as="style"
-      onload="this.onload=null;this.rel='stylesheet'"
-    />
+    <!-- justfont 蘭陽明體 已透過 justfont SDK 載入，無需額外 import -->
     <!-- Fallback for critical text -->
     <noscript>
       <link
@@ -529,9 +523,9 @@ const jfClass = [
     --border-soft: 1px solid rgba(148, 163, 184, 0.2);
     /* === Taiwan Typography System === */
     --font-title: 'Noto Serif TC', 'Source Han Serif TC', 'PMingLiU', serif;
-    --font-reading: 'LXGW WenKai TC', 'LXGW WenKai TC Light', 'Noto Sans TC', 'Source Han Sans TC', sans-serif;
+    --font-reading: 'jf-jinxuanlatte', 'Noto Sans TC', 'Source Han Sans TC', sans-serif;
     --font-interface: 'Noto Sans TC', 'Source Han Sans TC', 'PingFang TC', sans-serif;
-    --font-quote: 'LXGW WenKai TC', 'Noto Serif TC', serif;
+    --font-quote: 'jf-lanyangming', 'Noto Serif TC', serif;
     --font-mono: 'SF Mono', 'Fira Code', 'Source Code Pro', 'Consolas', monospace;
     /* Legacy compatibility */
     --font-editorial: var(--font-title);
