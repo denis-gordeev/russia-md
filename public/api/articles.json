@@ -446,21 +446,6 @@
     "path": "Technology/台灣人工智慧實驗室.md"
   },
   {
-    "title": "台灣人物知識庫企劃 — 200 人計畫",
-    "description": "Taiwan.md 人物頁面擴充路線圖，目標涵蓋 200 位代表台灣的重要人物",
-    "category": "People",
-    "tags": [
-      "企劃",
-      "People",
-      "roadmap"
-    ],
-    "url": "https://taiwan.md/People/PEOPLE-ROADMAP",
-    "readingTime": 22,
-    "featured": false,
-    "date": "2026-03-19",
-    "path": "People/PEOPLE-ROADMAP.md"
-  },
-  {
     "title": "台灣小吃",
     "description": "豐富多元的台灣小吃文化，融合閩南、客家、外省、原住民與現代創新的美食傳統",
     "category": "Food",
@@ -1417,19 +1402,21 @@
   },
   {
     "title": "台灣咖啡產業",
-    "description": "從日治時期的種植起源到Simple Kaffa世界冠軍，台灣咖啡的百年進化史",
+    "description": "從德記洋行1884年的100株苗木到2024年首屆CoE卓越盃，一個島嶼如何在140年間打造出年進口4.3萬公噸的咖啡王國",
     "category": "Food",
     "tags": [
       "咖啡",
       "古坑咖啡",
       "阿里山咖啡",
       "Simple Kaffa",
-      "第三波咖啡"
+      "第三波咖啡",
+      "Cup of Excellence",
+      "超商咖啡"
     ],
     "url": "https://taiwan.md/Food/%E5%8F%B0%E7%81%A3%E5%92%96%E5%95%A1%E7%94%A2%E6%A5%AD",
-    "readingTime": 12,
-    "featured": true,
-    "date": "2026-03-19",
+    "readingTime": 21,
+    "featured": false,
+    "date": "2026-03-23",
     "path": "Food/台灣咖啡產業.md"
   },
   {
@@ -2509,20 +2496,20 @@
   },
   {
     "title": "台灣森林生態系",
-    "description": "從亞熱帶海岸到高山針葉林，台灣3000公尺垂直落差中的豐富森林世界",
+    "description": "一趟從海平面到玉山頂峰的垂直旅行，穿越地球上最密集的森林光譜",
     "category": "Nature",
     "tags": [
       "森林生態",
       "垂直分布",
       "台灣杉",
       "檜木",
-      "生物多樣性",
-      "國有林"
+      "雲霧帶",
+      "生物多樣性"
     ],
     "url": "https://taiwan.md/Nature/%E5%8F%B0%E7%81%A3%E6%A3%AE%E6%9E%97%E7%94%9F%E6%85%8B%E7%B3%BB",
-    "readingTime": 16,
-    "featured": true,
-    "date": "2026-03-18",
+    "readingTime": 24,
+    "featured": false,
+    "date": "2026-03-23",
     "path": "Nature/台灣森林生態系.md"
   },
   {
@@ -4435,18 +4422,19 @@
   },
   {
     "title": "林懷民",
-    "description": "雲門舞集創辦人，台灣現代舞之父",
+    "description": "一個小說家創造了華語世界第一個現代舞團，並讓它活過50年",
     "category": "People",
     "tags": [
       "人物",
       "舞蹈",
       "藝術",
-      "表演藝術"
+      "表演藝術",
+      "雲門舞集"
     ],
     "url": "https://taiwan.md/People/%E6%9E%97%E6%87%B7%E6%B0%91",
-    "readingTime": 6,
-    "featured": true,
-    "date": "2026-03-19",
+    "readingTime": 13,
+    "featured": false,
+    "date": "2026-03-23",
     "path": "People/林懷民.md"
   },
   {
@@ -6055,15 +6043,17 @@
   },
   {
     "title": "解嚴後台灣文學",
-    "description": "",
+    "description": "三十八年禁錮一夕解除，文學創作迎來大爆發——但自由不等於無拘束，新的挑戰悄然而至",
     "category": "Art",
     "tags": [
       "文學",
       "解嚴",
-      "本土化"
+      "本土化",
+      "政治文學",
+      "多元文學"
     ],
     "url": "https://taiwan.md/Art/%E8%A7%A3%E5%9A%B4%E5%BE%8C%E5%8F%B0%E7%81%A3%E6%96%87%E5%AD%B8",
-    "readingTime": 10,
+    "readingTime": 20,
     "featured": false,
     "date": "2026-03-18",
     "path": "Art/解嚴後台灣文學.md"
@@ -6495,20 +6485,20 @@
   },
   {
     "title": "蕭敬騰",
-    "description": "台灣「雨神」，金曲歌王，從街頭藝人蛻變為國際舞台巨星",
+    "description": "從踢館魔王到金曲歌王，一個創造「雨神」傳說的台灣聲音",
     "category": "People",
     "tags": [
       "音樂",
       "流行音樂",
       "爵士樂",
-      "街頭藝人",
+      "超級星光大道",
       "金曲獎",
       "雨神"
     ],
     "url": "https://taiwan.md/People/%E8%95%AD%E6%95%AC%E9%A8%B0",
-    "readingTime": 7,
+    "readingTime": 15,
     "featured": false,
-    "date": "2026-03-19",
+    "date": "2026-03-23",
     "path": "People/蕭敬騰.md"
   },
   {
@@ -8777,6 +8767,24 @@
     "path": "en/People/jam-hsiao-rain-god-pop-star.md"
   },
   {
+    "title": "Jam Hsiao (蕭敬騰)",
+    "description": "From challenger contestant to Golden Melody King, the Taiwanese voice behind the \"Rain God\" legend",
+    "category": "en",
+    "tags": [
+      "music",
+      "pop music",
+      "jazz",
+      "One Million Star",
+      "Golden Melody Awards",
+      "Rain God"
+    ],
+    "url": "https://taiwan.md/en/People/jam-hsiao",
+    "readingTime": 44,
+    "featured": false,
+    "date": "2026-03-23",
+    "path": "en/People/jam-hsiao.md"
+  },
+  {
     "title": "Jamie Lin (Chien-Li Feng)",
     "description": "Former Google Taiwan Managing Director, AI industry pioneer, technology talent development advocate",
     "category": "en",
@@ -9243,18 +9251,19 @@
   },
   {
     "title": "Lin Hwai-min",
-    "description": "Founder of Cloud Gate Dance Theatre and the pioneering force behind modern dance in Taiwan.",
+    "description": "A novelist who created the first contemporary dance company in the Chinese-speaking world and kept it alive for 50 years",
     "category": "en",
     "tags": [
-      "people",
-      "dance",
-      "arts",
-      "performing arts"
+      "People",
+      "Dance",
+      "Arts",
+      "Performing Arts",
+      "Cloud Gate"
     ],
     "url": "https://taiwan.md/en/People/lin-hwai-min",
-    "readingTime": 22,
-    "featured": true,
-    "date": "2026-03-19",
+    "readingTime": 42,
+    "featured": false,
+    "date": "2026-03-23",
     "path": "en/People/lin-hwai-min.md"
   },
   {
@@ -9962,6 +9971,23 @@
     "featured": false,
     "date": "2026-03-20",
     "path": "en/Economy/pegatron-the-invisible-manufacturing-giant.md"
+  },
+  {
+    "title": "Post-Martial Law Taiwan Literature",
+    "description": "Thirty-eight years of censorship lifted overnight brought a literary explosion—but freedom didn't mean unrestraint, new challenges quietly emerged",
+    "category": "en",
+    "tags": [
+      "literature",
+      "martial law",
+      "localization",
+      "political literature",
+      "diverse literature"
+    ],
+    "url": "https://taiwan.md/en/Art/Post-Martial-Law-Taiwan-Literature",
+    "readingTime": 68,
+    "featured": false,
+    "date": "2026-03-18",
+    "path": "en/Art/Post-Martial-Law-Taiwan-Literature.md"
   },
   {
     "title": "Post-Martial Law Taiwanese Literature: An Explosion of Freedom",
@@ -12097,6 +12123,24 @@
     "featured": true,
     "date": "2026-03-19",
     "path": "en/Music/taiwan-electronic-music-and-party-culture.md"
+  },
+  {
+    "title": "Taiwan's Energy Transition and Green Energy Industries",
+    "description": "From reliance on nuclear power to a diversified renewable mix, how Taiwan is reshaping its energy structure on the road to net zero by 2050",
+    "category": "en",
+    "tags": [
+      "energy transition",
+      "renewable energy",
+      "offshore wind",
+      "solar power",
+      "net zero 2050",
+      "green energy industry"
+    ],
+    "url": "https://taiwan.md/en/Economy/taiwan-energy-transition-and-green-industry",
+    "readingTime": 55,
+    "featured": false,
+    "date": "2026-03-18",
+    "path": "en/Economy/taiwan-energy-transition-and-green-industry.md"
   },
   {
     "title": "Taiwan’s Fermented and Pickled Foods",

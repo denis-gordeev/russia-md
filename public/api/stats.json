@@ -1,12 +1,12 @@
 {
-  "totalArticles": 905,
+  "totalArticles": 907,
   "totalCategories": 27,
   "estimatedContributors": 61,
-  "totalTags": 2371,
+  "totalTags": 2385,
   "categories": [
     {
       "name": "en",
-      "count": 469
+      "count": 472
     },
     {
       "name": "History",
@@ -26,7 +26,7 @@
     },
     {
       "name": "People",
-      "count": 111
+      "count": 110
     },
     {
       "name": "ja",
@@ -128,7 +128,7 @@
     },
     {
       "name": "people",
-      "count": 23
+      "count": 22
     },
     {
       "name": "台灣",
@@ -139,11 +139,11 @@
       "count": 15
     },
     {
-      "name": "原住民",
-      "count": 13
+      "name": "literature",
+      "count": 14
     },
     {
-      "name": "literature",
+      "name": "原住民",
       "count": 13
     },
     {
@@ -196,8 +196,8 @@
     }
   ],
   "languageDistribution": {
-    "zh-TW": 905,
+    "zh-TW": 907,
     "en": 0
   },
-  "lastUpdated": "2026-03-23T13:48:48.002Z"
+  "lastUpdated": "2026-03-23T14:05:03.310Z"
 }
