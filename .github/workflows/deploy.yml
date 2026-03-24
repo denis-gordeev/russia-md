@@ -26,10 +26,10 @@ jobs:
           node-version: 22
       - name: Install dependencies
         run: npm install
+      - name: Validate frontmatter (changed files)
+        run: node scripts/test-frontmatter.mjs --ci
       - name: Build
         run: npm run build
-      - name: Post-build smoke test
-        run: node scripts/post-build-check.mjs
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
