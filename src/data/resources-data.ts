@@ -1,7 +1,9 @@
 export interface ResourceSite {
-  nameKey: string;
+  nameKey: string;    // i18n key, e.g. 'resources.site.president'
   url: string;
   domain: string;
+  descKey?: string;   // optional description i18n key (featured sites only)
+  featured?: boolean; // Top 3 featured per chapter
 }
 
 export interface HeroCategory {
@@ -20,7 +22,7 @@ export const heroCategories: HeroCategory[] = [
     sites: [
       { nameKey: 'resources.site.president', url: 'https://www.president.gov.tw/', domain: 'president.gov.tw' },
       { nameKey: 'resources.site.executiveYuan', url: 'https://www.ey.gov.tw/', domain: 'ey.gov.tw' },
-      { nameKey: 'resources.site.legislativeYuan', url: 'https://www.ly.gov.tw/', domain: 'ly.gov.tw' },
+      { nameKey: 'resources.site.legislativeYuan', url: 'https://www.ly.gov.tw/', domain: 'ly.gov.tw', featured: true, descKey: 'resources.featured.legislativeYuan' },
       { nameKey: 'resources.site.mofa', url: 'https://www.mofa.gov.tw/', domain: 'mofa.gov.tw' },
       { nameKey: 'resources.site.moda', url: 'https://moda.gov.tw/', domain: 'moda.gov.tw' },
       { nameKey: 'resources.site.cip', url: 'https://www.cip.gov.tw/', domain: 'cip.gov.tw' },
@@ -35,10 +37,11 @@ export const heroCategories: HeroCategory[] = [
     labelKey: 'resources.category.culture.label',
     color: '#059669',
     sites: [
-      { nameKey: 'resources.site.ncl', url: 'https://www.ncl.edu.tw/', domain: 'ncl.edu.tw' },
-      { nameKey: 'resources.site.npm', url: 'https://www.npm.gov.tw/', domain: 'npm.gov.tw' },
+      { nameKey: 'resources.site.ncl', url: 'https://www.ncl.edu.tw/', domain: 'ncl.edu.tw', featured: true, descKey: 'resources.featured.ncl' },
+      { nameKey: 'resources.site.npm', url: 'https://www.npm.gov.tw/', domain: 'npm.gov.tw', featured: true, descKey: 'resources.featured.npm' },
       { nameKey: 'resources.site.ntm', url: 'https://www.ntm.gov.tw/', domain: 'ntm.gov.tw' },
       { nameKey: 'resources.site.moc', url: 'https://www.moc.gov.tw/', domain: 'moc.gov.tw' },
+      { nameKey: 'resources.site.npgov', url: 'https://np.cpami.gov.tw/', domain: 'np.cpami.gov.tw', featured: true, descKey: 'resources.featured.npgov' },
     ],
   },
   {
@@ -56,7 +59,7 @@ export const heroCategories: HeroCategory[] = [
     labelKey: 'resources.category.economy.label',
     color: '#047857',
     sites: [
-      { nameKey: 'resources.site.tsmc', url: 'https://www.tsmc.com/chinese', domain: 'tsmc.com' },
+      { nameKey: 'resources.site.tsmc', url: 'https://www.tsmc.com/chinese', domain: 'tsmc.com', featured: true, descKey: 'resources.featured.tsmc' },
       { nameKey: 'resources.site.iii', url: 'https://www.iii.org.tw/', domain: 'iii.org.tw' },
       { nameKey: 'resources.site.stat', url: 'https://www.stat.gov.tw/', domain: 'stat.gov.tw' },
       { nameKey: 'resources.site.twse', url: 'https://www.twse.com.tw/', domain: 'twse.com.tw' },
@@ -68,8 +71,9 @@ export const heroCategories: HeroCategory[] = [
     color: '#064e3b',
     sites: [
       { nameKey: 'resources.site.cna', url: 'https://www.cna.com.tw', domain: 'cna.com.tw' },
-      { nameKey: 'resources.site.pts', url: 'https://www.pts.org.tw/', domain: 'pts.org.tw' },
-      { nameKey: 'resources.site.twreporter', url: 'https://www.twreporter.org/', domain: 'twreporter.org' },
+      { nameKey: 'resources.site.ptt', url: 'https://www.ptt.cc/', domain: 'ptt.cc', featured: true, descKey: 'resources.featured.ptt' },
+      { nameKey: 'resources.site.ptsNews', url: 'https://news.pts.org.tw/', domain: 'news.pts.org.tw', featured: true, descKey: 'resources.featured.ptsNews' },
+      { nameKey: 'resources.site.twreporter', url: 'https://www.twreporter.org/', domain: 'twreporter.org', featured: true, descKey: 'resources.featured.twreporter' },
       { nameKey: 'resources.site.taiwanNews', url: 'https://www.taiwannews.com.tw/', domain: 'taiwannews.com.tw' },
     ],
   },
@@ -78,10 +82,10 @@ export const heroCategories: HeroCategory[] = [
     labelKey: 'resources.category.opendata.label',
     color: '#059669',
     sites: [
-      { nameKey: 'resources.site.dataGov', url: 'https://data.gov.tw/', domain: 'data.gov.tw' },
+      { nameKey: 'resources.site.dataGov', url: 'https://data.gov.tw/', domain: 'data.gov.tw', featured: true, descKey: 'resources.featured.dataGov' },
       { nameKey: 'resources.site.taiwanGov', url: 'https://www.taiwan.gov.tw/', domain: 'taiwan.gov.tw' },
       { nameKey: 'resources.site.lawDb', url: 'https://law.moj.gov.tw/', domain: 'law.moj.gov.tw' },
-      { nameKey: 'resources.site.g0v', url: 'https://g0v.tw/', domain: 'g0v.tw' },
+      { nameKey: 'resources.site.g0v', url: 'https://g0v.tw/', domain: 'g0v.tw', featured: true, descKey: 'resources.featured.g0vGov' },
     ],
   },
   {
@@ -100,7 +104,7 @@ export const heroCategories: HeroCategory[] = [
 export const governmentFiveYuan: ResourceSite[] = [
   { nameKey: 'resources.site.president', url: 'https://www.president.gov.tw/', domain: 'president.gov.tw' },
   { nameKey: 'resources.site.executiveYuan', url: 'https://www.ey.gov.tw/', domain: 'ey.gov.tw' },
-  { nameKey: 'resources.site.legislativeYuan', url: 'https://www.ly.gov.tw/', domain: 'ly.gov.tw' },
+  { nameKey: 'resources.site.legislativeYuan', url: 'https://www.ly.gov.tw/', domain: 'ly.gov.tw', featured: true, descKey: 'resources.featured.legislativeYuan' },
   { nameKey: 'resources.site.judicialYuan', url: 'https://www.judicial.gov.tw/', domain: 'judicial.gov.tw' },
   { nameKey: 'resources.site.examinationYuan', url: 'https://www.exam.gov.tw/', domain: 'exam.gov.tw' },
   { nameKey: 'resources.site.controlYuan', url: 'https://www.cy.gov.tw/', domain: 'cy.gov.tw' },
@@ -158,10 +162,10 @@ export const governmentLocalGov: ResourceSite[] = [
 ];
 
 export const governmentOpenData: ResourceSite[] = [
-  { nameKey: 'resources.site.dataGov', url: 'https://data.gov.tw/', domain: 'data.gov.tw' },
+  { nameKey: 'resources.site.dataGov', url: 'https://data.gov.tw/', domain: 'data.gov.tw', featured: true, descKey: 'resources.featured.dataGov' },
   { nameKey: 'resources.site.taiwanGov', url: 'https://www.taiwan.gov.tw/', domain: 'taiwan.gov.tw' },
   { nameKey: 'resources.site.lawDb', url: 'https://law.moj.gov.tw/', domain: 'law.moj.gov.tw' },
-  { nameKey: 'resources.site.g0v', url: 'https://g0v.tw/', domain: 'g0v.tw' },
+  { nameKey: 'resources.site.g0v', url: 'https://g0v.tw/', domain: 'g0v.tw', featured: true, descKey: 'resources.featured.g0vGov' },
 ];
 
 // ─── Chapter 2: Culture ───
@@ -181,8 +185,8 @@ export const cultureUniversities: ResourceSite[] = [
 ];
 
 export const cultureMuseums: ResourceSite[] = [
-  { nameKey: 'resources.site.ncl', url: 'https://www.ncl.edu.tw/', domain: 'ncl.edu.tw' },
-  { nameKey: 'resources.site.npm', url: 'https://www.npm.gov.tw/', domain: 'npm.gov.tw' },
+  { nameKey: 'resources.site.ncl', url: 'https://www.ncl.edu.tw/', domain: 'ncl.edu.tw', featured: true, descKey: 'resources.featured.ncl' },
+  { nameKey: 'resources.site.npm', url: 'https://www.npm.gov.tw/', domain: 'npm.gov.tw', featured: true, descKey: 'resources.featured.npm' },
   { nameKey: 'resources.site.ntm', url: 'https://www.ntm.gov.tw/', domain: 'ntm.gov.tw' },
   { nameKey: 'resources.site.nmth', url: 'https://www.nmth.gov.tw/', domain: 'nmth.gov.tw' },
   { nameKey: 'resources.site.nmns', url: 'https://www.nmns.edu.tw/ch/', domain: 'nmns.edu.tw' },
@@ -207,6 +211,7 @@ export const cultureVenues: ResourceSite[] = [
 ];
 
 export const cultureParks: ResourceSite[] = [
+  { nameKey: 'resources.site.npgov', url: 'https://np.cpami.gov.tw/', domain: 'np.cpami.gov.tw', featured: true, descKey: 'resources.featured.npgov' },
   { nameKey: 'resources.site.yushan', url: 'https://www.ysnp.gov.tw/', domain: 'ysnp.gov.tw' },
   { nameKey: 'resources.site.taroko', url: 'https://www.taroko.gov.tw/', domain: 'taroko.gov.tw' },
   { nameKey: 'resources.site.kenting', url: 'https://www.ktnp.gov.tw/', domain: 'ktnp.gov.tw' },
@@ -224,6 +229,7 @@ export const cultureParks: ResourceSite[] = [
 // ─── Chapter 3: Media ───
 export const mediaMainstream: ResourceSite[] = [
   { nameKey: 'resources.site.cna', url: 'https://www.cna.com.tw', domain: 'cna.com.tw' },
+  { nameKey: 'resources.site.ptsNews', url: 'https://news.pts.org.tw/', domain: 'news.pts.org.tw', featured: true, descKey: 'resources.featured.ptsNews' },
   { nameKey: 'resources.site.pts', url: 'https://www.pts.org.tw/', domain: 'pts.org.tw' },
   { nameKey: 'resources.site.focusTaiwan', url: 'https://focustaiwan.tw/', domain: 'focustaiwan.tw' },
   { nameKey: 'resources.site.taiwanToday', url: 'https://www.taiwantoday.tw/', domain: 'taiwantoday.tw' },
@@ -237,7 +243,8 @@ export const mediaMainstream: ResourceSite[] = [
 ];
 
 export const mediaDigital: ResourceSite[] = [
-  { nameKey: 'resources.site.twreporter', url: 'https://www.twreporter.org/', domain: 'twreporter.org' },
+  { nameKey: 'resources.site.twreporter', url: 'https://www.twreporter.org/', domain: 'twreporter.org', featured: true, descKey: 'resources.featured.twreporter' },
+  { nameKey: 'resources.site.ptt', url: 'https://www.ptt.cc/', domain: 'ptt.cc', featured: true, descKey: 'resources.featured.ptt' },
   { nameKey: 'resources.site.taiwanNews', url: 'https://www.taiwannews.com.tw/', domain: 'taiwannews.com.tw' },
   { nameKey: 'resources.site.thenewslens', url: 'https://www.thenewslens.com/', domain: 'thenewslens.com' },
   { nameKey: 'resources.site.commonwealth', url: 'https://www.cw.com.tw/', domain: 'cw.com.tw' },
@@ -256,7 +263,7 @@ export const mediaNgo: ResourceSite[] = [
 
 // ─── Chapter 4: Economy ───
 export const econCompanies: ResourceSite[] = [
-  { nameKey: 'resources.site.tsmc', url: 'https://www.tsmc.com/chinese', domain: 'tsmc.com' },
+  { nameKey: 'resources.site.tsmc', url: 'https://www.tsmc.com/chinese', domain: 'tsmc.com', featured: true, descKey: 'resources.featured.tsmc' },
   { nameKey: 'resources.site.umc', url: 'https://www.umc.com/', domain: 'umc.com' },
   { nameKey: 'resources.site.foxconn', url: 'https://www.foxconn.com/', domain: 'foxconn.com' },
   { nameKey: 'resources.site.delta', url: 'https://www.deltaww.com/', domain: 'deltaww.com' },
@@ -278,7 +285,7 @@ export const econTransport: ResourceSite[] = [
 
 export const econHealth: ResourceSite[] = [
   { nameKey: 'resources.site.cdc', url: 'https://www.cdc.gov.tw/', domain: 'cdc.gov.tw' },
-  { nameKey: 'resources.site.nhi', url: 'https://www.nhi.gov.tw/', domain: 'nhi.gov.tw' },
+  { nameKey: 'resources.site.nhi', url: 'https://www.nhi.gov.tw/', domain: 'nhi.gov.tw', featured: true, descKey: 'resources.featured.nhi' },
   { nameKey: 'resources.site.ntuh', url: 'https://www.ntuh.gov.tw/ntuh/Index.action', domain: 'ntuh.gov.tw' },
   { nameKey: 'resources.site.vghtpe', url: 'https://www.vghtpe.gov.tw/', domain: 'vghtpe.gov.tw' },
   { nameKey: 'resources.site.cgmh', url: 'https://www.cgmh.org.tw/', domain: 'cgmh.org.tw' },
@@ -288,8 +295,27 @@ export const econHealth: ResourceSite[] = [
 
 export const econFinance: ResourceSite[] = [
   { nameKey: 'resources.site.stat', url: 'https://www.stat.gov.tw/', domain: 'stat.gov.tw' },
-  { nameKey: 'resources.site.twse', url: 'https://www.twse.com.tw/', domain: 'twse.com.tw' },
+  { nameKey: 'resources.site.twse', url: 'https://www.twse.com.tw/', domain: 'twse.com.tw', featured: true, descKey: 'resources.featured.twse' },
   { nameKey: 'resources.site.tpex', url: 'https://www.tpex.org.tw/', domain: 'tpex.org.tw' },
+];
+
+// ─── Chapter 5: Community ───
+export const communityProjects: ResourceSite[] = [
+  { nameKey: 'resources.site.g0v', url: 'https://g0v.tw/', domain: 'g0v.tw', featured: true, descKey: 'resources.featured.g0v' },
+  { nameKey: 'resources.site.cofacts', url: 'https://cofacts.tw/', domain: 'cofacts.tw', featured: true, descKey: 'resources.featured.cofacts' },
+  { nameKey: 'resources.site.disfactory', url: 'https://disfactory.tw/', domain: 'disfactory.tw' },
+  { nameKey: 'resources.site.electionMap', url: 'https://votes.tw/', domain: 'votes.tw' },
+  { nameKey: 'resources.site.maskMap', url: 'https://kiang.github.io/pharmacies/', domain: 'kiang.github.io' },
+  { nameKey: 'resources.site.goodinfo', url: 'https://goodinfo.tw/', domain: 'goodinfo.tw' },
+  { nameKey: 'resources.site.ccw', url: 'https://www.ccw.org.tw/', domain: 'ccw.org.tw' },
+  { nameKey: 'resources.site.thaubing', url: 'https://thaubing.gcaa.org.tw/', domain: 'thaubing.gcaa.org.tw' },
+  { nameKey: 'resources.site.politicalDonation', url: 'https://campaign-finance.g0v.ronny.tw/', domain: 'campaign-finance.g0v.ronny.tw' },
+  { nameKey: 'resources.site.taiwanmd', url: 'https://taiwan.md/', domain: 'taiwan.md', featured: true, descKey: 'resources.featured.taiwanmd' },
+];
+
+export const communityFood: ResourceSite[] = [
+  { nameKey: 'resources.site.burgerMap', url: 'https://hsieh-george.github.io/taipei-burger-map/', domain: 'hsieh-george.github.io' },
+  { nameKey: 'resources.site.nightMarket', url: 'https://github.com/hsiu0305/NightMarketSwift', domain: 'github.com' },
 ];
 
 // ─── Taiwan.md Links (footer) ───

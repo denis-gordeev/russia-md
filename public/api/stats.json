@@ -1,12 +1,12 @@
 {
-  "totalArticles": 935,
+  "totalArticles": 936,
   "totalCategories": 27,
   "estimatedContributors": 63,
-  "totalTags": 2499,
+  "totalTags": 2512,
   "categories": [
     {
       "name": "en",
-      "count": 481
+      "count": 483
     },
     {
       "name": "History",
@@ -26,7 +26,7 @@
     },
     {
       "name": "Lifestyle",
-      "count": 18
+      "count": 17
     },
     {
       "name": "People",
@@ -196,8 +196,8 @@
     }
   ],
   "languageDistribution": {
-    "zh-TW": 935,
+    "zh-TW": 936,
     "en": 0
   },
-  "lastUpdated": "2026-03-24T06:18:05.774Z"
+  "lastUpdated": "2026-03-24T08:47:52.179Z"
 }

@@ -180,5 +180,70 @@ description: '策展式描述，不是「本頁收錄 X 類文章」'
 
 ---
 
+---
+
+## 七、Resources 頁面策展經驗（2026-03-24 補充）
+
+Resources 頁面是一種特殊的 Hub：它不連結站內文章，而是連結**外部網站**。但策展邏輯完全相同。
+
+### 從「黃頁」到「策展」的教訓
+
+**問題**：150 個外部連結按分類排列 = 電話簿。讀者看到「行政院 ey.gov.tw」不會有任何感覺。
+
+**解法**：每個章節加三層策展：
+1. **場景化開場**（story）— 用一個具體事件帶入（口罩地圖 → 開放資料）
+2. **子類別過渡語** — 不只是標題，要解釋「為什麼把這些放在一起」
+3. **策展人筆記**（curator note）— 🔍 開頭，點出非顯而易見的洞察
+
+### 外部連結策展的特殊規則
+
+| 普通連結 | 精選連結（Top 3） |
+|---------|-------------------|
+| 名稱 + 域名 | 名稱 + 域名 + **一句話描述** |
+| 白底卡片 | 淡綠底 + 左邊線（視覺區分） |
+| 只需要存在 | 需要回答「為什麼選它」 |
+
+**精選的標準**：
+- 它代表了這個領域台灣最獨特的面向
+- 外國人如果只看 3 個，一定要看這 3 個
+- 有具體數字或故事可以說（不是「很重要」就完了）
+
+### i18n Best Practice（技術層面）
+
+Resources 頁面重構確立的模式：
+
+```
+src/data/resources-data.ts   ← 純資料（nameKey, url, domain, descKey?, featured?）
+src/i18n/resources.ts        ← 所有翻譯（en + zh-TW）
+src/templates/resources.template.astro  ← 零 inline 語言判斷，全用 t()
+```
+
+**鐵律**：
+- 資料檔不含任何語言文字，只有 i18n key
+- Template 裡零 `lang === 'en'`
+- 新增連結 = 同時更新 data + i18n 兩個檔案
+- 每個 i18n key 都要有 en + zh-TW 版本
+
+### 互動元素策展原則
+
+Resources 頁面加入的互動元素（搜尋、sticky nav、折疊）遵循：
+
+1. **搜尋**：150+ 項目的頁面必須有搜尋。篩選範圍 = 名稱 + 域名
+2. **Sticky 導航**：超過 3 個章節就需要。z-index 低於 header（40 < 50）
+3. **折疊**（details/summary）：超過 10 項的子類別應折疊，避免壓迫感
+4. **心智圖/視覺化**：酌情使用。如果佔第一屏太多空間，考慮隱藏或移到底部
+5. **Favicon**：外部連結用 Google Favicon API（sz=32），加 JS error fallback
+
+### 全域 CSS 衝突防護
+
+Astro 的全域連結樣式（`main a:not(...)` 的 border-bottom）會影響卡片和導航：
+```css
+.site-card { border-bottom: 1px solid #e5e7eb !important; }
+.chapter-link { border: none !important; }
+```
+**教訓**：任何新頁面加連結卡片時，先檢查全域 `a` 樣式有沒有干擾。
+
+---
+
 *這份文件跟 EDITORIAL.md 一起構成 Taiwan.md 的完整品質標準。*
-*最後更新：2026-03-23*
+*最後更新：2026-03-24*

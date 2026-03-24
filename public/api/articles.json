@@ -2778,18 +2778,21 @@
   },
   {
     "title": "台灣新媒體藝術",
-    "description": "",
+    "description": "當黃心健的VR作品在威尼斯拿下最佳體驗獎時，很少人知道：推動這場革命的不是科技業，而是一群用程式碼寫詩的藝術家。台灣新媒體藝術20年來的發展軌跡，揭示了科技與人文結合的另一種可能性。",
     "category": "Art",
     "tags": [
       "新媒體藝術",
       "數位藝術",
-      "科技藝術",
-      "生成藝術"
+      "黃心健",
+      "豪華朗機工",
+      "威尼斯雙年展",
+      "台北數位藝術節",
+      "科技藝術"
     ],
     "url": "https://taiwan.md/Art/%E5%8F%B0%E7%81%A3%E6%96%B0%E5%AA%92%E9%AB%94%E8%97%9D%E8%A1%93",
-    "readingTime": 24,
-    "featured": false,
-    "date": "2026-03-18",
+    "readingTime": 20,
+    "featured": true,
+    "date": "2026-03-24",
     "path": "Art/台灣新媒體藝術.md"
   },
   {
@@ -3530,19 +3533,21 @@
   },
   {
     "title": "台灣麵食文化",
-    "description": "從擔仔麵到牛肉麵，從陽春麵到乾拌麵，台灣麵食文化融合閩南、外省與創新元素，形成獨特的麵條飲食傳統",
+    "description": "從戰後眷村到國際舞台，台灣麵食在七十年間從美援麵粉開始，融合省籍記憶與本土創新，寫下一部移民與原鄉的飲食史詩",
     "category": "Food",
     "tags": [
       "麵食",
       "飲食文化",
       "台灣料理",
       "外省菜",
-      "閩南菜"
+      "眷村文化",
+      "牛肉麵",
+      "擔仔麵"
     ],
     "url": "https://taiwan.md/Food/%E5%8F%B0%E7%81%A3%E9%BA%B5%E9%A3%9F%E6%96%87%E5%8C%96",
-    "readingTime": 8,
-    "featured": false,
-    "date": "2026-03-20",
+    "readingTime": 18,
+    "featured": true,
+    "date": "2026-03-24",
     "path": "Food/台灣麵食文化.md"
   },
   {
@@ -3975,9 +3980,9 @@
       "人物"
     ],
     "url": "https://taiwan.md/People/%E5%90%B3%E5%93%B2%E5%AE%87",
-    "readingTime": 14,
+    "readingTime": 22,
     "featured": false,
-    "date": "2026-03-19",
+    "date": "2026-03-24",
     "path": "People/吳哲宇.md"
   },
   {
@@ -4645,24 +4650,6 @@
     "path": "People/侯孝賢.md"
   },
   {
-    "title": "便利商店文化",
-    "description": "密度世界第一的台灣超商，如何從零售店變成一整個國家的生活作業系統",
-    "category": "Lifestyle",
-    "tags": [
-      "便利商店",
-      "7-ELEVEN",
-      "全家",
-      "生活服務",
-      "零售創新",
-      "都市文化"
-    ],
-    "url": "https://taiwan.md/Lifestyle/%E4%BE%BF%E5%88%A9%E5%95%86%E5%BA%97%E6%96%87%E5%8C%96",
-    "readingTime": 17,
-    "featured": true,
-    "date": "2026-03-17",
-    "path": "Lifestyle/便利商店文化.md"
-  },
-  {
     "title": "城市特色與區域文化",
     "description": "從台北的國際都會到台南的古都風情，台灣各城市如何形塑獨特的地方認同",
     "category": "Geography",
@@ -4905,17 +4892,19 @@
   },
   {
     "title": "原住民文學",
-    "description": "",
+    "description": "從無字的歌聲到書面創作，一段橫跨千年的文學演化史",
     "category": "Art",
     "tags": [
       "文學",
       "原住民",
-      "口傳文學"
+      "口傳文學",
+      "南島語系",
+      "文化復振"
     ],
     "url": "https://taiwan.md/Art/%E5%8E%9F%E4%BD%8F%E6%B0%91%E6%96%87%E5%AD%B8",
     "readingTime": 16,
     "featured": false,
-    "date": "2026-03-18",
+    "date": "2026-03-24",
     "path": "Art/原住民文學.md"
   },
   {
@@ -9081,6 +9070,23 @@
     "path": "en/Art/indigenous-literature-traditions-and-revival.md"
   },
   {
+    "title": "Indigenous Literature of Taiwan",
+    "description": "From wordless songs to written works - a thousand-year literary evolution",
+    "category": "en",
+    "tags": [
+      "Literature",
+      "Indigenous",
+      "Oral Literature",
+      "Austronesian Languages",
+      "Cultural Revival"
+    ],
+    "url": "https://taiwan.md/en/Art/%E5%8E%9F%E4%BD%8F%E6%B0%91%E6%96%87%E5%AD%B8",
+    "readingTime": 49,
+    "featured": false,
+    "date": "2026-03-24",
+    "path": "en/Art/原住民文學.md"
+  },
+  {
     "title": "Indigenous Music Traditions of Taiwan: Songs as Memory, Ritual, and Living History",
     "description": "A cultural map of Taiwan’s 16 Indigenous peoples through song—polyphonic prayer, harvest dance, mouth harps, and the living archives of language and ritual.",
     "category": "en",
@@ -11903,6 +11909,25 @@
   },
   {
     "title": "Taiwan New Media Art",
+    "description": "When Huang Hsin-chien's VR work won the Best VR Experience Award at Venice, few knew the truth: this revolution wasn't driven by tech companies, but by artists who write poetry with code. Taiwan's 20-year new media art development reveals another possibility of combining technology with humanities.",
+    "category": "en",
+    "tags": [
+      "new media art",
+      "digital art",
+      "Huang Hsin-chien",
+      "LuxuryLogico",
+      "Venice Biennale",
+      "Taipei Digital Art Festival",
+      "tech art"
+    ],
+    "url": "https://taiwan.md/en/Art/Taiwan%20New%20Media%20Art",
+    "readingTime": 61,
+    "featured": true,
+    "date": "2026-03-24",
+    "path": "en/Art/Taiwan New Media Art.md"
+  },
+  {
+    "title": "Taiwan New Media Art",
     "description": "Exploring the intersection of digital technology and artistic expression on the \"Island of Tech.\"",
     "category": "en",
     "tags": [
@@ -14194,20 +14219,21 @@
     "path": "en/Geography/taipei-101.md"
   },
   {
-    "title": "Threads 在台灣：從現象級爆紅到日常「脆」文化",
-    "description": "Meta 的 Threads 在台灣發展出全球罕見的高黏著度——被暱稱為「脆」，成為 Z 世代碎碎念、政治人物「下凡」、迷因發酵的新公共廣場",
+    "title": "Threads 在台灣：從 Twitter 代餐到「脆」文化主戰場",
+    "description": "當全球用戶對 Threads 熱情冷卻，台灣卻走出截然不同的路——350 萬用戶、全球第二大市場、使用時間居冠。這裡成為 Z 世代真實發聲、政治人物「下凡」、迷因狂歡的數位公共廣場，重新定義了台灣的社群媒體生態。",
     "category": "Technology",
     "tags": [
       "社群媒體",
       "數位文化",
       "Threads",
       "Z世代",
-      "政治傳播"
+      "政治傳播",
+      "網路論壇"
     ],
     "url": "https://taiwan.md/Technology/Threads%E5%9C%A8%E5%8F%B0%E7%81%A3",
-    "readingTime": 6,
+    "readingTime": 25,
     "featured": true,
-    "date": "2026-03-19",
+    "date": "2026-03-24",
     "path": "Technology/Threads在台灣.md"
   },
   {
