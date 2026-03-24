@@ -12,9 +12,10 @@ interface Props {
   content?: string;
   tags?: string[];
   category?: string;
+  noindex?: boolean;
 }
 
-const { title, description = 'Open-source, AI-friendly knowledge base about Russia and a visible fork of taiwan-md', lang = 'en', image, type, datePublished, dateModified, content, tags, category } = Astro.props;
+const { title, description = 'Open-source, AI-friendly knowledge base about Russia and a visible fork of taiwan-md', lang = 'en', image, type, datePublished, dateModified, content, tags, category, noindex = false } = Astro.props;
 const currentPath = Astro.url.pathname;
 
 const i18n = {
@@ -70,6 +71,7 @@ const navConfig = [
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
     <link rel="icon" type="image/png" href="/favicon.png" />
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
     <link rel="alternate" type="application/rss+xml" title="Russia.md RSS" href="/feed.xml" />

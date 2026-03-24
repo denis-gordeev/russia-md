@@ -9,6 +9,8 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
+    "check:hollow": "bash tools/detect-ai-hollow.sh",
+    "check:hollow:diff": "bash tools/detect-ai-hollow.sh --diff --sort",
     "check-links": "bash scripts/check-links.sh",
     "check:skills": "node scripts/validate-skill-examples.mjs",
     "check:skills:changed": "node scripts/validate-skill-examples.mjs --changed",
