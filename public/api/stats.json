@@ -1,8 +1,8 @@
 {
-  "totalArticles": 908,
+  "totalArticles": 909,
   "totalCategories": 27,
   "estimatedContributors": 61,
-  "totalTags": 2396,
+  "totalTags": 2398,
   "categories": [
     {
       "name": "en",
@@ -18,7 +18,7 @@
     },
     {
       "name": "Society",
-      "count": 22
+      "count": 23
     },
     {
       "name": "Economy",
@@ -151,12 +151,12 @@
       "count": 13
     },
     {
-      "name": "culture",
+      "name": "歷史",
       "count": 12
     },
     {
-      "name": "歷史",
-      "count": 11
+      "name": "culture",
+      "count": 12
     },
     {
       "name": "金曲獎",
@@ -187,17 +187,17 @@
       "count": 11
     },
     {
-      "name": "ODM",
+      "name": "民主化",
       "count": 10
     },
     {
-      "name": "奧運",
+      "name": "ODM",
       "count": 10
     }
   ],
   "languageDistribution": {
-    "zh-TW": 908,
+    "zh-TW": 909,
     "en": 0
   },
-  "lastUpdated": "2026-03-23T14:37:22.219Z"
+  "lastUpdated": "2026-03-24T01:56:36.016Z"
 }
