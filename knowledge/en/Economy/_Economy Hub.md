@@ -73,21 +73,18 @@ _Image source: [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Taipe
 
 ## Further Reading
 
-<<<<<<< Updated upstream
-
-- [[semiconductor-industry]]
-- [[tsmc-morris-chang]]
-- [[tsmc]]
-- [[science-park-development]]
-- [[taiwan-economic-miracle-from-agriculture-to-asian-tiger]]
-- # [[startup-ecosystem]]
 - [[semiconductor-industry]]
 - [[tsmc-morris-chang]]
 - [[tsmc]]
 - [[science-park-development]]
 - [[taiwan-economic-miracle-from-agriculture-to-asian-tiger]]
 - [[startup-ecosystem]]
-  > > > > > > > Stashed changes
+- [[semiconductor-industry]]
+- [[tsmc-morris-chang]]
+- [[tsmc]]
+- [[science-park-development]]
+- [[taiwan-economic-miracle-from-agriculture-to-asian-tiger]]
+- [[startup-ecosystem]]
 - [[Taiwan SMEs and Hidden Champions]]
 - [[Hsinchu Science Park]]
 

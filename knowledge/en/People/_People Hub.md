@@ -45,16 +45,8 @@ In the 1930s, [[deng-yu-xian-taiwanese-song-composer]]'s compositions "Longing f
 
 [[teresa-teng]]'s voice crossed the Cold War iron curtain. In an era when cross-strait exchanges had not yet begun, her cassettes flowed from Taiwan into mainland China. "Listen to old Deng during the day, young Deng at night" — her cultural penetration exceeded political propaganda. [[Lo Ta-yu]] and [[Jonathan Lee]] represent two extremes of Chinese creative music: Lo used "Lukang Town" and "Asian Orphan" to directly confront social contradictions; Jonathan Lee dissected middle-aged hearts with "Hill" and "Song for Myself."
 
-<<<<<<< Updated upstream
 In the 2000s, [[jay-chou]] redefined the sound of Chinese popular music, fusing R&B, hip-hop, and Chinese traditional elements. [[a-mei]] became a diva with her indigenous heritage and explosive vocals, later advocating for LGBTQ rights. [[mayday]] grew from underground band to Asia's largest Chinese rock group. [[wu-bai]]'s Taiwanese rock injected raw vitality into local music.
-
-# [[deng-yu-xian-taiwanese-song-composer]] | [[teresa-teng]] | [[Lo Ta-yu]] | [[Jonathan Lee]] | [[jay-chou]] | [[a-mei]] | [[mayday]] | [[wu-bai]] | [[蔡依林]] | [[jj-lin-singaporean-mandopop-king]] | [[crowd-lu-indie-folk-treasure]] | [[jam-hsiao]] | [[bobby-chen-indie-music-pioneer]]
-
-In the 2000s, [[jay-chou]] redefined the sound of Chinese popular music, fusing R&B, hip-hop, and Chinese traditional elements. [[a-mei]] became a diva with her indigenous heritage and explosive vocals, later advocating for LGBTQ rights. [[mayday]] grew from underground band to Asia's largest Chinese rock group. [[wu-bai]]'s Taiwanese rock injected raw vitality into local music.
-
 [[deng-yu-xian-taiwanese-song-composer]] | [[teresa-teng]] | [[Lo Ta-yu]] | [[Jonathan Lee]] | [[jay-chou]] | [[a-mei]] | [[mayday]] | [[wu-bai]] | [[蔡依林]] | [[jj-lin-singaporean-mandopop-king]] | [[crowd-lu-indie-folk-treasure]] | [[jam-hsiao]] | [[bobby-chen-indie-music-pioneer]]
-
-> > > > > > > Stashed changes
 
 ---
 

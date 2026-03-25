@@ -33,12 +33,7 @@ Taiwan possesses the world's most spectacular vertical climate zone distribution
 
 The Zhuoshui River carries snow and rainwater from the Central Mountains, depositing vast alluvial fans along Changhua's coast; the Tamsui River system shaped Taipei Basin's topography while creating Taiwan's most important metropolitan area. Shimen, Feitsui, Zengwen, and other reservoirs aren't merely water resource facilities but crystallizations of Taiwanese wisdom in negotiating with monsoon climate. When northeastern monsoons bring abundant rainfall, reservoirs store water; when southern typhoons threaten, reservoirs control floods. This water resource management synchronized with natural rhythms reflects Taiwan's geographical environment complexity and human adaptability wisdom.
 
-<<<<<<< Updated upstream
 [[climate]] | [[Taiwan's River Systems and Hydrological Features]] | [[taiwan-reservoirs-and-water-resource-management]]
-=======
-[[climate]] | [[Taiwan's River Systems and Hydrological Features]] | [[taiwan-reservoirs-and-water-resource-management]]
-
-> > > > > > > Stashed changes
 
 ## 🏙️ Urban & Regional — Human Landscapes from Basins to Plains
 

@@ -68,14 +68,9 @@ Audrey Tang's appointment and practice as Digital Minister symbolizes Taiwan's p
 
 - [[tsmc]]: Global foundry leader
 - [[mediatek]]: Leading IC design company
-  <<<<<<< Updated upstream
-- [[foxconn-precision-industry]]: World's largest contract manufacturer
-- [[asus-computer]]: Brand computer and motherboard manufacturer
-- # [[acer-pc-industry-pioneer]]: International brand pioneer
 - [[foxconn-precision-industry]]: World's largest contract manufacturer
 - [[asus-computer]]: Brand computer and motherboard manufacturer
 - [[acer-pc-industry-pioneer]]: International brand pioneer
-  > > > > > > > Stashed changes
 
 ### Industry Ecosystem
 

@@ -92,18 +92,11 @@ _Fuente de la imagen: [Wikimedia Commons](https://commons.wikimedia.org/wiki/Fil
 - [[Parque Científico de Hsinchu]]​: El milagro innovador del Silicon Valley del Este
 - [[g0v Gobierno Cero]]​: Tecnología cívica y colaboración de código abierto
 - [[Democracia Digital]]​: vTaiwan y gobernanza participativa
-  <<<<<<< Updated upstream
-- [[audrey-tang]]​: Ministra digital e innovación en gobernanza tecnológica
-- [[mediatek]]​: La competitividad global del diseño de IC taiwanés
-- [[acer-pc-industry-pioneer]]​: Curva de la sonrisa e internacionalización de marca
-- [[asus-computer]]​: De placas madre a marca tecnológica integral
-- # [[foxconn-precision-industry]]​: Fabricación de precisión y reino de fabricación por contrato
 - [[audrey-tang]]​: Ministra digital e innovación en gobernanza tecnológica
 - [[mediatek]]​: La competitividad global del diseño de IC taiwanés
 - [[acer-pc-industry-pioneer]]​: Curva de la sonrisa e internacionalización de marca
 - [[asus-computer]]​: De placas madre a marca tecnológica integral
 - [[foxconn-precision-industry]]​: Fabricación de precisión y reino de fabricación por contrato
-  > > > > > > > Stashed changes
 
 ---
 

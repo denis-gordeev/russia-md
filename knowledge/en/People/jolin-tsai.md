@@ -53,12 +53,7 @@ Three major world tours tell the story in numbers:
 | Play        | 2015–2017 | 23     | 34    | —          | ~1.5 billion     |
 | Ugly Beauty | 2019–2024 | 23     | 34    | ~600,000   | ~1.5 billion     |
 
-<<<<<<< Updated upstream
 Over 100 shows, cumulative box office exceeding NT$4 billion (roughly US$130 million). In the Mandopop world, only [[jay-chou]] and [[mayday]] operate at comparable scale. She is the highest-grossing female concert act in Taiwanese pop history.
-=======
-Over 100 shows, cumulative box office exceeding NT$4 billion (roughly US$130 million). In the Mandopop world, only [[jay-chou]] and [[mayday]] operate at comparable scale. She is the highest-grossing female concert act in Taiwanese pop history.
-
-> > > > > > > Stashed changes
 
 The production budgets match the ambition. _Ugly Beauty_'s album alone cost over NT$100 million to produce — nearly unheard of in Chinese-language music.
 

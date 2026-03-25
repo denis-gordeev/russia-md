@@ -42,12 +42,7 @@ On February 27, 1947, a gunshot on Taipei's streets opened Taiwan's darkest post
 
 On September 28, 1986, the Democratic Progressive Party was founded at the Grand Hotel Taipei—the first organization to openly challenge KMT one-party rule during martial law. From that moment, Taiwan's politics entered an irreversible democratization process. Lifting of martial law in 1987, direct presidential elections in 1996, and party alternation in 2000—Taiwan completed in fourteen years what might take other countries decades. More importantly, this revolution was so quiet that many forgot how incredible it once seemed. The night Chiang Ching-kuo announced he wouldn't seek re-election, there were no military mutinies, political assassinations, or even large demonstrations. Taiwanese seemed to already know democracy would come, patiently waiting for it to happen naturally. Where did this political maturity come from? Perhaps precisely because Taiwanese had witnessed too many regime changes to take any political promises too seriously.
 
-<<<<<<< Updated upstream
 [[democratization]] | [[Taiwan Democracy Movement]] | [[taiwan-elections-and-party-politics]]
-=======
-[[democratization]] | [[Taiwan Democracy Movement]] | [[taiwan-elections-and-party-politics]]
-
-> > > > > > > Stashed changes
 
 ## 🌊 Economic Leap and Geopolitical Games
 

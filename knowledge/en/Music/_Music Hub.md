@@ -26,12 +26,7 @@ If we had to describe 2000s Taiwan pop music's status in one word, it would be "
 
 These names aren't just Taiwan's pride; they redrew the boundaries of Mandarin music entirely. The thirty-four-year history of the Golden Melody Awards since 1990 chronicles Mandarin music's journey from periphery to center. When this ceremony earned the title "Grammy of Chinese-language music," it carries more than recognition for excellent works — it became the compass for the entire Chinese music world.
 
-<<<<<<< Updated upstream
 [[Mandarin Pop and Golden Melody Awards]] | [[jay-chou]] | [[mayday]] | [[蔡依林]] | [[a-mei]] | [[Yoga Lin]] | [[Hebe Tien]]
-=======
-[[Mandarin Pop and Golden Melody Awards]] | [[jay-chou]] | [[mayday]] | [[蔡依林]] | [[a-mei]] | [[Yoga Lin]] | [[Hebe Tien]]
-
-> > > > > > > Stashed changes
 
 ## 🎸 Independent & Rock's Rebellious Blood
 
@@ -61,12 +56,7 @@ Atayal mouth harps, Thao pestle music, Amis harvest festival songs and dances �
 
 Most importantly, this music reminds us: Taiwan's cultural roots run far deeper than imagined. Before all the modernization, internationalization, globalization — this land already had its own voice. Those voices remain vibrant today, still moving hearts, still telling the world what true "Taiwan originality" means.
 
-<<<<<<< Updated upstream
 [[Taiwan Indigenous Music Traditions]] | [[contemporary-indigenous-singer-songwriters]] | [[a-mei]] | [[Jia Jia]] | [[Haowen]]
-=======
-[[Taiwan Indigenous Music Traditions]] | [[contemporary-indigenous-singer-songwriters]] | [[a-mei]] | [[Jia Jia]] | [[Haowen]]
-
-> > > > > > > Stashed changes
 
 ## 🎬 Industry & Innovation's Digital Transformation
 

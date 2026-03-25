@@ -61,12 +61,8 @@ Desde el Festival de Música Oceánica de Gongliao, Spring Scream hasta Megaport
 
 - [[Golden Melody Awards]]​: Desarrollo histórico del máximo honor del mundo de la música en chino mandarín
 - [[mayday]]​: El camino musical de la banda de rock en chino mandarín
-  <<<<<<< Updated upstream
-- [[jay-chou]]​: El creador de la música pop de estilo chino
-- # [[蔡依林]]​: La carrera artística de la reina del pop asiático
 - [[jay-chou]]​: El creador de la música pop de estilo chino
 - [[蔡依林]]​: La carrera artística de la reina del pop asiático
-  > > > > > > > Stashed changes
 - [[No Party for Cao Dong]]​: Banda representativa de la música independiente taiwanesa
 - [[Cultura de Live House]]​: Base importante de la escena musical taiwanesa
 - [[Festivales de Música Taiwaneses]]​: Desde el Festival de Música Oceánica de Gongliao hasta Megaport Festival

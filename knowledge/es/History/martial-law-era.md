@@ -183,9 +183,7 @@ La experiencia de la ley marcial se convirtió en una referencia importante para
 - [[Kaohsiung Incident]]: Importante evento del movimiento democrático
 - [[democratization]]: El proceso de transición de la ley marcial a la democracia
   <<<<<<< Updated upstream
-- # [[february-28-incident-and-white-terror-taiwan-authoritarian-rule-trauma-and-memory]]: Conflicto político temprano
 - [[february-28-incident-and-white-terror-taiwan-authoritarian-rule-trauma-and-memory]]: Conflicto político temprano
-  > > > > > > > Stashed changes
 - [[Transitional Justice]]: Esfuerzos para abordar el legado autoritario
 
 ---

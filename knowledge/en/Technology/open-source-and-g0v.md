@@ -86,11 +86,7 @@ g0v demonstrates the possibility of promoting open government in Chinese-speakin
 
 ## Related Topics
 
-<<<<<<< Updated upstream
-
-- # [[semiconductor-industry]]
 - [[semiconductor-industry]]
-  > > > > > > > Stashed changes
 - [[democratic-system]]
 - [[convenience-store-culture]]
 - [[economic-miracle]]

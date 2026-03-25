@@ -34,12 +34,7 @@ Lo que más sorprende al mundo sobre Taiwán quizás sean los creadores cultural
 
 Los logros tecnológicos de Taiwán han impresionado al mundo entero, y detrás de estos logros hay un grupo de pioneros tecnológicos con visión. No solo han creado milagros comerciales, sino que, lo que es más importante, han hecho que Taiwán ocupe una posición indispensable en el mapa tecnológico global.
 
-<<<<<<< Updated upstream
 [[tsmc-morris-chang]] es conocido como el "Padrino de los Semiconductores", creó [[tsmc]] con sus propias manos, que no solo cambió a Taiwán, sino que también redefinió el modelo de división del trabajo de la industria global de semiconductores. En 1987, cuando Morris Chang propuso el concepto de "fundición profesional de obleas", muchas personas pensaron que era un modelo de negocio imposible. Sin embargo, fue precisamente este modelo "imposible" el que hizo de TSMC la fundición de obleas más grande del mundo, dando a Taiwán una posición estratégica de "escudo de silicio" en la cadena de suministro global de semiconductores.
-=======
-[[tsmc-morris-chang]] es conocido como el "Padrino de los Semiconductores", creó [[tsmc]] con sus propias manos, que no solo cambió a Taiwán, sino que también redefinió el modelo de división del trabajo de la industria global de semiconductores. En 1987, cuando Morris Chang propuso el concepto de "fundición profesional de obleas", muchas personas pensaron que era un modelo de negocio imposible. Sin embargo, fue precisamente este modelo "imposible" el que hizo de TSMC la fundición de obleas más grande del mundo, dando a Taiwán una posición estratégica de "escudo de silicio" en la cadena de suministro global de semiconductores.
-
-> > > > > > > Stashed changes
 
 Hoy, el valor de mercado de TSMC supera los quinientos mil millones de dólares, equivalente al PIB de Taiwán de un año entero. Cuando Apple necesita los procesadores más avanzados, cuando NVIDIA lanza una nueva generación de chips de IA, cuando los gobiernos de varios países se preocupan por la seguridad del suministro de semiconductores, todos piensan en TSMC, en este milagro comercial creado por Morris Chang. Este empresario nacido en China continental, educado en Estados Unidos y exitoso en Taiwán, encarna las características sociales abiertas e inclusivas de Taiwán.
 
@@ -113,12 +108,7 @@ En el campo de imagen y diseño, [[齊柏林]] despertó la conciencia ambiental
 
 ### Revolución Tecnológica
 
-<<<<<<< Updated upstream
 [[jensen-huang]], fundador de NVIDIA, ha liderado la revolución global de computación de IA. Como "Padrino de la IA", no solo demuestra liderazgo en la cima de la tecnología, sino que también retribuye activamente a su tierra natal, profundizando las conexiones estratégicas con la industria de semiconductores taiwanesa como [[tsmc]], convirtiendo a Taiwán en el núcleo del mapa global de IA.
-=======
-[[jensen-huang]], fundador de NVIDIA, ha liderado la revolución global de computación de IA. Como "Padrino de la IA", no solo demuestra liderazgo en la cima de la tecnología, sino que también retribuye activamente a su tierra natal, profundizando las conexiones estratégicas con la industria de semiconductores taiwanesa como [[tsmc]], convirtiendo a Taiwán en el núcleo del mapa global de IA.
-
-> > > > > > > Stashed changes
 
 📖 Lectura adicional: [[kuo-hsing-chun-olympic-weightlifting-champion]] ｜ [[El Dúo Lin-Yang]] ｜ [[yang-yung-wei-judo-olympic-silver]] ｜ [[Lee Chih-kai]] ｜ [[齊柏林]] ｜ [[Aaron Nieh]] ｜ [[crowd-lu-indie-folk-treasure]] ｜ [[andre-chiang-taiwanese-culinary-innovator]] ｜ [[jensen-huang]]
 
@@ -158,15 +148,6 @@ _Fuente de la imagen: [Wikimedia Commons](https://commons.wikimedia.org/wiki/Fil
 - [[陳偉殷]]​: Representante del béisbol taiwanés en Estados Unidos, 16 victorias en dos temporadas consecutivas de las Grandes Ligas
 - [[terry-gou]]​: Fundador del imperio Foxconn, el mayor fabricante electrónico por contrato del mundo
 - [[Stan Chang]]​: Padrino del turismo, dedicado a la educación en áreas remotas después de retirarse
-  <<<<<<< Updated upstream
-- [[annette-lu]]​: Pionera feminista taiwanesa, primera mujer vicepresidenta en el mundo de habla china
-- [[高俊明]]​: Pastor de derechos humanos, prisionero de conciencia durante el período de ley marcial
-- [[蔡依林]]​: Reina del pop asiático, reina de Golden Melody
-- [[mayday]]​: Sinónimo de rock en chino mandarín, mejor banda de Golden Melody
-- [[wei-te-sheng-taiwanese-epic-filmmaker]]​: Director de "Cape No. 7" y "Warriors of the Rainbow: Seediq Bale"
-- [[chen-shu-chu-vegetable-vendor-philanthropist]]​: Vendedora de verduras de Taitung, una de las 100 personas más influyentes de TIME
-- [[jimmy-liao]]​: Autor de libros ilustrados, obras internacionalmente conocidas como "Turn Left, Turn Right"
-- # [[jeremy-lin]]​: Leyenda de "Linsanity" en la NBA, máxima visibilidad de atleta taiwanés-estadounidense
 - [[annette-lu]]​: Pionera feminista taiwanesa, primera mujer vicepresidenta en el mundo de habla china
 - [[高俊明]]​: Pastor de derechos humanos, prisionero de conciencia durante el período de ley marcial
 - [[蔡依林]]​: Reina del pop asiático, reina de Golden Melody
@@ -175,7 +156,6 @@ _Fuente de la imagen: [Wikimedia Commons](https://commons.wikimedia.org/wiki/Fil
 - [[chen-shu-chu-vegetable-vendor-philanthropist]]​: Vendedora de verduras de Taitung, una de las 100 personas más influyentes de TIME
 - [[jimmy-liao]]​: Autor de libros ilustrados, obras internacionalmente conocidas como "Turn Left, Turn Right"
 - [[jeremy-lin]]​: Leyenda de "Linsanity" en la NBA, máxima visibilidad de atleta taiwanés-estadounidense
-  > > > > > > > Stashed changes
 - [[Ju Tzong-ching]]​: Padrino de la percusión, llevó lo minoritario a lo mainstream
 - [[kevin-lin-ultramarathon-desert-pioneer]]​: Aventurero taiwanés, primero en cruzar el desierto del Sahara
 

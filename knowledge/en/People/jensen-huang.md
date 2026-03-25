@@ -79,12 +79,7 @@ In June 2024, Huang appeared at Computex in Taipei. He wasn't on the official pr
 
 He wore his signature black leather jacket to night markets, chatted with vendors in Taiwanese Hokkien, and posed with strangers. Mark Zuckerberg posted a photo on Instagram of the two wearing each other's jackets, writing: "He's like Taylor Swift, but for tech." (Instagram, March 2024)
 
-<<<<<<< Updated upstream
 But Huang's significance to Taiwan extends far beyond celebrity. NVIDIA's most advanced AI chips are manufactured by [[tsmc]]. Huang and TSMC founder [[tsmc-morris-chang]] share a partnership spanning over three decades. At Computex, Huang displayed a map of Taiwan covered with NVIDIA's supply-chain partners and declared: "Taiwan is a world hero."
-=======
-But Huang's significance to Taiwan extends far beyond celebrity. NVIDIA's most advanced AI chips are manufactured by [[tsmc]]. Huang and TSMC founder [[tsmc-morris-chang]] share a partnership spanning over three decades. At Computex, Huang displayed a map of Taiwan covered with NVIDIA's supply-chain partners and declared: "Taiwan is a world hero."
-
-> > > > > > > Stashed changes
 
 This wasn't flattery. NVIDIA needs TSMC's cutting-edge fabrication; TSMC needs NVIDIA's orders to fill its most advanced production lines. Their fates are bound together — and that bond runs through an island that averages 3.7 earthquakes per year and gets swept by typhoons on a regular basis.
 
@@ -140,10 +135,6 @@ Jensen Huang now has a corporate logo permanently inked on his skin. His NVIDIA 
 
 ## See Also
 
-<<<<<<< Updated upstream
-
-- # [[tsmc-morris-chang]]: NVIDIA's most critical partner, founder of TSMC
 - [[tsmc-morris-chang]]: NVIDIA's most critical partner, founder of TSMC
-  > > > > > > > Stashed changes
 - [[tsmc]]: Manufacturer of the world's most advanced AI chips
 - [[Science Parks]]: The foundation of Taiwan's semiconductor ecosystem

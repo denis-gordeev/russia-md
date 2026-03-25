@@ -82,8 +82,6 @@ Animar a los ciudadanos a descargar la aplicación "Libreta de salud" para compr
 
 - [[convenience-store-culture]]
   <<<<<<< Updated upstream
-- # [[human-rights-and-gender-equality]]
 - [[human-rights-and-gender-equality]]
-  > > > > > > > Stashed changes
 - [[open-source-and-g0v]]
 - [[economic-miracle]]

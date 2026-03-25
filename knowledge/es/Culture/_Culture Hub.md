@@ -62,12 +62,7 @@ Como isla, Taiwán ha desarrollado un carácter cultural único: abierto, inclus
 
 ## Milagro Insular de la Creatividad Cultural
 
-<<<<<<< Updated upstream
 A principios del siglo XXI, Taiwán propuso una estrategia de desarrollo de "industrias creativas culturales", esto no es terminología política, sino una manifestación de la esencia de la cultura taiwanesa. La música popular de Taiwán una vez lideró la tendencia cultural en chino mandarín, desde la suave voz de [[teresa-teng]] cruzando las barreras políticas a través del Estrecho, hasta el ritmo innovador de [[jay-chou]] redefiniendo la música pop en chino mandarín, desde el espíritu rock de [[mayday]] inspirando a toda una generación, hasta el encanto pop de [[蔡依林]] arrasando en Asia, los músicos taiwaneses cuentan historias emocionales universales con una perspectiva única de la isla.
-=======
-A principios del siglo XXI, Taiwán propuso una estrategia de desarrollo de "industrias creativas culturales", esto no es terminología política, sino una manifestación de la esencia de la cultura taiwanesa. La música popular de Taiwán una vez lideró la tendencia cultural en chino mandarín, desde la suave voz de [[teresa-teng]] cruzando las barreras políticas a través del Estrecho, hasta el ritmo innovador de [[jay-chou]] redefiniendo la música pop en chino mandarín, desde el espíritu rock de [[mayday]] inspirando a toda una generación, hasta el encanto pop de [[蔡依林]] arrasando en Asia, los músicos taiwaneses cuentan historias emocionales universales con una perspectiva única de la isla.
-
-> > > > > > > Stashed changes
 
 En el cine, la Nueva Ola del Cine Taiwanés también ha sacudido internacionalmente. El realismo poético de [[hou-hsiao-hsien]] ganó el León de Oro en el Festival de Cine de Venecia, la narrativa transcultural de [[ang-lee]] ganó el premio Oscar al Mejor Director dos veces, el espíritu experimental de [[tsai-ming-liang]] desafía los límites del lenguaje cinematográfico, el sentimiento épico de [[wei-te-sheng-taiwanese-epic-filmmaker]] recrea la magnificencia de la historia taiwanesa. Estos directores han mostrado búsquedas estéticas únicas en el cine internacional, demostrando que el cine taiwanés puede dialogar con el mundo en su propio idioma.
 
