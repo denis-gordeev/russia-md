@@ -45,21 +45,23 @@ export async function getStaticPaths() {
       );
 
       for (const file of zhMarkdownFiles) {
-        const filePath = join(zhFolderPath, file);
-        const fileContent = await readFile(filePath, 'utf-8');
-        const { data: frontmatter } = matter(fileContent);
-        const slug = basename(file, '.md');
+        try {
+          const filePath = join(zhFolderPath, file);
+          const fileContent = await readFile(filePath, 'utf-8');
+          const { data: frontmatter } = matter(fileContent);
+          const slug = basename(file, '.md');
 
-        articles.push({
-          slug,
-          title: frontmatter.title || slug,
-          description: frontmatter.description || '',
-          status: frontmatter.status || '',
-          readingTime: frontmatter.readingTime || null,
-          date: frontmatter.date || null,
-          featured: frontmatter.featured || false,
-          lang: 'en',
-        });
+          articles.push({
+            slug,
+            title: frontmatter.title || slug,
+            description: frontmatter.description || '',
+            status: frontmatter.status || '',
+            readingTime: frontmatter.readingTime || null,
+            date: frontmatter.date || null,
+            featured: frontmatter.featured || false,
+            lang: 'en',
+          });
+        } catch {}
       }
     } catch {}
 

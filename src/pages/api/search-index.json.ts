@@ -41,17 +41,21 @@ async function readCategoryIndex(
       for (const file of files.filter(
         (entry) => entry.endsWith('.md') && !entry.startsWith('_'),
       )) {
-        const source = await readFile(join(dirPath, file), 'utf-8');
-        const { data } = matter(source);
-        const name = basename(file, '.md');
+        try {
+          const source = await readFile(join(dirPath, file), 'utf-8');
+          const { data } = matter(source);
+          const name = basename(file, '.md');
 
-        items.push({
-          t: data.title || name,
-          d: data.description || '',
-          u: `${slugPrefix}/${slug}/${name}`,
-          tags: Array.isArray(data.tags) ? data.tags.map((tag) => String(tag)) : [],
-          lang,
-        });
+          items.push({
+            t: data.title || name,
+            d: data.description || '',
+            u: `${slugPrefix}/${slug}/${name}`,
+            tags: Array.isArray(data.tags)
+              ? data.tags.map((tag) => String(tag))
+              : [],
+            lang,
+          });
+        } catch {}
       }
     } catch {}
   }

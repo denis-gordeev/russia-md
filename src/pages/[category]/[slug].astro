@@ -106,27 +106,29 @@ export async function getStaticPaths() {
       );
 
       for (const file of zhMarkdownFiles) {
-        const filePath = join(zhFolderPath, file);
-        const fileContent = await readFile(filePath, 'utf-8');
-        const { data: frontmatter, content } = matter(fileContent);
-        const slug = basename(file, '.md');
-
-        let gitInfo = { contributors: [] as string[], lastModified: '' };
         try {
-          gitInfo = getGitInfo(filePath);
+          const filePath = join(zhFolderPath, file);
+          const fileContent = await readFile(filePath, 'utf-8');
+          const { data: frontmatter, content } = matter(fileContent);
+          const slug = basename(file, '.md');
+
+          let gitInfo = { contributors: [] as string[], lastModified: '' };
+          try {
+            gitInfo = getGitInfo(filePath);
+          } catch {}
+          paths.push({
+            params: { category: categorySlug, slug },
+            props: {
+              title: frontmatter.title || slug,
+              description: frontmatter.description || '',
+              content,
+              frontmatter,
+              lang: 'en',
+              contributors: gitInfo.contributors,
+              lastModified: gitInfo.lastModified,
+            },
+          });
         } catch {}
-        paths.push({
-          params: { category: categorySlug, slug },
-          props: {
-            title: frontmatter.title || slug,
-            description: frontmatter.description || '',
-            content,
-            frontmatter,
-            lang: 'en',
-            contributors: gitInfo.contributors,
-            lastModified: gitInfo.lastModified,
-          },
-        });
       }
     } catch {}
   }
@@ -191,16 +193,18 @@ try {
     for (const file of markdownFiles) {
       const articleSlug = basename(file, '.md');
       if (articleSlug !== slug) {
-        const filePath = join(categoryFolderPath, file);
-        const fileContent = await readFile(filePath, 'utf-8');
-        const { data: frontmatter } = matter(fileContent);
+        try {
+          const filePath = join(categoryFolderPath, file);
+          const fileContent = await readFile(filePath, 'utf-8');
+          const { data: frontmatter } = matter(fileContent);
 
-        relatedArticles.push({
-          title: frontmatter.title || articleSlug,
-          slug: articleSlug,
-          description: frontmatter.description || '',
-          category,
-        });
+          relatedArticles.push({
+            title: frontmatter.title || articleSlug,
+            slug: articleSlug,
+            description: frontmatter.description || '',
+            category,
+          });
+        } catch {}
       }
     }
 
@@ -219,15 +223,17 @@ try {
       for (const file of catFiles.filter(
         (f) => f.endsWith('.md') && !f.startsWith('_'),
       )) {
-        const articleSlug = basename(file, '.md');
-        const { data: fm } = matter(
-          await readFile(join(catPath, file), 'utf-8'),
-        );
-        allArticles.push({
-          title: fm.title || articleSlug,
-          slug: articleSlug,
-          category: catSlug,
-        });
+        try {
+          const articleSlug = basename(file, '.md');
+          const { data: fm } = matter(
+            await readFile(join(catPath, file), 'utf-8'),
+          );
+          allArticles.push({
+            title: fm.title || articleSlug,
+            slug: articleSlug,
+            category: catSlug,
+          });
+        } catch {}
       }
     } catch {}
   }

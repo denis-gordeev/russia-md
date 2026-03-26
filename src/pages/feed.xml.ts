@@ -45,25 +45,27 @@ export async function GET() {
       );
 
       for (const file of markdownFiles) {
-        const filePath = join(folderPath, file);
-        const fileContent = await readFile(filePath, 'utf-8');
-        const { data: frontmatter, content } = matter(fileContent);
-        const slug = basename(file, '.md');
-        const description =
-          frontmatter.description ||
-          content
-            .replace(/[\n\r]+/g, ' ')
-            .replace(/[#*`>-]/g, '')
-            .trim()
-            .slice(0, 220);
+        try {
+          const filePath = join(folderPath, file);
+          const fileContent = await readFile(filePath, 'utf-8');
+          const { data: frontmatter, content } = matter(fileContent);
+          const slug = basename(file, '.md');
+          const description =
+            frontmatter.description ||
+            content
+              .replace(/[\n\r]+/g, ' ')
+              .replace(/[#*`>-]/g, '')
+              .trim()
+              .slice(0, 220);
 
-        articles.push({
-          title: frontmatter.title || slug,
-          description,
-          link: `${siteUrl}/${categorySlug}/${slug}`,
-          pubDate: new Date(frontmatter.date || Date.now()).toUTCString(),
-          category: categorySlug,
-        });
+          articles.push({
+            title: frontmatter.title || slug,
+            description,
+            link: `${siteUrl}/${categorySlug}/${slug}`,
+            pubDate: new Date(frontmatter.date || Date.now()).toUTCString(),
+            category: categorySlug,
+          });
+        } catch {}
       }
     } catch {}
   }
