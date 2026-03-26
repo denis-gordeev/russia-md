@@ -516,6 +516,60 @@ async function getValidationInputPaths(cliOptions) {
   return null;
 }
 
+function matchesRepositoryMarkdownPath(repoPath) {
+  for (const documentPath of documentPaths) {
+    const repoDocumentPath = path.relative(root, documentPath).replace(/\\/g, '/');
+
+    if (repoPath === repoDocumentPath && repoPath.endsWith('.md')) {
+      return true;
+    }
+
+    if (repoPath.startsWith(`${repoDocumentPath}/`) && repoPath.endsWith('.md')) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+async function classifyScopedRepoPaths(repoPaths, skillNames) {
+  const ignoredRepoPaths = [];
+  const unmatchedRepoPaths = [];
+
+  for (const repoPath of repoPaths) {
+    if (shouldValidateAllSkillsForPath(repoPath)) {
+      continue;
+    }
+
+    if (repoPath.startsWith('skills/')) {
+      const [, skillName] = repoPath.split('/');
+
+      if (skillName && skillName !== 'shared' && skillNames.has(skillName)) {
+        continue;
+      }
+    }
+
+    if (matchesRepositoryMarkdownPath(repoPath)) {
+      continue;
+    }
+
+    if (await pathExists(path.join(root, repoPath))) {
+      ignoredRepoPaths.push(repoPath);
+    } else {
+      unmatchedRepoPaths.push(repoPath);
+    }
+  }
+
+  return {
+    ignoredRepoPaths: ignoredRepoPaths.sort(),
+    unmatchedRepoPaths: unmatchedRepoPaths.sort()
+  };
+}
+
+function formatScopedPathDiagnostics(label, repoPaths) {
+  return `${label}: ${repoPaths.map((repoPath) => JSON.stringify(repoPath)).join(', ')}.`;
+}
+
 function collectMarkdownDocsWithin(basePath, repoPaths) {
   const matchedDocs = new Set();
   const normalizedBasePath = `${basePath.replace(/\\/g, '/')}/`;
@@ -540,12 +594,15 @@ async function resolveValidationTargets(allSkillDirs, cliOptions) {
   if (!changedRepoPaths) {
     return {
       changedRepoPaths: null,
+      ignoredRepoPaths: [],
       noOpMessage: null,
       repositoryMarkdownPaths: null,
-      skillDirsToValidate: allSkillDirs
+      skillDirsToValidate: allSkillDirs,
+      unmatchedRepoPaths: []
     };
   }
 
+  const skillNames = new Set(allSkillDirs.map((skillDir) => path.basename(skillDir)));
   const changedSkillNames = new Set();
   let validateAllSkills = false;
 
@@ -590,13 +647,17 @@ async function resolveValidationTargets(allSkillDirs, cliOptions) {
     }
   }
 
+  const { ignoredRepoPaths, unmatchedRepoPaths } = await classifyScopedRepoPaths(changedRepoPaths, skillNames);
+
   if (validateAllSkills) {
     console.log('Shared validation inputs changed; validating all skill folders.');
     return {
       changedRepoPaths,
+      ignoredRepoPaths,
       noOpMessage: null,
       repositoryMarkdownPaths,
-      skillDirsToValidate: allSkillDirs
+      skillDirsToValidate: allSkillDirs,
+      unmatchedRepoPaths
     };
   }
 
@@ -609,9 +670,11 @@ async function resolveValidationTargets(allSkillDirs, cliOptions) {
 
       return {
         changedRepoPaths,
+        ignoredRepoPaths,
         noOpMessage,
         repositoryMarkdownPaths,
-        skillDirsToValidate: []
+        skillDirsToValidate: [],
+        unmatchedRepoPaths
       };
     } else {
       console.log('No changed skill folders detected; validating changed repository markdown links only.');
@@ -619,17 +682,21 @@ async function resolveValidationTargets(allSkillDirs, cliOptions) {
 
     return {
       changedRepoPaths,
+      ignoredRepoPaths,
       noOpMessage: null,
       repositoryMarkdownPaths,
-      skillDirsToValidate: []
+      skillDirsToValidate: [],
+      unmatchedRepoPaths
     };
   }
 
   return {
     changedRepoPaths,
+    ignoredRepoPaths,
     noOpMessage: null,
     repositoryMarkdownPaths,
-    skillDirsToValidate: allSkillDirs.filter((skillDir) => changedSkillNames.has(path.basename(skillDir)))
+    skillDirsToValidate: allSkillDirs.filter((skillDir) => changedSkillNames.has(path.basename(skillDir))),
+    unmatchedRepoPaths
   };
 }
 
@@ -731,10 +798,21 @@ async function main() {
     fail('No skill directories found.');
   }
 
-  const { skillDirsToValidate, repositoryMarkdownPaths, noOpMessage } = await resolveValidationTargets(
-    skillDirs,
-    cliOptions
-  );
+  const { ignoredRepoPaths, noOpMessage, repositoryMarkdownPaths, skillDirsToValidate, unmatchedRepoPaths } =
+    await resolveValidationTargets(skillDirs, cliOptions);
+
+  if (unmatchedRepoPaths.length > 0) {
+    console.log(formatScopedPathDiagnostics('Scoped input paths did not match repository entries', unmatchedRepoPaths));
+  }
+
+  if (ignoredRepoPaths.length > 0) {
+    console.log(
+      formatScopedPathDiagnostics(
+        'Ignoring scoped repo paths outside skill bundles and tracked markdown docs',
+        ignoredRepoPaths
+      )
+    );
+  }
 
   if (noOpMessage) {
     console.log(noOpMessage);

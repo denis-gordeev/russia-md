@@ -1,5 +1,7 @@
 import { execFile as execFileCallback } from 'child_process';
 import assert from 'assert/strict';
+import { cp, mkdir, mkdtemp, writeFile } from 'fs/promises';
+import os from 'os';
 import path from 'path';
 import { promisify } from 'util';
 
@@ -38,6 +40,23 @@ async function runCase(caseName, { args = [], expectSuccess, expectedText }) {
   }
 }
 
+async function withTempGitFixture(caseName, mutateFixture, assertion) {
+  const tempRoot = await mkdtemp(path.join(os.tmpdir(), 'skill-validator-fixture-'));
+  const fixtureRoot = path.join(fixturesRoot, caseName);
+
+  await cp(fixtureRoot, tempRoot, { recursive: true });
+  await execFile('git', ['init'], { cwd: tempRoot });
+  await execFile('git', ['add', '.'], { cwd: tempRoot });
+  await execFile(
+    'git',
+    ['-c', 'user.name=Codex', '-c', 'user.email=codex@example.com', 'commit', '-m', 'fixture baseline'],
+    { cwd: tempRoot }
+  );
+
+  await mutateFixture(tempRoot);
+  await assertion(tempRoot);
+}
+
 async function main() {
   await runCase('valid-minimal', {
     expectSuccess: true,
@@ -65,8 +84,61 @@ async function main() {
   await runCase('valid-minimal', {
     args: ['--paths', 'notes/todo.txt'],
     expectSuccess: true,
-    expectedText: /No skill folders or repository markdown docs matched the selected --paths input; nothing to validate\./
+    expectedText:
+      /Ignoring scoped repo paths outside skill bundles and tracked markdown docs: "notes\/todo\.txt"\.[\s\S]*No skill folders or repository markdown docs matched the selected --paths input; nothing to validate\./
   });
+
+  await runCase('valid-minimal', {
+    args: ['--paths', 'notes/missing.txt'],
+    expectSuccess: true,
+    expectedText:
+      /Scoped input paths did not match repository entries: "notes\/missing\.txt"\.[\s\S]*No skill folders or repository markdown docs matched the selected --paths input; nothing to validate\./
+  });
+
+  await withTempGitFixture(
+    'valid-minimal',
+    async (tempRoot) => {
+      await mkdir(path.join(tempRoot, 'notes'), { recursive: true });
+      await writeFile(path.join(tempRoot, 'notes', 'extra.txt'), 'todo\n');
+    },
+    async (tempRoot) => {
+      const { stdout, stderr } = await execFile('node', [validatorPath, '--changed'], {
+        cwd: repoRoot,
+        env: {
+          ...process.env,
+          SKILL_VALIDATOR_ROOT: tempRoot
+        }
+      });
+
+      assert.match(
+        `${stdout}\n${stderr}`,
+        /Ignoring scoped repo paths outside skill bundles and tracked markdown docs: "notes\/extra\.txt"\.[\s\S]*No changed skill folders or tracked repository markdown docs detected; nothing to validate\./
+      );
+    }
+  );
+
+  await withTempGitFixture(
+    'valid-minimal',
+    async (tempRoot) => {
+      await mkdir(path.join(tempRoot, 'notes'), { recursive: true });
+      await writeFile(path.join(tempRoot, 'notes', 'extra.txt'), 'todo\n');
+      await execFile('git', ['add', 'notes/extra.txt'], { cwd: tempRoot });
+    },
+    async (tempRoot) => {
+      const { stdout, stderr } = await execFile('node', [validatorPath, '--staged'], {
+        cwd: repoRoot,
+        env: {
+          ...process.env,
+          SKILL_VALIDATOR_ROOT: tempRoot
+        }
+      });
+
+      assert.match(
+        `${stdout}\n${stderr}`,
+        /Ignoring scoped repo paths outside skill bundles and tracked markdown docs: "notes\/extra\.txt"\.[\s\S]*No changed skill folders or tracked repository markdown docs detected; nothing to validate\./
+      );
+    }
+  );
 
   await runCase('invalid-icon-path', {
     expectSuccess: false,
