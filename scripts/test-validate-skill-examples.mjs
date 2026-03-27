@@ -65,7 +65,29 @@ async function main() {
   await runCase('valid-minimal', {
     args: ['--paths', 'notes/todo.txt'],
     expectSuccess: true,
-    expectedText: /No skill folders or repository markdown docs matched the selected --paths input; nothing to validate\./
+    expectedText:
+      /No skill folders or repository markdown docs matched the selected --paths input; nothing to validate \(ignored existing non-markdown path\(s\): notes\/todo\.txt\.\)/
+  });
+
+  await runCase('valid-minimal', {
+    args: ['--paths', 'notes/extra.md'],
+    expectSuccess: true,
+    expectedText:
+      /No skill folders or repository markdown docs matched the selected --paths input; nothing to validate \(ignored existing markdown path\(s\) outside tracked docs: notes\/extra\.md\.\)/
+  });
+
+  await runCase('valid-minimal', {
+    args: ['--paths', 'missing.txt'],
+    expectSuccess: true,
+    expectedText:
+      /No skill folders or repository markdown docs matched the selected --paths input; nothing to validate \(unmatched path\(s\): missing\.txt\.\)/
+  });
+
+  await runCase('valid-minimal', {
+    args: ['--paths', 'README.md,notes/todo.txt'],
+    expectSuccess: true,
+    expectedText:
+      /Additional --paths selection details: ignored existing non-markdown path\(s\): notes\/todo\.txt\.[\s\S]*No changed skill folders detected; validating changed repository markdown links only\.[\s\S]*Validated 0 skill example contract\(s\) and changed repository markdown links\./
   });
 
   await runCase('invalid-icon-path', {
