@@ -167,6 +167,29 @@ python3 -c "import urllib.parse; print('https://taiwan.md/<category>/' + urllib.
 - ❌ `taiwan.md/music/台灣民歌運動/`（Threads 會斷開連結）
 - ❌ `taiwan.md/peopl…`（被截斷 = 死連結）
 
+### 3e. 配圖：OG Card 頁面
+
+每篇文章都有獨立的 OG card 頁面，固定 1200×630 尺寸：
+
+```
+https://taiwan.md/og/<category>/<slug>/
+```
+
+例如：`https://taiwan.md/og/music/台灣民歌運動/`
+
+**配圖產生方式（目前）：**
+
+1. 在瀏覽器開啟 OG card 頁面
+2. 截圖（macOS: `Cmd+Shift+4` 框選 / 瀏覽器 DevTools screenshot）
+3. 附加到孢子貼文
+
+**設計規格：**
+
+- 尺寸：1200×630px
+- 深綠色漸變背景 + Noto Serif TC 明體大標題
+- 包含：麵包屑、標題、描述、標籤（前 4 個）、Taiwan.md footer
+- `noindex` 不會污染 SEO
+
 ---
 
 ## Step 4: 品檢 + 發佈（QA + SHIP）
