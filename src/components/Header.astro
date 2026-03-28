@@ -249,6 +249,67 @@ const categoryList = [
                   </Fragment>
                 );
               }
+              if (item.path === '/dashboard') {
+                return (
+                  <Fragment>
+                    {showSep && <span class="nav-sep" />}
+                    <div class="nav-dropdown">
+                      <a
+                        href={item.fullPath}
+                        class:list={['nav-link', { active: item.active }]}
+                      >
+                        {item.label} <span class="dropdown-arrow">▾</span>
+                      </a>
+                      <div class="dropdown-menu">
+                        <a
+                          href={`${translatePath('/dashboard')}#vitals`}
+                          class="dropdown-item"
+                        >
+                          💓 {lang === 'en' ? 'Vital Signs' : '生命徵象'}
+                        </a>
+                        <a
+                          href={`${translatePath('/dashboard')}#registry`}
+                          class="dropdown-item"
+                        >
+                          📋 {lang === 'en' ? 'Article Registry' : '文章總覽'}
+                        </a>
+                        <a
+                          href={`${translatePath('/dashboard')}#health`}
+                          class="dropdown-item"
+                        >
+                          📊{' '}
+                          {lang === 'en' ? 'Health Distribution' : '健康分布'}
+                        </a>
+                        <a
+                          href={`${translatePath('/dashboard')}#organism`}
+                          class="dropdown-item"
+                        >
+                          🧬 {lang === 'en' ? 'Organ Anatomy' : '器官解剖'}
+                        </a>
+                        <a
+                          href={`${translatePath('/dashboard')}#translation`}
+                          class="dropdown-item"
+                        >
+                          🌐{' '}
+                          {lang === 'en' ? 'Translation Coverage' : '翻譯覆蓋'}
+                        </a>
+                        <a
+                          href={`${translatePath('/dashboard')}#immune`}
+                          class="dropdown-item"
+                        >
+                          🛡️ {lang === 'en' ? 'Immune System' : '免疫系統'}
+                        </a>
+                        <a
+                          href={`${translatePath('/dashboard')}#growth`}
+                          class="dropdown-item"
+                        >
+                          📈 {lang === 'en' ? 'Growth Timeline' : '成長時間軸'}
+                        </a>
+                      </div>
+                    </div>
+                  </Fragment>
+                );
+              }
               if (item.path === '/contribute') {
                 return (
                   <Fragment>
