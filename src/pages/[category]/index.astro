@@ -83,6 +83,7 @@ export async function getStaticPaths() {
           image: frontmatter.image || null,
           imageAlt: frontmatter.imageAlt || '',
           imageCredit: frontmatter.imageCredit || '',
+          subcategory: frontmatter.subcategory || '',
         });
       }
     } catch (err) {
@@ -270,6 +271,23 @@ if (isEconomy && hubHtml) {
   });
 }
 
+// Group articles by subcategory
+const subcategoryGroups: { name: string; articles: any[] }[] = [];
+const subcatMap = new Map<string, any[]>();
+for (const article of articles) {
+  const sub = (article as any).subcategory || '其他';
+  if (!subcatMap.has(sub)) subcatMap.set(sub, []);
+  subcatMap.get(sub)!.push(article);
+}
+// Sort: named subcategories first (alphabetically), then "其他" last
+for (const [name, arts] of [...subcatMap.entries()].sort((a, b) => {
+  if (a[0] === '其他') return 1;
+  if (b[0] === '其他') return -1;
+  return a[0].localeCompare(b[0]);
+})) {
+  subcategoryGroups.push({ name, articles: arts });
+}
+
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
 
@@ -406,8 +424,19 @@ const otherCategories = categories
         )
       }
 
-      <!-- Articles Section -->
+      <!-- Articles Section (grouped by subcategory) -->
       <h2 class="articles-heading">📖 延伸閱讀</h2>
+
+      {subcategoryGroups.length > 1 && (
+        <nav class="subcategory-nav">
+          {subcategoryGroups.map((group) => (
+            <a href={`#sub-${group.name}`} class="subcategory-chip">
+              {group.name}
+              <span class="chip-count">{group.articles.length}</span>
+            </a>
+          ))}
+        </nav>
+      )}
       {
         articles.length > 0 ? (
           <section class="articles-section">
@@ -454,66 +483,79 @@ const otherCategories = categories
               </div>
             </div>
 
-            <div class="articles-grid" id="articlesGrid">
-              {articles.map((article: any, index: number) => (
-                <article
-                  class={`article-card ${index === 0 && article.featured ? 'featured-card' : ''}`}
-                  data-title={article.title}
-                  data-date={article.date || ''}
-                  data-reading={article.readingTime || 0}
-                  data-featured={article.featured ? '1' : '0'}
-                  data-tags={JSON.stringify(article.tags || [])}
-                  data-lang={article.lang}
-                >
-                  <a href={`/${category}/${article.slug}`} class="card-link">
-                    {article.image ? (
-                      <div class="card-image">
-                        <img 
-                          src={article.image} 
-                          alt={article.imageAlt || article.title} 
-                          loading="lazy" 
-                        />
-                      </div>
-                    ) : (
-                      <div
-                        class="card-image-placeholder"
-                        style={`background: ${categoryInfo.gradient};`}
+            <div id="articlesGrid">
+              {subcategoryGroups.map((group) => (
+                <div class="subcategory-section" id={`sub-${group.name}`}>
+                  {subcategoryGroups.length > 1 && (
+                    <h3 class="subcategory-heading">
+                      {group.name}
+                      <span class="subcategory-count">{group.articles.length}</span>
+                    </h3>
+                  )}
+                  <div class="articles-grid">
+                    {group.articles.map((article: any, index: number) => (
+                      <article
+                        class={`article-card ${index === 0 && article.featured ? 'featured-card' : ''}`}
+                        data-title={article.title}
+                        data-date={article.date || ''}
+                        data-reading={article.readingTime || 0}
+                        data-featured={article.featured ? '1' : '0'}
+                        data-tags={JSON.stringify(article.tags || [])}
+                        data-lang={article.lang}
+                        data-subcategory={article.subcategory || ''}
                       >
-                        <div class="card-image-icon">{categoryInfo.icon}</div>
-                      </div>
-                    )}
-
-                    <div class="card-content">
-                      <div class="card-header">
-                        <div class="article-meta">
-                          {article.status && (
-                            <span class="status-tag">{article.status}</span>
+                        <a href={`/${category}/${article.slug}`} class="card-link">
+                          {article.image ? (
+                            <div class="card-image">
+                              <img 
+                                src={article.image} 
+                                alt={article.imageAlt || article.title} 
+                                loading="lazy" 
+                              />
+                            </div>
+                          ) : (
+                            <div
+                              class="card-image-placeholder"
+                              style={`background: ${categoryInfo.gradient};`}
+                            >
+                              <div class="card-image-icon">{categoryInfo.icon}</div>
+                            </div>
                           )}
-                          {article.lang && (
-                            <span class="lang-tag">
-                              {article.lang === 'zh-TW' ? '中文' : 'EN'}
-                            </span>
-                          )}
-                        </div>
-                        {article.featured && (
-                          <div class="featured-badge">⭐ 精選</div>
-                        )}
-                      </div>
 
-                      <h3 class="article-title">{article.title}</h3>
+                          <div class="card-content">
+                            <div class="card-header">
+                              <div class="article-meta">
+                                {article.status && (
+                                  <span class="status-tag">{article.status}</span>
+                                )}
+                                {article.lang && (
+                                  <span class="lang-tag">
+                                    {article.lang === 'zh-TW' ? '中文' : 'EN'}
+                                  </span>
+                                )}
+                              </div>
+                              {article.featured && (
+                                <div class="featured-badge">⭐ 精選</div>
+                              )}
+                            </div>
 
-                      <p class="article-excerpt">{article.description}</p>
+                            <h3 class="article-title">{article.title}</h3>
 
-                      <div class="article-info">
-                        {article.readingTime && (
-                          <span class="info-item">
-                            📖 {article.readingTime} 分鐘
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                  </a>
-                </article>
+                            <p class="article-excerpt">{article.description}</p>
+
+                            <div class="article-info">
+                              {article.readingTime && (
+                                <span class="info-item">
+                                  📖 {article.readingTime} 分鐘
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                        </a>
+                      </article>
+                    ))}
+                  </div>
+                </div>
               ))}
             </div>
             <div class="no-results" id="noResults" style="display:none;">
@@ -581,6 +623,9 @@ const otherCategories = categories
     const cards = Array.from(
       grid.querySelectorAll('.article-card'),
     ) as HTMLElement[];
+    const subcategorySections = Array.from(
+      grid.querySelectorAll('.subcategory-section'),
+    ) as HTMLElement[];
     let activeSort = 'featured';
     let activeTag = '';
 
@@ -623,6 +668,12 @@ const otherCategories = categories
         card.style.display = show ? '' : 'none';
         // Reset featured-card class based on visibility
         if (show) visible++;
+      });
+      // Hide subcategory sections with no visible cards
+      subcategorySections.forEach((section) => {
+        const sectionCards = section.querySelectorAll('.article-card') as NodeListOf<HTMLElement>;
+        const anyVisible = Array.from(sectionCards).some((c) => c.style.display !== 'none');
+        section.style.display = anyVisible ? '' : 'none';
       });
       if (noResults) {
         noResults.style.display = visible === 0 ? 'block' : 'none';
@@ -1060,6 +1111,76 @@ const otherCategories = categories
 
   .articles-section {
     margin-bottom: var(--space-8);
+  }
+
+  /* Subcategory Navigation */
+  .subcategory-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+    padding: 1rem;
+    background: #f8fafc;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+  }
+
+  .subcategory-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.4rem 0.85rem;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    color: #475569;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.2s;
+  }
+
+  .subcategory-chip:hover {
+    border-color: var(--categoryColor);
+    color: var(--categoryColor);
+    background: var(--categoryColorLight);
+  }
+
+  .chip-count {
+    background: #e2e8f0;
+    color: #64748b;
+    padding: 0.1rem 0.45rem;
+    border-radius: 10px;
+    font-size: 0.72rem;
+    font-weight: 600;
+  }
+
+  /* Subcategory Section */
+  .subcategory-section {
+    margin-bottom: 2.5rem;
+  }
+
+  .subcategory-heading {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 1.25rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--categoryColor);
+    font-family: var(--font-editorial);
+    letter-spacing: var(--title-letter-spacing);
+  }
+
+  .subcategory-count {
+    background: var(--categoryColorLight);
+    color: var(--categoryColor);
+    padding: 0.15rem 0.55rem;
+    border-radius: 10px;
+    font-size: 0.78rem;
+    font-weight: 600;
   }
 
   /* Toolbar */
