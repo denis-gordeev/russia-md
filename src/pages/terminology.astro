@@ -1007,13 +1007,16 @@ const forkDataJSON = JSON.stringify(forkData);
     display: flex;
     flex-direction: column;
     gap: 0.25rem;
+    min-width: 0;
+    flex: 1;
   }
   .taiwan-word {
     font-family: var(--font-editorial, Georgia, serif);
-    font-size: 1.55rem;
+    font-size: clamp(1.1rem, 2.5vw, 1.4rem);
     font-weight: 700;
     color: #1a1a2e;
-    line-height: 1.1;
+    line-height: 1.2;
+    word-break: break-word;
   }
   .china-word {
     font-size: 0.82rem;
