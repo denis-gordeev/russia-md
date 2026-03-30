@@ -1,22 +1,17 @@
 id: 攝影機
-category: daily
-subcategory: 日常生活
+category: tech
+subcategory: 硬體與裝置
 fork_type: B
-
 display:
-  taiwan: 攝影機
+  taiwan: 攝影機 / 攝錄影機
   china: 攝像機
-
 etymology:
-  origin: ""
+  origin: 「攝影機」為台灣通用稱呼（video camera），「攝錄影機」強調同時可錄影。中國稱「攝像機」，「像」vs「影」是兩岸用字差異。
   taiwan_path: 台灣用法
   china_path: 中國用法
   fork_point: ""
-
 notes: ""
-
 sources:
-  - "ThunderKO C2T / 《大陸用語檢索手冊》1997"
-
-added: "2026-03-30"
-updated: "2026-03-30"
+  - ThunderKO C2T / 《大陸用語檢索手冊》1997
+added: 2026-03-30
+updated: 2026-03-30

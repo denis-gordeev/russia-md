@@ -1,31 +1,25 @@
 id: guo-dao
-category: transport
+category: daily
 subcategory: 公路交通
 fork_type: E
-
 display:
   taiwan: 國道
   china: 高速公路
 english: national freeway (Taiwan)
-
 etymology:
   origin: 台灣「國道」特指國家高速公路（國道1-8號等）；中國「國道」指國家幹線公路（不一定高速），與台灣用法有本質差別。
   taiwan_path: 台灣國道由國道高速公路局管理，「國道1號（中山高）」是台灣最重要的南北高速公路，「走國道」是台灣長途旅行的日常語言。
   china_path: 中國「國道」指全國性幹線公路（如G104），包含非高速路段，「高速公路」才特指限速高速路段，與台灣用法不同。
-  fork_point: "~1974"
+  fork_point: ~1974
   fork_cause: 同詞不同指涉範疇：台灣「國道」=高速公路；中國「國道」=幹線公路（不一定高速）。
-
 usage:
   taiwan_formal: true
   taiwan_casual: true
   exceptions: ""
-
 status: stable
 notes: |
   台灣國道系統是南北交通大動脈，「春節國道塞車」是台灣年度大事，「國道」這個詞在台灣已完全等同於「高速公路」。
-
 sources:
-  - "國道高速公路局台灣高速公路發展史"
-
-added: "2026-03-30"
-updated: "2026-03-30"
+  - 國道高速公路局台灣高速公路發展史
+added: 2026-03-30
+updated: 2026-03-30

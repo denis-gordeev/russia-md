@@ -5,7 +5,7 @@ display:
   taiwan: 儲值 / 加值
   china: 充值
 etymology:
-  origin: 將錢、點數儲入帳戶供之後使用。
+  origin: 為預付費帳戶加錢。中國說「充值」（充入價值），台灣說「儲值」（儲存價值）或「加值」。悠遊卡「加值」、遊戲「儲值」為台灣常見用法。
 notes: 來源：caris-events/invade (CC0)
 sources:
   - https://github.com/caris-events/invade

@@ -1,12 +1,13 @@
 id: 拉黑
-category: daily
+category: tech
 fork_type: E
 display:
   taiwan: 封鎖
   china: 拉黑
 etymology:
-  origin: 把某個人加入到黑名單。
+  origin: 將對方加入黑名單。中國說「拉黑」（拉進黑名單），台灣說「封鎖」。微信、QQ 等中國社群軟體的標準用語。
 notes: 來源：caris-events/invade (CC0)
 sources:
   - https://github.com/caris-events/invade
 added: 2026-03-30
+subcategory: 網路與通訊

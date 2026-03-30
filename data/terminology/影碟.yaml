@@ -1,22 +1,17 @@
 id: 影碟
-category: daily
-subcategory: 日常生活
+category: tech
+subcategory: 硬體與裝置
 fork_type: B
-
 display:
-  taiwan: 影碟
+  taiwan: 影碟 / 雷射影碟
   china: 激光視盤
-
 etymology:
-  origin: ""
+  origin: 台灣通稱「影碟」或「雷射影碟」（LD），中國稱「激光視盤」。「激光」為中國對 laser 的譯法，台灣譯「雷射」。
   taiwan_path: 台灣用法
   china_path: 中國用法
   fork_point: ""
-
 notes: ""
-
 sources:
-  - "ThunderKO C2T / 《大陸用語檢索手冊》1997"
-
-added: "2026-03-30"
-updated: "2026-03-30"
+  - ThunderKO C2T / 《大陸用語檢索手冊》1997
+added: 2026-03-30
+updated: 2026-03-30

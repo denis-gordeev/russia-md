@@ -1,31 +1,25 @@
 id: hou-che-ting
-category: transport
+category: daily
 subcategory: 大眾運輸
 fork_type: B
-
 display:
   taiwan: 候車亭
   china: 候車廳
 english: bus shelter
-
 etymology:
   origin: 「候車」指等候車輛，「亭」指戶外小型遮蔽設施，兩岸用詞相近，台灣以「亭」為主，中國有時用「廳」指室內大型空間。
   taiwan_path: 台灣候車亭普及於各大路口，提供遮陽避雨功能，部分配備電子公車動態顯示，是台灣道路景觀的標準設施。
   china_path: 中國大城市公交站多有候車設施，長途客運站的「候車廳」為封閉室內空間。
-  fork_point: "~1970s"
+  fork_point: ~1970s
   fork_cause: 「亭 vs 廳」的空間規模差異，台灣偏戶外小型設施。
-
 usage:
   taiwan_formal: true
   taiwan_casual: true
   exceptions: ""
-
 status: stable
 notes: |
   台灣候車亭廣告看板是戶外廣告文化的主要媒介，也是城市美化與公共藝術的結合點。
-
 sources:
-  - "交通部公路局候車設施設置規範"
-
-added: "2026-03-30"
-updated: "2026-03-30"
+  - 交通部公路局候車設施設置規範
+added: 2026-03-30
+updated: 2026-03-30

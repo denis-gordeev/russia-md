@@ -1,31 +1,25 @@
 id: gao-jia-qiao
-category: transport
+category: daily
 subcategory: 公路交通
 fork_type: F
-
 display:
   taiwan: 高架橋
   china: 高架桥
 english: overpass / elevated road
-
 etymology:
   origin: 「高架橋」描述架設於高處的橋梁式道路，兩岸基本用詞相近（繁簡字差異），中國「立交橋」特指立體交叉橋。
   taiwan_path: 台灣城市高架橋（如中正高架橋）是都市交通的重要設施，「高架道路」是台灣城市規劃的重要基礎設施，橋墩下空間也常被作為停車場或市集使用。
   china_path: 中國「立交橋」特指多層立體交叉的橋梁，「高架路」指高架快速道路，區分較細。
-  fork_point: "~1970s"
+  fork_point: ~1970s
   fork_cause: 繁簡字差異加部分用語範疇不同，台灣「高架橋」通用，中國有更細的分類。
-
 usage:
   taiwan_formal: true
   taiwan_casual: true
   exceptions: ""
-
 status: stable
 notes: |
   台灣高架橋是城市景觀的重要組成，「橋下文化」（橋墩下的市集、停車場）也是台灣城市空間多層利用的智慧體現。
-
 sources:
-  - "交通部公路局高架道路設計規範"
-
-added: "2026-03-30"
-updated: "2026-03-30"
+  - 交通部公路局高架道路設計規範
+added: 2026-03-30
+updated: 2026-03-30

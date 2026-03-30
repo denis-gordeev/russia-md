@@ -1,31 +1,25 @@
 id: huo-che-zhan
-category: transport
+category: daily
 subcategory: 大眾運輸
 fork_type: F
-
 display:
   taiwan: 火車站
   china: 火车站
 english: train station / railway station
-
 etymology:
   origin: 漢語固有詞，兩岸用詞完全相同（繁簡字差異：車/车），但台鐵火車站在台灣文化中有特殊地位。
   taiwan_path: 台灣「火車站」由台鐵（台灣鐵路）管理，台北車站是全台最重要的交通樞紐，各縣市火車站也是地方生活的中心，「在火車站等」是台灣約定見面的標準地點。
   china_path: 中國「火车站」是城市交通樞紐，高鐵站（動車站）在近年已部分取代傳統火車站的地位。
-  fork_point: "~1891"
+  fork_point: ~1891
   fork_cause: 繁簡字差異，台灣台鐵火車站的文化地位與日治時期鐵路歷史深度結合。
-
 usage:
   taiwan_formal: true
   taiwan_casual: true
   exceptions: ""
-
 status: stable
 notes: |
   台灣火車站不僅是交通樞紐，更是城市文化地標，台北車站廣場是台灣重要的公共集會空間，每逢假日常見各族群聚集。
-
 sources:
-  - "台灣鐵路管理局官方網站"
-
-added: "2026-03-30"
-updated: "2026-03-30"
+  - 台灣鐵路管理局官方網站
+added: 2026-03-30
+updated: 2026-03-30

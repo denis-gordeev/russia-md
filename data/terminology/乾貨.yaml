@@ -1,10 +1,10 @@
 id: useful-content
-category: internet
+category: tech
 fork_type: B
 display:
   taiwan: 實用內容
   china: 乾貨
 notes: 中國網路用語「乾貨」= 有實質內容的分享。台灣不用此詞，通常說「實用內容」「有料的內容」
 sources:
-- 中國網路用語
-added: '2026-03-30'
+  - 中國網路用語
+added: 2026-03-30

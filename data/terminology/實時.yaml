@@ -1,12 +1,13 @@
 id: 實時
-category: daily
+category: tech
 fork_type: E
 display:
   taiwan: 即時
   china: 實時
 etymology:
-  origin: 立即性的。
+  origin: 表示「即時」的概念。台灣用「即時」（立即的時間），中國用「實時」（real-time 直譯）。科技文件中差異尤其明顯。
 notes: 來源：caris-events/invade (CC0)
 sources:
   - https://github.com/caris-events/invade
 added: 2026-03-30
+subcategory: 軟體與程式開發

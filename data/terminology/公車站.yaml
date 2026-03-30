@@ -1,31 +1,25 @@
 id: gong-che-zhan
-category: transport
+category: daily
 subcategory: 大眾運輸
 fork_type: B
-
 display:
   taiwan: 公車站
   china: 公交站
 english: bus stop
-
 etymology:
   origin: 台灣稱公共巴士為「公車」（公共汽車縮寫），站點稱「公車站」；中國稱「公交車」，站點稱「公交站」。
   taiwan_path: 台灣「公車站」是城市大眾運輸的基礎設施，近年整合YouBike站點，公車站成為多模式交通節點，站牌提供即時動態顯示。
   china_path: 中國「公交站」是城市公共交通基礎，各地公交系統在規模和命名上均以「公交」為主。
-  fork_point: "~1950s"
+  fork_point: ~1950s
   fork_cause: 「公車 vs 公交車」的命名差異延伸到站點名稱。
-
 usage:
   taiwan_formal: true
   taiwan_casual: true
   exceptions: ""
-
 status: stable
 notes: |
   台灣公車站牌系統提供即時動態顯示，「等公車」是台灣通勤文化的日常場景，台北市公車系統的資訊透明度在亞洲大城市中具競爭力。
-
 sources:
-  - "交通部公路局大眾運輸統計"
-
-added: "2026-03-30"
-updated: "2026-03-30"
+  - 交通部公路局大眾運輸統計
+added: 2026-03-30
+updated: 2026-03-30

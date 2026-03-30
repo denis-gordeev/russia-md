@@ -1,31 +1,25 @@
 id: jiao-liu-dao
-category: transport
+category: daily
 subcategory: 公路交通
 fork_type: B
-
 display:
   taiwan: 交流道
   china: 互通式立交
 english: highway interchange
-
 etymology:
   origin: 「交流道」為台灣自創詞，意指高速公路與一般道路「交流」（相互進出）的通道，中國用「互通式立交」或「立交出入口」。
   taiwan_path: 台灣高速公路系統以「交流道」統稱各出入口，「幾號交流道」是台灣長途旅行的導航語言，已完全固化為公路文化語彙。
   china_path: 中國高速公路出入口稱「互通式立交」或直接稱「入口/出口」，「立交橋」則特指城市立體交叉橋。
-  fork_point: "~1974"
+  fork_point: ~1974
   fork_cause: 台灣自創「交流道」一詞，反映台灣公路文化的獨立語言體系。
-
 usage:
   taiwan_formal: true
   taiwan_casual: true
   exceptions: ""
-
 status: stable
 notes: |
   「下交流道」「過了這個交流道」是台灣長途開車的標準導航語言，反映台灣高速公路文化與國民旅遊習慣的深度結合。
-
 sources:
-  - "國道高速公路局（台灣）路線及交流道資訊"
-
-added: "2026-03-30"
-updated: "2026-03-30"
+  - 國道高速公路局（台灣）路線及交流道資訊
+added: 2026-03-30
+updated: 2026-03-30

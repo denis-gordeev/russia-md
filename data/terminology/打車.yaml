@@ -5,8 +5,9 @@ display:
   taiwan: 叫車 / 坐計程車
   china: 打車
 etymology:
-  origin: 呼叫、乘坐計程車。
+  origin: 招叫計程車。台灣說「叫車」或「搭計程車」（小黃），中國說「打車」或「打的」（「的」來自 taxi 的粵語音譯「的士」）。
 notes: 來源：caris-events/invade (CC0)
 sources:
   - https://github.com/caris-events/invade
 added: 2026-03-30
+subcategory: 交通

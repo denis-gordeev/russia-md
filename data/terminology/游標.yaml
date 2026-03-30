@@ -1,22 +1,17 @@
 id: 游標
-category: daily
-subcategory: 日常生活
+category: tech
+subcategory: 硬體與裝置
 fork_type: B
-
 display:
   taiwan: 游標
   china: 光標
-
 etymology:
-  origin: ""
+  origin: 螢幕上顯示目前位置的指標。台灣稱「游標」（游動的標記），中國稱「光標」（光的標記）。「遊標」為異體字寫法，正寫為「游標」。
   taiwan_path: 台灣用法
   china_path: 中國用法
   fork_point: ""
-
-notes: ""
-
+notes: 「遊標」為「游標」異體字，統一為「游標」
 sources:
-  - "ThunderKO C2T / 《大陸用語檢索手冊》1997"
-
-added: "2026-03-30"
-updated: "2026-03-30"
+  - ThunderKO C2T / 《大陸用語檢索手冊》1997
+added: 2026-03-30
+updated: 2026-03-30

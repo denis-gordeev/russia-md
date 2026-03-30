@@ -2,21 +2,16 @@ id: 軟體套件
 category: tech
 subcategory: 軟體與程式開發
 fork_type: B
-
 display:
-  taiwan: 軟體套件
+  taiwan: 軟體套件 / 套裝軟體
   china: 軟件包
-
 etymology:
   origin: ""
   taiwan_path: 台灣用法
   china_path: 中國用法
   fork_point: ""
-
-notes: ""
-
+notes: 「軟體套件」偏技術語境（npm package），「套裝軟體」偏消費者語境（Microsoft Office），合併為同條目
 sources:
-  - "ThunderKO C2T / 《大陸用語檢索手冊》1997"
-
-added: "2026-03-30"
-updated: "2026-03-30"
+  - ThunderKO C2T / 《大陸用語檢索手冊》1997
+added: 2026-03-30
+updated: 2026-03-30

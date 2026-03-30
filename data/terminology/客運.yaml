@@ -1,31 +1,25 @@
 id: ke-yun
-category: transport
+category: daily
 subcategory: 大眾運輸
 fork_type: B
-
 display:
   taiwan: 客運
   china: 長途客運
 english: intercity bus / long-distance bus
-
 etymology:
   origin: 台灣「客運」泛指旅客運輸業者，尤指長途巴士公司（如統聯、國光、阿羅哈等）；中國「長途客運」或「大巴」更為常用。
   taiwan_path: 台灣客運公司（統聯、國光、阿羅哈等）是城際交通的重要支柱，「搭客運回家」是台灣南來北往學生的共同記憶，「客運站」是長途旅行的起點。
   china_path: 中國「長途客運」是重要的省際交通工具，但高鐵普及後地位下降，「大巴」是日常口語。
-  fork_point: "~1950s"
+  fork_point: ~1950s
   fork_cause: 台灣「客運」指長途巴士運輸，中國更常說「長途客運」或「大巴」。
-
 usage:
   taiwan_formal: true
   taiwan_casual: true
   exceptions: ""
-
 status: stable
 notes: |
   台灣客運公司是台灣城際交通的歷史基礎設施，「國光號」「統聯」是幾代台灣人的長途旅行記憶，也是台灣公路文化的重要符號。
-
 sources:
-  - "交通部公路局客運業者統計"
-
-added: "2026-03-30"
-updated: "2026-03-30"
+  - 交通部公路局客運業者統計
+added: 2026-03-30
+updated: 2026-03-30

@@ -2,30 +2,24 @@ id: chu-kong
 category: tech
 subcategory: 硬體與裝置
 fork_type: B
-
 display:
-  taiwan: 觸控
+  taiwan: 觸控 / 觸控螢幕 / 觸控式螢幕
   china: 觸摸屏
 english: touch (screen) / touchscreen
-
 etymology:
   origin: 台灣以「觸控」（觸碰控制）描述touchscreen技術，中國以「觸摸屏」為主要用語，「觸控 vs 觸摸」是兩岸科技詞彙的典型差異。
   taiwan_path: 台灣觸控技術在宸鴻光電（TPK）等廠商推動下曾是全球最大觸控面板供應地，「觸控螢幕」「觸控板」是台灣科技日常語彙。
   china_path: 中國「觸摸屏」是主流用語，「電容屏」「多點觸控」等技術術語與台灣類似但選字不同。
-  fork_point: "~2007"
+  fork_point: ~2007
   fork_cause: 台灣「觸控」強調控制互動功能，中國「觸摸屏」強調螢幕物理特性。
-
 usage:
   taiwan_formal: true
   taiwan_casual: true
   exceptions: ""
-
 status: stable
 notes: |
   台灣觸控面板產業曾是全球供應鏈重要節點，宸鴻光電等台廠為iPhone供應觸控玻璃，是台灣科技業在智慧型手機時代的關鍵角色。
-
 sources:
-  - "工業技術研究院（ITRI）觸控產業報告"
-
-added: "2026-03-30"
-updated: "2026-03-30"
+  - 工業技術研究院（ITRI）觸控產業報告
+added: 2026-03-30
+updated: 2026-03-30

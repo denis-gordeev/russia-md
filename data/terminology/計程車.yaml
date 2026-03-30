@@ -1,27 +1,22 @@
 id: taxi
-category: transport
+category: daily
 subcategory: 大眾運輸
 fork_type: B
-
 display:
   taiwan: 計程車
   china: 出租車
   hongkong: 的士
-
 english: taxi
-
 etymology:
   origin: 三地各自翻譯 taxi
-  taiwan_path: "「計程」= 按里程計費，強調計費方式"
-  china_path: "「出租」= 出租使用，強調租賃性質"
-  fork_point: "~1950s"
+  taiwan_path: 「計程」= 按里程計費，強調計費方式
+  china_path: 「出租」= 出租使用，強調租賃性質
+  fork_point: ~1950s
   fork_cause: 兩岸分治後各自命名
-
 usage:
   taiwan_formal: true
   taiwan_casual: true
-  exceptions: "香港「的士」為粵語音譯 taxi"
-
+  exceptions: 香港「的士」為粵語音譯 taxi
 status: stable
 notes: |
   同一事物三種翻譯邏輯：
@@ -29,10 +24,8 @@ notes: |
   中國看「什麼服務」→ 出租車
   香港直接音譯 → 的士
   三者並存反映了華語世界翻譯策略的多樣性。
-
 sources:
-  - "《大陸用語檢索手冊》（1997）：計程車 / 出租車"
-  - "教育部國語辭典：計程車"
-
-added: "2026-03-29"
-updated: "2026-03-29"
+  - 《大陸用語檢索手冊》（1997）：計程車 / 出租車
+  - 教育部國語辭典：計程車
+added: 2026-03-29
+updated: 2026-03-29

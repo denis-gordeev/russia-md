@@ -1,12 +1,13 @@
 id: 學渣
-category: daily
+category: education
 fork_type: E
 display:
   taiwan: 吊車尾 / 後段班
   china: 學渣
 etymology:
-  origin: 學習成績不佳的人。
+  origin: 中國校園俗語，形容成績很差的學生，與「學霸」相對。台灣對應「吊車尾」（排名末段）或「後段班」。
 notes: 來源：caris-events/invade (CC0)
 sources:
   - https://github.com/caris-events/invade
 added: 2026-03-30
+subcategory: 教育

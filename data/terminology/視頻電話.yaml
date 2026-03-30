@@ -1,11 +1,11 @@
 id: 視頻電話
-category: daily
+category: tech
 fork_type: E
 display:
   taiwan: 視訊電話
   china: 視頻電話
 etymology:
-  origin: 可以透過網路看見彼此並進行通話的一種通訊方式。
+  origin: 透過網路進行的影像通話。中國說「視頻電話」，台灣說「視訊電話」或「視訊通話」。「視頻」vs「視訊」是兩岸最常見的科技用語差異之一。
 notes: 來源：caris-events/invade (CC0)
 sources:
   - https://github.com/caris-events/invade
