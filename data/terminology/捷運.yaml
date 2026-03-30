@@ -5,7 +5,7 @@ fork_type: B
 
 display:
   taiwan: "捷運"
-  china: "地鐵 / 軌道交通"
+  china: 地鐵
   hongkong: "港鐵 / 地鐵"
   southeast_asia: "地鐵 / MRT"
 

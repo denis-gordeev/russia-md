@@ -5,7 +5,7 @@ fork_type: F
 
 display:
   taiwan: "領導（少用日常）/ 領袖 / 長官 / 主管"
-  china: "領導（泛用）"
+  china: 領導
   hongkong: "領導 / 上司"
   southeast_asia: "領導 / 上司"
 

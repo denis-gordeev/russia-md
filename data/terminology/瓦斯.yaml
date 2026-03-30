@@ -5,7 +5,7 @@ fork_type: A
 
 display:
   taiwan: "瓦斯"
-  china: "煤氣 / 天然氣"
+  china: 煤氣
   hongkong: "煤氣 / 天然氣"
   southeast_asia: "天然氣 / 瓦斯（部分地區）"
 

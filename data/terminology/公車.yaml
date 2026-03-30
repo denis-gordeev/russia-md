@@ -5,7 +5,7 @@ fork_type: B
 
 display:
   taiwan: "公車"
-  china: "公交車 / 公共汽車"
+  china: 公交車
   hongkong: "巴士"
   southeast_asia: "巴士 / 公共汽車"
 

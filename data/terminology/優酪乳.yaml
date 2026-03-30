@@ -1,22 +1,22 @@
-id: 優酪乳
-category: daily
-subcategory: 日常生活
-fork_type: B
+id: 優酪乳
+category: food
+subcategory: 飲品與乳製品
+fork_type: A
 
 display:
-  taiwan: 優酪乳
-  china: 酸牛奶
+  taiwan: 優酪乳
+  china: 酸奶
 
 etymology:
   origin: ""
-  taiwan_path: 台灣用法
-  china_path: 中國用法
+  taiwan_path: 台灣稱發酵乳為「優酪乳」，源自日語ヨーグルト的台灣本地化命名
+  china_path: 中國稱發酵乳為「酸奶」，即酸味牛奶之意
   fork_point: ""
 
-notes: ""
+notes: "同指發酵乳製品（yogurt），台灣也有人說「優格」（指希臘式較濃的款式）。"
 
 sources:
-  - "ThunderKO C2T / 《大陸用語檢索手冊》1997"
+  - "日常用語觀察"
 
 added: "2026-03-30"
 updated: "2026-03-30"

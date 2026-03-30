@@ -1,0 +1,22 @@
+id: 大菜
+category: food
+subcategory: 飲食文化
+fork_type: A
+
+display:
+  taiwan: 大菜
+  china: 硬菜
+
+etymology:
+  origin: ""
+  taiwan_path: 台灣以「大菜」或「主菜」稱宴席中份量豐盛、價格較高的主要菜餚
+  china_path: 中國流行用語「硬菜」指份量足、有料的主菜，含有豪氣待客之意
+  fork_point: ""
+
+notes: "「硬菜」為中國網路流行語，在台灣幾乎不使用。台灣說「大菜」、「壓軸菜」或「主菜」。"
+
+sources:
+  - "日常用語觀察"
+
+added: "2026-03-30"
+updated: "2026-03-30"

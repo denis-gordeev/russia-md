@@ -15,7 +15,7 @@ etymology:
   taiwan_path: 台灣用「資料」對應 data，「資料庫」即儲存資料的倉庫
   china_path: 中國偏用「數據」對應 data（強調數字/量化），「數據庫」與「數據中心」一脈相承
   fork_point: "~1980s"
-  fork_cause: "資料" vs "數據" 的用語選擇分歧（見「資料/數據」詞對）
+  fork_cause: '"資料" vs "數據" 的用語選擇分歧（見「資料/數據」詞對）'
 
 usage:
   taiwan_formal: true

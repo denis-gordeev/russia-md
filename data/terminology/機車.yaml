@@ -5,7 +5,7 @@ fork_type: D
 
 display:
   taiwan: "機車"
-  china: "摩托車 / 電動車"
+  china: 摩托車
   hongkong: "電單車 / 摩托車"
   southeast_asia: "摩托車 / 機車"
 

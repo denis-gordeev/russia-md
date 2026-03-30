@@ -3,6 +3,45 @@ import Layout from '../../layouts/Layout.astro';
 import { readdir, readFile } from 'fs/promises';
 import { resolve, join } from 'path';
 import { parse as parseYaml } from 'yaml';
+import { createRequire } from 'module';
+
+// ── Build-time: s2t converter for normalizing china values ────────────────────
+// We use opencc-js at build time to convert any simplified Chinese china values
+// to traditional Chinese, since the frontend OpenCC already converts input text
+// from simplified → traditional before matching against our rules.
+let s2tConverter: ((text: string) => string) | null = null;
+try {
+  const require = createRequire(import.meta.url);
+  const OpenCC = require('opencc-js');
+  // Converter({from:'cn', to:'tw'}) converts simplified→traditional (字形 only)
+  // This matches what the frontend does before terminology matching
+  s2tConverter = OpenCC.Converter({ from: 'cn', to: 'tw' });
+} catch {
+  console.warn('[converter.astro] opencc-js not available, china values may not match simplified input');
+}
+
+function toTraditional(text: string): string {
+  if (!s2tConverter) return text;
+  try { return s2tConverter(text); } catch { return text; }
+}
+
+/**
+ * Extract the primary source term from a china value that may contain
+ * slash-separated variants or parenthetical annotations.
+ * This mirrors the logic in scripts/tools/terminology-clean.py.
+ */
+function cleanChinaSource(raw: string): string {
+  if (!raw || raw.startsWith('N/A') || raw.startsWith('（無')) return raw;
+  let s = raw;
+  // Remove parenthetical annotations like （簡）（中國）（舊）etc.
+  s = s.replace(/（[^）]*）/g, '');
+  s = s.replace(/\([^)]*\)/g, '');
+  // Take first variant if slash-separated
+  if (s.includes('/')) {
+    s = s.split('/')[0];
+  }
+  return s.trim();
+}
 
 // ── Build-time: generate conversion rules from YAML files ─────────────────────
 interface TermEntry {
@@ -30,6 +69,8 @@ interface ConversionRule {
 const termDir = resolve(process.cwd(), 'data/terminology');
 const files = await readdir(termDir);
 const rules: ConversionRule[] = [];
+// Track seen sources to avoid duplicates
+const seenSources = new Set<string>();
 
 for (const file of files) {
   if (!file.endsWith('.yaml') || file.startsWith('_')) continue;
@@ -43,13 +84,34 @@ for (const file of files) {
       d.display.taiwan &&
       d.display.china !== d.display.taiwan
     ) {
-      rules.push({
-        source: d.display.china,
-        target: d.display.taiwan,
-        forkType: d.fork_type || '',
-        category: d.category || '',
-        id: d.id || file.replace('.yaml', ''),
-      });
+      const forkType = d.fork_type || '';
+      const category = d.category || '';
+      const id = d.id || file.replace('.yaml', '');
+      const target = d.display.taiwan;
+      const chinaRaw = d.display.china;
+
+      // Step 1: Clean the raw china value (strip annotations, take first slash variant)
+      const chinaCleaned = cleanChinaSource(chinaRaw);
+
+      // Skip if cleaned value equals taiwan (no useful conversion)
+      if (!chinaCleaned || chinaCleaned === target) continue;
+
+      // Step 2: Normalize to traditional Chinese so it matches
+      // the frontend's OpenCC-converted input text
+      const chinaTraditional = toTraditional(chinaCleaned);
+
+      // Add rule for the traditional form (the primary matching source)
+      if (!seenSources.has(chinaTraditional) && chinaTraditional !== target) {
+        rules.push({ source: chinaTraditional, target, forkType, category, id });
+        seenSources.add(chinaTraditional);
+      }
+
+      // If the original simplified form differs from traditional, also add
+      // a fallback rule for the simplified form (for when OpenCC is unavailable)
+      if (chinaCleaned !== chinaTraditional && !seenSources.has(chinaCleaned) && chinaCleaned !== target) {
+        rules.push({ source: chinaCleaned, target, forkType, category, id: id + '_simp' });
+        seenSources.add(chinaCleaned);
+      }
     }
   } catch {
     // skip malformed

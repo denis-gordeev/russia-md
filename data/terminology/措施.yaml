@@ -1,0 +1,22 @@
+id: 措施
+category: society
+subcategory: 政治與行政
+fork_type: B
+
+display:
+  taiwan: 措施
+  china: 舉措
+
+etymology:
+  origin: ""
+  taiwan_path: 台灣一般使用「措施」表示具體行動或政策手段，「舉措」偶見於正式文件
+  china_path: 中國官方媒體及政府文件常用「舉措」，語感更偏書面與官方
+  fork_point: ""
+
+notes: "台灣並非不用「舉措」，但頻率遠低於中國媒體，一般口語及新聞以「措施」為主。"
+
+sources:
+  - "日常用語觀察"
+
+added: "2026-03-30"
+updated: "2026-03-30"

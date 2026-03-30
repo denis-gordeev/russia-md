@@ -1,0 +1,22 @@
+id: 社區
+category: life
+subcategory: 居住與社區
+fork_type: A
+
+display:
+  taiwan: 社區
+  china: 小區
+
+etymology:
+  origin: ""
+  taiwan_path: 台灣稱住宅社區為「社區」，泛指由住宅及共同設施組成的居住單位
+  china_path: 中國稱封閉式住宅區為「小區」，通常有圍牆與門衛
+  fork_point: ""
+
+notes: "中國「小區」強調封閉管理性質，台灣「社區」則較開放，概念有重疊但不完全對應。"
+
+sources:
+  - "日常用語觀察"
+
+added: "2026-03-30"
+updated: "2026-03-30"

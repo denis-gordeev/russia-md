@@ -5,7 +5,7 @@ fork_type: B
 
 display:
   taiwan: "記憶體"
-  china: "內存 / 記憶體"
+  china: 內存
   hongkong: "記憶體 / 內存"
   southeast_asia: "記憶體 / 內存"
 
