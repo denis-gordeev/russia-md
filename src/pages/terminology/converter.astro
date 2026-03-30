@@ -13,8 +13,9 @@ let s2tConverter: ((text: string) => string) | null = null;
 try {
   const require = createRequire(import.meta.url);
   const OpenCC = require('opencc-js');
-  // Converter({from:'cn', to:'tw'}) converts simplified→traditional (字形 only)
+  // Converter({from:'cn', to:'tw'}) converts simplified→traditional (Taiwan standard)
   // This matches what the frontend does before terminology matching
+  // Both build-time and frontend must use the same conversion to ensure rules match
   s2tConverter = OpenCC.Converter({ from: 'cn', to: 'tw' });
 } catch {
   console.warn('[converter.astro] opencc-js not available, china values may not match simplified input');
@@ -231,12 +232,15 @@ const rulesJSON = JSON.stringify(rules);
       try {
         const OpenCC =
           await import('https://cdn.jsdelivr.net/npm/opencc-js@1/dist/esm/cn2t.js');
-        // Use cn → t (字形 only), NOT cn → tw (字形+用語)
-        // We want OpenCC to only convert simplified → traditional characters,
-        // while our terminology rules handle the semantic conversion (视频→影片 etc.)
+        // Use cn → tw (standard traditional Chinese used in Taiwan)
+        // cn → t produces archaic characters (麪/喫/裏) that nobody uses,
+        // cn → tw produces modern traditional (麵/吃/裡) matching our terminology rules.
+        // OpenCC cn→tw does include some word-level conversions, but since our
+        // terminology rules run AFTER OpenCC and use marker-based replacement,
+        // they always take priority for the terms we care about.
         openccConverter = OpenCC.ConverterFactory(
           OpenCC.Locale.from.cn,
-          OpenCC.Locale.to.t,
+          OpenCC.Locale.to.tw,
         );
         openccStatus = 'ready';
       } catch (e) {

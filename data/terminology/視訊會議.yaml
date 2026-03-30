@@ -1,0 +1,9 @@
+id: video-conference
+category: tech
+fork_type: B
+display:
+  taiwan: 視訊會議
+  china: 視頻會議
+sources:
+- 台灣企業常用術語
+added: '2026-03-30'
