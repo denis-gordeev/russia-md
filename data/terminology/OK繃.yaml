@@ -1,0 +1,11 @@
+id: bandaid
+taiwan: OK繃
+china: 創口貼 / 創可貼
+type: A
+category: medical
+origin: 台灣說「OK繃」（品牌名），中國說「創口貼」或「創可貼」。
+taiwan_path: 台灣「OK繃」來自 Band-Aid 品牌的本土化，已成通用名詞，藥局、便利商店都這樣標示。
+china_path: 中國說「創口貼」（官方）或「創可貼」（品牌名邦迪），「OK繃」在中國幾乎無人使用。
+fork_cause: 品牌名不同路徑：台灣沿用日系 OK 繃品牌名，中國取描述性名稱「創口貼」。
+notes: |
+  台灣人去中國藥店問「有沒有 OK 繃」會得到一臉困惑。反之亦然。

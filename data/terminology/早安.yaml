@@ -1,0 +1,11 @@
+id: good-morning
+taiwan: 早安
+china: 早上好
+type: D
+category: daily
+origin: 台灣說「早安」，中國說「早上好」。
+taiwan_path: 台灣統一用「早安」「午安」「晚安」，不說「早上好」「下午好」。
+china_path: 中國說「早上好」「下午好」「晚上好」，較少用「早安」。
+fork_cause: 日語影響（おはよう→早安）vs 中國白話文直譯。
+notes: |
+  台灣人聽到 YouTuber 說「大家好，早上好」會立刻辨識出是中國用法。這是最明顯的打招呼差異。

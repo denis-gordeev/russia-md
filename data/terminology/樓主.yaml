@@ -1,0 +1,11 @@
+id: original-poster
+taiwan: 原PO / 版主
+china: 樓主
+type: A
+category: tech
+origin: 台灣說「原PO」（original poster），中國說「樓主」。
+taiwan_path: 台灣 PTT 文化用「原PO」（原始發文者），論壇管理者稱「版主」。
+china_path: 中國論壇用「樓主」（簡稱 LZ），指發帖者。回覆者稱「沙發」（第一樓）「板凳」（第二樓）。
+fork_cause: 台灣 PTT vs 中國百度貼吧/天涯，各自發展出不同的論壇術語。
+notes: |
+  台灣人聽到「樓主」會知道是中國論壇用語。PTT 文化的「原PO」是台灣獨有。

@@ -1,0 +1,11 @@
+id: immediately
+taiwan: 立刻 / 馬上
+china: 立馬
+type: D
+category: daily
+origin: 台灣說「立刻」「馬上」，中國常說「立馬」。
+taiwan_path: 台灣說「立刻」「馬上」「立即」，「立馬」在台灣不常見。
+china_path: 中國「立馬」是口語高頻詞：「立馬出發」「立馬衝一波」。
+fork_cause: 「立馬」為中國口語縮合詞（立刻+馬上），台灣未採用。
+notes: |
+  很多台灣人看中國 YouTuber 說「立馬」才注意到這是中國用法。台灣會說「馬上」。

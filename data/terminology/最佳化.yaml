@@ -1,0 +1,11 @@
+id: optimization
+taiwan: 最佳化
+china: 優化
+type: B
+category: tech
+origin: 台灣技術領域說「最佳化」（optimization），中國說「優化」。
+taiwan_path: 台灣學術/技術用「最佳化」，但日常「優化」也會用（受中國影響漸增）。
+china_path: 中國統一用「優化」：「優化方案」「優化配置」「SEO優化」。
+fork_cause: 台灣保留較精確的翻譯「最佳化」（optimal），中國採用較通俗的「優化」。
+notes: |
+  「優化」在台灣工程師圈子裡也常用，但學術論文和教科書仍用「最佳化」。日常對話兩者混用。

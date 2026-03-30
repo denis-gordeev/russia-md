@@ -1,0 +1,11 @@
+id: traffic-jam
+taiwan: 塞車
+china: 堵車
+type: A
+category: transport
+origin: 台灣說「塞車」，中國說「堵車」。
+taiwan_path: 台灣統一說「塞車」「大塞車」「塞在路上」，不說「堵車」。
+china_path: 中國說「堵車」「堵得水洩不通」。
+fork_cause: 動詞選擇不同：台灣用「塞」（被塞住），中國用「堵」（被堵住）。
+notes: |
+  兩個字其實都能理解，但一聽就能區分兩岸。台灣人說「我塞在國道上」，中國人說「我堵在高速上」。

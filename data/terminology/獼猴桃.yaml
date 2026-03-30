@@ -1,0 +1,11 @@
+id: kiwi
+taiwan: 奇異果
+china: 獼猴桃
+type: A
+category: food
+origin: 台灣說「奇異果」（kiwifruit 音譯），中國說「獼猴桃」。
+taiwan_path: 台灣統一用「奇異果」，超市、水果攤都這樣標示。
+china_path: 中國稱「獼猴桃」（因果皮像獼猴的毛），也認識「奇異果」但主要用於進口品牌。
+fork_cause: 台灣採用紐西蘭 Zespri 品牌推廣的音譯名「奇異果」(kiwi)，中國保留原生名「獼猴桃」。
+notes: |
+  同一種水果，兩個完全不同的名字。台灣人聽到「獼猴桃」需要想一下才能對應到奇異果。

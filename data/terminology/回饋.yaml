@@ -1,0 +1,11 @@
+id: feedback
+taiwan: 回饋
+china: 反饋
+type: B
+category: business
+origin: 台灣說「回饋」（feedback），中國說「反饋」。
+taiwan_path: 台灣說「回饋」「意見回饋」「回饋問卷」。
+china_path: 中國說「反饋」「用戶反饋」「反饋意見」。
+fork_cause: 同義詞的前綴偏好不同：台灣「回」，中國「反」。
+notes: |
+  台灣的「反饋」僅在工程/系統領域使用（如「負反饋迴路」），日常一律用「回饋」。

@@ -1,0 +1,11 @@
+id: top-student
+taiwan: 資優生 / 學神
+china: 學霸
+type: E
+category: education
+origin: 中國「學霸」指成績頂尖的學生，台灣說「資優生」。
+taiwan_path: 台灣說「資優生」「第一名」「很會讀書」，「學霸」不常用。
+china_path: 中國「學霸」極高頻：「學霸筆記」「學霸養成」「學霸vs學渣」。
+fork_cause: 中國網路校園文化造詞，台灣未全面採用。
+notes: |
+  中國還有對應的「學渣」（成績很差），台灣沒有類似的對立組詞。台灣會說「放牛班的」。
