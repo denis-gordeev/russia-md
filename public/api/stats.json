@@ -1,5 +1,5 @@
 {
-  "totalArticles": 957,
+  "totalArticles": 959,
   "totalCategories": 18,
   "estimatedContributors": 64,
   "totalTags": 2464,
@@ -34,7 +34,7 @@
     },
     {
       "name": "ja",
-      "count": 13
+      "count": 15
     },
     {
       "name": "Art",
@@ -160,8 +160,8 @@
     }
   ],
   "languageDistribution": {
-    "zh-TW": 957,
+    "zh-TW": 959,
     "en": 0
   },
-  "lastUpdated": "2026-03-30T09:47:43.368Z"
+  "lastUpdated": "2026-03-30T12:16:52.651Z"
 }

@@ -449,6 +449,28 @@
     "path": "ja/Economy/tsmc-taiwan-semiconductor.md"
   },
   {
+    "title": "台湾原住民族の食文化",
+    "description": "AKAME の火からアミ族の山野草の宇宙まで——台湾原住民族の食はいかにして三千年を経て、再び世界の視線を引き寄せたのか",
+    "category": "ja",
+    "tags": [],
+    "url": "https://taiwan.md/ja/Food/taiwan-indigenous-food-culture",
+    "readingTime": 25,
+    "featured": false,
+    "date": "2026-03-30",
+    "path": "ja/Food/taiwan-indigenous-food-culture.md"
+  },
+  {
+    "title": "台湾眷村料理",
+    "description": "1949年の大移動がもたらした各地の味が、竹の柵に囲まれた台所から眷村の解体後の味の保存へとつながっていく物語。",
+    "category": "ja",
+    "tags": [],
+    "url": "https://taiwan.md/ja/Food/military-dependents-village-cuisine",
+    "readingTime": 17,
+    "featured": false,
+    "date": "2026-03-19",
+    "path": "ja/Food/military-dependents-village-cuisine.md"
+  },
+  {
     "title": "台湾の宗教と寺廟文化",
     "description": "媽祖巡行から仏道融合まで——台湾の寺廟がいかに信仰・コミュニティ・文化の生活の中心となっているか",
     "category": "ja",

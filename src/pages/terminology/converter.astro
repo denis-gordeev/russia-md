@@ -78,18 +78,20 @@ for (const file of files) {
   const raw = await readFile(join(termDir, file), 'utf-8');
   try {
     const d = parseYaml(raw) as TermEntry;
+    // Support both display.{china,taiwan} and top-level {china,taiwan} formats
+    const chinaVal = d?.display?.china || (d as any)?.china;
+    const taiwanVal = d?.display?.taiwan || (d as any)?.taiwan;
     if (
       d &&
-      d.display &&
-      d.display.china &&
-      d.display.taiwan &&
-      d.display.china !== d.display.taiwan
+      chinaVal &&
+      taiwanVal &&
+      chinaVal !== taiwanVal
     ) {
-      const forkType = d.fork_type || '';
+      const forkType = d.fork_type || (d as any)?.type || '';
       const category = d.category || '';
       const id = d.id || file.replace('.yaml', '');
-      const target = d.display.taiwan;
-      const chinaRaw = d.display.china;
+      const target = taiwanVal;
+      const chinaRaw = chinaVal;
 
       // Step 1: Clean the raw china value (strip annotations, take first slash variant)
       const chinaCleaned = cleanChinaSource(chinaRaw);

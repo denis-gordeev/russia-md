@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-03-30T09:47:44.012Z",
+  "lastUpdated": "2026-03-30T12:16:53.304Z",
   "organs": [
     {
       "id": "heart",
@@ -101,7 +101,7 @@
           "zh-TW": 419,
           "en": 482,
           "es": 34,
-          "ja": 13
+          "ja": 15
         },
         "translationPct": 115
       }

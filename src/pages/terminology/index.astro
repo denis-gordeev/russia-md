@@ -45,6 +45,16 @@ for (const file of files) {
   const raw = await readFile(join(termDir, file), 'utf-8');
   try {
     const d = parseYaml(raw) as TermEntry;
+    // Support both display.{taiwan,china} and top-level {taiwan,china} formats
+    if (d && !d.display && ((d as any).taiwan || (d as any).china)) {
+      (d as any).display = {
+        taiwan: (d as any).taiwan || '',
+        china: (d as any).china || '',
+      };
+      if (!(d as any).fork_type && (d as any).type) {
+        (d as any).fork_type = (d as any).type;
+      }
+    }
     if (d && d.display && d.display.taiwan) {
       terms.push(d);
     }

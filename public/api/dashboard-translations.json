@@ -19,8 +19,8 @@
       "percentage": 8.1
     },
     "ja": {
-      "total": 13,
-      "percentage": 3.1
+      "total": 15,
+      "percentage": 3.6
     }
   },
   "matrix": {
@@ -52,7 +52,7 @@
       "zh-TW": 27,
       "en": 34,
       "es": 5,
-      "ja": 6
+      "ja": 8
     },
     "geography": {
       "zh-TW": 18,
