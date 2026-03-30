@@ -1,9 +1,7 @@
 {
   "version": "3.0",
-  "timestamp": "2026-03-30T07:37:59Z",
+  "timestamp": "2026-03-30T07:45:55Z",
   "total": 1,
-  "flagged": 1,
-  "files": [
-    { "file": "/Users/cheyuwu/taiwan-md/knowledge/Art/植劇場.md", "score": 4 }
-  ]
+  "flagged": 0,
+  "files": []
 }
