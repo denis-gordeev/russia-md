@@ -1,0 +1,15 @@
+id: 忙音信號
+category: technology
+fork_type: semantic
+
+display:
+  taiwan: 忙線訊號
+  china: 忙音信號
+
+notes: ''
+
+sources:
+  - 'fanhuaji-config'
+
+added: '2026-03-31'
+updated: '2026-03-31'

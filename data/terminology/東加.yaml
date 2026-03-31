@@ -1,0 +1,15 @@
+id: 東加
+category: proper-noun
+fork_type: orthographic
+
+display:
+  taiwan: 湯加
+  china: 東加
+
+notes: ''
+
+sources:
+  - 'fanhuaji-config'
+
+added: '2026-03-31'
+updated: '2026-03-31'

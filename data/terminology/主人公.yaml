@@ -1,0 +1,15 @@
+id: 主人公
+category: daily-life
+fork_type: semantic
+
+display:
+  taiwan: 主角
+  china: 主人公
+
+notes: ''
+
+sources:
+  - 'fanhuaji-config'
+
+added: '2026-03-31'
+updated: '2026-03-31'

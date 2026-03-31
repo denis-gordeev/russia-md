@@ -1,0 +1,15 @@
+id: 本地
+category: daily-life
+fork_type: semantic
+
+display:
+  taiwan: 在地
+  china: 本地
+
+notes: ''
+
+sources:
+  - 'google-sheets-crowdsource'
+
+added: '2026-03-31'
+updated: '2026-03-31'

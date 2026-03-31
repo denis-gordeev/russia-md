@@ -1,0 +1,16 @@
+id: 圖元
+category: technology
+fork_type: semantic
+
+display:
+  taiwan: 像素 / 畫素
+  china: 圖元
+
+notes: |
+  pixel
+
+sources:
+  - 'google-sheets-crowdsource'
+
+added: '2026-03-31'
+updated: '2026-03-31'

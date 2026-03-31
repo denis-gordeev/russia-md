@@ -1,0 +1,15 @@
+id: 花生
+category: food
+fork_type: semantic
+
+display:
+  taiwan: 土豆
+  china: 花生
+
+notes: ''
+
+sources:
+  - 'fanhuaji-config'
+
+added: '2026-03-31'
+updated: '2026-03-31'

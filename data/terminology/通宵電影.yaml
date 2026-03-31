@@ -1,0 +1,15 @@
+id: 通宵電影
+category: media
+fork_type: semantic
+
+display:
+  taiwan: 午夜場
+  china: 通宵電影
+
+notes: ''
+
+sources:
+  - 'fanhuaji-config'
+
+added: '2026-03-31'
+updated: '2026-03-31'

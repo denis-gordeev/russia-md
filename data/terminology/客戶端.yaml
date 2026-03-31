@@ -1,0 +1,16 @@
+id: 客戶端
+category: daily-life
+fork_type: semantic
+
+display:
+  taiwan: 用戶端
+  china: 客戶端
+
+notes: |
+  Client-side
+
+sources:
+  - 'google-sheets-crowdsource'
+
+added: '2026-03-31'
+updated: '2026-03-31'

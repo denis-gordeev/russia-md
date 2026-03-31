@@ -1,0 +1,15 @@
+id: 面市
+category: daily-life
+fork_type: semantic
+
+display:
+  taiwan: 上市
+  china: 面市
+
+notes: ''
+
+sources:
+  - 'fanhuaji-config'
+
+added: '2026-03-31'
+updated: '2026-03-31'

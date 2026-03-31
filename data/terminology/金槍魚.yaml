@@ -1,0 +1,15 @@
+id: 金槍魚
+category: food
+fork_type: semantic
+
+display:
+  taiwan: 鮪魚
+  china: 金槍魚
+
+notes: ''
+
+sources:
+  - 'google-sheets-crowdsource'
+
+added: '2026-03-31'
+updated: '2026-03-31'

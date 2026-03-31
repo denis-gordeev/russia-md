@@ -1,0 +1,15 @@
+id: 寬心丸
+category: daily-life
+fork_type: semantic
+
+display:
+  taiwan: 定心丸
+  china: 寬心丸
+
+notes: ''
+
+sources:
+  - 'fanhuaji-config'
+
+added: '2026-03-31'
+updated: '2026-03-31'

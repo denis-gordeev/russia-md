@@ -1,0 +1,15 @@
+id: 音箱
+category: daily-life
+fork_type: semantic
+
+display:
+  taiwan: 喇叭 / 揚聲器
+  china: 音箱
+
+notes: ''
+
+sources:
+  - 'google-sheets-crowdsource'
+
+added: '2026-03-31'
+updated: '2026-03-31'

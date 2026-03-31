@@ -1,0 +1,15 @@
+id: 生物食品
+category: daily-life
+fork_type: semantic
+
+display:
+  taiwan: 天然食品
+  china: 生物食品
+
+notes: ''
+
+sources:
+  - 'fanhuaji-config'
+
+added: '2026-03-31'
+updated: '2026-03-31'

@@ -1,0 +1,15 @@
+id: 單反相機
+category: daily-life
+fork_type: semantic
+
+display:
+  taiwan: 單眼相機
+  china: 單反相機
+
+notes: ''
+
+sources:
+  - 'fanhuaji-config'
+
+added: '2026-03-31'
+updated: '2026-03-31'

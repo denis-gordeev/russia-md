@@ -1,0 +1,15 @@
+id: 風投
+category: finance
+fork_type: semantic
+
+display:
+  taiwan: 創投
+  china: 風投
+
+notes: ''
+
+sources:
+  - 'google-sheets-crowdsource'
+
+added: '2026-03-31'
+updated: '2026-03-31'

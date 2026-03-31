@@ -1,0 +1,15 @@
+id: 坦克
+category: daily-life
+fork_type: semantic
+
+display:
+  taiwan: 戰車
+  china: 坦克
+
+notes: ''
+
+sources:
+  - 'fanhuaji-config'
+
+added: '2026-03-31'
+updated: '2026-03-31'

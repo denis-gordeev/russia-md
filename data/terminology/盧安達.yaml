@@ -1,0 +1,15 @@
+id: 盧安達
+category: daily-life
+fork_type: semantic
+
+display:
+  taiwan: 盧旺達
+  china: 盧安達
+
+notes: ''
+
+sources:
+  - 'fanhuaji-config'
+
+added: '2026-03-31'
+updated: '2026-03-31'

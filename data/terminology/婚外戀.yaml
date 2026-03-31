@@ -1,0 +1,15 @@
+id: 婚外戀
+category: daily-life
+fork_type: semantic
+
+display:
+  taiwan: 婚外情
+  china: 婚外戀
+
+notes: ''
+
+sources:
+  - 'fanhuaji-config'
+
+added: '2026-03-31'
+updated: '2026-03-31'

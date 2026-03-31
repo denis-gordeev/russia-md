@@ -1,0 +1,15 @@
+id: 擴銷
+category: daily-life
+fork_type: semantic
+
+display:
+  taiwan: 促銷
+  china: 擴銷
+
+notes: ''
+
+sources:
+  - 'fanhuaji-config'
+
+added: '2026-03-31'
+updated: '2026-03-31'

@@ -1,0 +1,16 @@
+id: 保存
+category: daily-life
+fork_type: semantic
+
+display:
+  taiwan: 存檔 / 儲存
+  china: 保存
+
+notes: |
+  save
+
+sources:
+  - 'google-sheets-crowdsource'
+
+added: '2026-03-31'
+updated: '2026-03-31'

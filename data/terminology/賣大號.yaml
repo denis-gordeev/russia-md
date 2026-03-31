@@ -1,0 +1,15 @@
+id: 賣大號
+category: daily-life
+fork_type: semantic
+
+display:
+  taiwan: 量販
+  china: 賣大號
+
+notes: ''
+
+sources:
+  - 'fanhuaji-config'
+
+added: '2026-03-31'
+updated: '2026-03-31'

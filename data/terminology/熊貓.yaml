@@ -1,0 +1,15 @@
+id: 熊貓
+category: daily-life
+fork_type: semantic
+
+display:
+  taiwan: 貓熊
+  china: 熊貓
+
+notes: ''
+
+sources:
+  - 'fanhuaji-config'
+
+added: '2026-03-31'
+updated: '2026-03-31'

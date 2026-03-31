@@ -1,0 +1,15 @@
+id: 愛侶動物
+category: daily-life
+fork_type: semantic
+
+display:
+  taiwan: 寵物
+  china: 愛侶動物
+
+notes: ''
+
+sources:
+  - 'fanhuaji-config'
+
+added: '2026-03-31'
+updated: '2026-03-31'

@@ -1,0 +1,15 @@
+id: 開門紅
+category: daily-life
+fork_type: semantic
+
+display:
+  taiwan: 好采頭
+  china: 開門紅
+
+notes: ''
+
+sources:
+  - 'fanhuaji-config'
+
+added: '2026-03-31'
+updated: '2026-03-31'

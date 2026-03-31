@@ -1,0 +1,16 @@
+id: 握手
+category: technology
+fork_type: semantic
+
+display:
+  taiwan: 交握
+  china: 握手
+
+notes: |
+  handshake
+
+sources:
+  - 'google-sheets-crowdsource'
+
+added: '2026-03-31'
+updated: '2026-03-31'

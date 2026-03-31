@@ -1,0 +1,15 @@
+id: 裝系統
+category: daily-life
+fork_type: semantic
+
+display:
+  taiwan: 灌係統
+  china: 裝系統
+
+notes: ''
+
+sources:
+  - 'fanhuaji-config'
+
+added: '2026-03-31'
+updated: '2026-03-31'

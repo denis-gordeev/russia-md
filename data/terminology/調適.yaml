@@ -1,0 +1,16 @@
+id: 調適
+category: technology
+fork_type: semantic
+
+display:
+  taiwan: 偵錯 / 除錯
+  china: 調適
+
+notes: |
+  debug
+
+sources:
+  - 'google-sheets-crowdsource'
+
+added: '2026-03-31'
+updated: '2026-03-31'

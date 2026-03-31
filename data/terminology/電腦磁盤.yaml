@@ -1,0 +1,15 @@
+id: 電腦磁盤
+category: technology
+fork_type: semantic
+
+display:
+  taiwan: 磁碟
+  china: 電腦磁盤
+
+notes: ''
+
+sources:
+  - 'fanhuaji-config'
+
+added: '2026-03-31'
+updated: '2026-03-31'

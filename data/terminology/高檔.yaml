@@ -1,0 +1,15 @@
+id: 高檔
+category: daily-life
+fork_type: semantic
+
+display:
+  taiwan: 高級
+  china: 高檔
+
+notes: ''
+
+sources:
+  - 'google-sheets-crowdsource'
+
+added: '2026-03-31'
+updated: '2026-03-31'

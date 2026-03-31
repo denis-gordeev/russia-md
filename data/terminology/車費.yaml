@@ -1,0 +1,15 @@
+id: 車費
+category: transportation
+fork_type: semantic
+
+display:
+  taiwan: 車資
+  china: 車費
+
+notes: ''
+
+sources:
+  - 'fanhuaji-config'
+
+added: '2026-03-31'
+updated: '2026-03-31'

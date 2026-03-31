@@ -1,0 +1,15 @@
+id: 晶體管
+category: technology
+fork_type: semantic
+
+display:
+  taiwan: 電晶體
+  china: 晶體管
+
+notes: ''
+
+sources:
+  - 'google-sheets-crowdsource'
+
+added: '2026-03-31'
+updated: '2026-03-31'

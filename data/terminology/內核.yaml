@@ -1,0 +1,15 @@
+id: 內核
+category: technology
+fork_type: semantic
+
+display:
+  taiwan: 核心
+  china: 內核
+
+notes: ''
+
+sources:
+  - 'google-sheets-crowdsource'
+
+added: '2026-03-31'
+updated: '2026-03-31'

@@ -1,0 +1,15 @@
+id: 顯示器
+category: daily-life
+fork_type: semantic
+
+display:
+  taiwan: 螢幕
+  china: 顯示器
+
+notes: ''
+
+sources:
+  - 'fanhuaji-config'
+
+added: '2026-03-31'
+updated: '2026-03-31'

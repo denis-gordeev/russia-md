@@ -1,0 +1,15 @@
+id: 傳統風味
+category: daily-life
+fork_type: semantic
+
+display:
+  taiwan: 古早味
+  china: 傳統風味
+
+notes: ''
+
+sources:
+  - 'fanhuaji-config'
+
+added: '2026-03-31'
+updated: '2026-03-31'

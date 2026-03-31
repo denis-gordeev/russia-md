@@ -1,0 +1,16 @@
+id: 滾回
+category: daily-life
+fork_type: semantic
+
+display:
+  taiwan: 退回 / 還原 / 轉返
+  china: 滾回
+
+notes: |
+  roll back
+
+sources:
+  - 'google-sheets-crowdsource'
+
+added: '2026-03-31'
+updated: '2026-03-31'

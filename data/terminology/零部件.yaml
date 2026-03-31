@@ -1,0 +1,15 @@
+id: 零部件
+category: daily-life
+fork_type: semantic
+
+display:
+  taiwan: 零組件
+  china: 零部件
+
+notes: ''
+
+sources:
+  - 'google-sheets-crowdsource'
+
+added: '2026-03-31'
+updated: '2026-03-31'

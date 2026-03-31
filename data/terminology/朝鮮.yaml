@@ -1,0 +1,15 @@
+id: 朝鮮
+category: proper-noun
+fork_type: orthographic
+
+display:
+  taiwan: 北韓
+  china: 朝鮮
+
+notes: ''
+
+sources:
+  - 'fanhuaji-config'
+
+added: '2026-03-31'
+updated: '2026-03-31'

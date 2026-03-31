@@ -1,0 +1,15 @@
+id: 二進制
+category: technology
+fork_type: semantic
+
+display:
+  taiwan: 二進位
+  china: 二進制
+
+notes: ''
+
+sources:
+  - 'google-sheets-crowdsource'
+
+added: '2026-03-31'
+updated: '2026-03-31'

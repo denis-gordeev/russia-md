@@ -1,0 +1,15 @@
+id: 緊張
+category: daily-life
+fork_type: semantic
+
+display:
+  taiwan: 吃緊 / 短缺
+  china: 緊張
+
+notes: ''
+
+sources:
+  - 'google-sheets-crowdsource'
+
+added: '2026-03-31'
+updated: '2026-03-31'

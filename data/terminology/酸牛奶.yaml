@@ -1,0 +1,15 @@
+id: 酸牛奶
+category: food
+fork_type: semantic
+
+display:
+  taiwan: 優酪乳
+  china: 酸牛奶
+
+notes: ''
+
+sources:
+  - 'fanhuaji-config'
+
+added: '2026-03-31'
+updated: '2026-03-31'

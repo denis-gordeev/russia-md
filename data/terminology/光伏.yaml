@@ -1,0 +1,15 @@
+id: 光伏
+category: daily-life
+fork_type: semantic
+
+display:
+  taiwan: 太陽電池 / 太陽能板 / 光電板
+  china: 光伏
+
+notes: ''
+
+sources:
+  - 'google-sheets-crowdsource'
+
+added: '2026-03-31'
+updated: '2026-03-31'

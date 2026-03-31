@@ -1,0 +1,15 @@
+id: 冰毒
+category: daily-life
+fork_type: semantic
+
+display:
+  taiwan: 安非他命
+  china: 冰毒
+
+notes: ''
+
+sources:
+  - 'fanhuaji-config'
+
+added: '2026-03-31'
+updated: '2026-03-31'

@@ -1,0 +1,16 @@
+id: 賬號
+category: finance
+fork_type: semantic
+
+display:
+  taiwan: 帳號
+  china: 賬號
+
+notes: |
+  金融語境
+
+sources:
+  - 'google-sheets-crowdsource'
+
+added: '2026-03-31'
+updated: '2026-03-31'

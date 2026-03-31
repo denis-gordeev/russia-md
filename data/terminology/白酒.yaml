@@ -1,0 +1,15 @@
+id: 白酒
+category: food
+fork_type: semantic
+
+display:
+  taiwan: 高粱酒
+  china: 白酒
+
+notes: ''
+
+sources:
+  - 'fanhuaji-config'
+
+added: '2026-03-31'
+updated: '2026-03-31'

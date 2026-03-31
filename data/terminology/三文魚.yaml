@@ -1,0 +1,15 @@
+id: 三文魚
+category: food
+fork_type: semantic
+
+display:
+  taiwan: 鮭魚
+  china: 三文魚
+
+notes: ''
+
+sources:
+  - 'fanhuaji-config'
+
+added: '2026-03-31'
+updated: '2026-03-31'

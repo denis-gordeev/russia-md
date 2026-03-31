@@ -1,0 +1,15 @@
+id: 灰色影片
+category: daily-life
+fork_type: semantic
+
+display:
+  taiwan: 大爛片
+  china: 灰色影片
+
+notes: ''
+
+sources:
+  - 'fanhuaji-config'
+
+added: '2026-03-31'
+updated: '2026-03-31'

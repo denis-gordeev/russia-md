@@ -1,0 +1,15 @@
+id: 幻燈片
+category: daily-life
+fork_type: semantic
+
+display:
+  taiwan: 投影片
+  china: 幻燈片
+
+notes: ''
+
+sources:
+  - 'fanhuaji-config'
+
+added: '2026-03-31'
+updated: '2026-03-31'

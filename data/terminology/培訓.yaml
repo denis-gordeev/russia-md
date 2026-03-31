@@ -1,0 +1,15 @@
+id: 培訓
+category: daily-life
+fork_type: semantic
+
+display:
+  taiwan: 教育訓練
+  china: 培訓
+
+notes: ''
+
+sources:
+  - 'google-sheets-crowdsource'
+
+added: '2026-03-31'
+updated: '2026-03-31'

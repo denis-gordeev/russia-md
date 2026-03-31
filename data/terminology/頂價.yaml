@@ -1,0 +1,15 @@
+id: 頂價
+category: daily-life
+fork_type: semantic
+
+display:
+  taiwan: 天價
+  china: 頂價
+
+notes: ''
+
+sources:
+  - 'fanhuaji-config'
+
+added: '2026-03-31'
+updated: '2026-03-31'

@@ -1,0 +1,15 @@
+id: 白葡萄酒
+category: food
+fork_type: semantic
+
+display:
+  taiwan: 白酒
+  china: 白葡萄酒
+
+notes: ''
+
+sources:
+  - 'fanhuaji-config'
+
+added: '2026-03-31'
+updated: '2026-03-31'

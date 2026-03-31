@@ -1,0 +1,15 @@
+id: 配置檔
+category: technology
+fork_type: semantic
+
+display:
+  taiwan: 設定檔
+  china: 配置檔
+
+notes: ''
+
+sources:
+  - 'google-sheets-crowdsource'
+
+added: '2026-03-31'
+updated: '2026-03-31'

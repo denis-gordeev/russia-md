@@ -1,0 +1,15 @@
+id: 電芯
+category: daily-life
+fork_type: semantic
+
+display:
+  taiwan: 電池芯
+  china: 電芯
+
+notes: ''
+
+sources:
+  - 'google-sheets-crowdsource'
+
+added: '2026-03-31'
+updated: '2026-03-31'

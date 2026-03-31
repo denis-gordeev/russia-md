@@ -1,0 +1,16 @@
+id: 選中
+category: daily-life
+fork_type: semantic
+
+display:
+  taiwan: 選取
+  china: 選中
+
+notes: |
+  select
+
+sources:
+  - 'google-sheets-crowdsource'
+
+added: '2026-03-31'
+updated: '2026-03-31'

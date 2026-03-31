@@ -1,0 +1,15 @@
+id: 低常兒童
+category: medical
+fork_type: semantic
+
+display:
+  taiwan: 智障兒
+  china: 低常兒童
+
+notes: ''
+
+sources:
+  - 'fanhuaji-config'
+
+added: '2026-03-31'
+updated: '2026-03-31'

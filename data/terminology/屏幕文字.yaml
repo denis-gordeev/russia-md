@@ -1,0 +1,15 @@
+id: 屏幕文字
+category: technology
+fork_type: semantic
+
+display:
+  taiwan: 字幕
+  china: 屏幕文字
+
+notes: ''
+
+sources:
+  - 'fanhuaji-config'
+
+added: '2026-03-31'
+updated: '2026-03-31'

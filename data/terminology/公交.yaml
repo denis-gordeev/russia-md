@@ -1,0 +1,15 @@
+id: 公交
+category: daily-life
+fork_type: semantic
+
+display:
+  taiwan: 公車
+  china: 公交
+
+notes: ''
+
+sources:
+  - 'google-sheets-crowdsource'
+
+added: '2026-03-31'
+updated: '2026-03-31'

@@ -1,0 +1,16 @@
+id: 哈希
+category: technology
+fork_type: semantic
+
+display:
+  taiwan: 雜湊
+  china: 哈希
+
+notes: |
+  hash
+
+sources:
+  - 'google-sheets-crowdsource'
+
+added: '2026-03-31'
+updated: '2026-03-31'

@@ -1,0 +1,15 @@
+id: 半截美
+category: daily-life
+fork_type: semantic
+
+display:
+  taiwan: 發財車
+  china: 半截美
+
+notes: ''
+
+sources:
+  - 'fanhuaji-config'
+
+added: '2026-03-31'
+updated: '2026-03-31'

@@ -1,0 +1,15 @@
+id: 台球
+category: daily-life
+fork_type: semantic
+
+display:
+  taiwan: 撞球
+  china: 台球
+
+notes: ''
+
+sources:
+  - 'google-sheets-crowdsource'
+
+added: '2026-03-31'
+updated: '2026-03-31'

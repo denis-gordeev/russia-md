@@ -1,0 +1,16 @@
+id: 並口
+category: technology
+fork_type: semantic
+
+display:
+  taiwan: 平行介面 / 平行埠 / 並列埠
+  china: 並口
+
+notes: |
+  parallel port
+
+sources:
+  - 'google-sheets-crowdsource'
+
+added: '2026-03-31'
+updated: '2026-03-31'

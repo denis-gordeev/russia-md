@@ -1,0 +1,15 @@
+id: 斯坦福
+category: proper-noun
+fork_type: orthographic
+
+display:
+  taiwan: 史丹福
+  china: 斯坦福
+
+notes: ''
+
+sources:
+  - 'google-sheets-crowdsource'
+
+added: '2026-03-31'
+updated: '2026-03-31'

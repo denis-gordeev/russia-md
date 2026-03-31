@@ -1,0 +1,15 @@
+id: 芝士
+category: food
+fork_type: semantic
+
+display:
+  taiwan: 起司
+  china: 芝士
+
+notes: ''
+
+sources:
+  - 'fanhuaji-config'
+
+added: '2026-03-31'
+updated: '2026-03-31'

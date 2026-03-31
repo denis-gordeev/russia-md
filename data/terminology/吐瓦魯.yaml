@@ -1,0 +1,15 @@
+id: 吐瓦魯
+category: daily-life
+fork_type: semantic
+
+display:
+  taiwan: 圖瓦盧
+  china: 吐瓦魯
+
+notes: ''
+
+sources:
+  - 'fanhuaji-config'
+
+added: '2026-03-31'
+updated: '2026-03-31'

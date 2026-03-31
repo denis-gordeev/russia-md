@@ -1,0 +1,16 @@
+id: 社交
+category: daily-life
+fork_type: semantic
+
+display:
+  taiwan: 社群
+  china: 社交
+
+notes: |
+  如果是在 social network 的語境下，在台灣都應翻成「社群」
+
+sources:
+  - 'google-sheets-crowdsource'
+
+added: '2026-03-31'
+updated: '2026-03-31'

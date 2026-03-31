@@ -1,0 +1,15 @@
+id: 前沿
+category: daily-life
+fork_type: semantic
+
+display:
+  taiwan: 先進 / 尖端 / 前瞻
+  china: 前沿
+
+notes: ''
+
+sources:
+  - 'google-sheets-crowdsource'
+
+added: '2026-03-31'
+updated: '2026-03-31'

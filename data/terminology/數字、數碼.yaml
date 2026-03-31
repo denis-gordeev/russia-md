@@ -1,0 +1,16 @@
+id: 數字、數碼
+category: daily-life
+fork_type: semantic
+
+display:
+  taiwan: 數位
+  china: 數字、數碼
+
+notes: |
+  digital
+
+sources:
+  - 'google-sheets-crowdsource'
+
+added: '2026-03-31'
+updated: '2026-03-31'

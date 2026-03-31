@@ -1,0 +1,15 @@
+id: 底板價
+category: daily-life
+fork_type: semantic
+
+display:
+  taiwan: 基價，底價
+  china: 底板價
+
+notes: ''
+
+sources:
+  - 'fanhuaji-config'
+
+added: '2026-03-31'
+updated: '2026-03-31'

@@ -1,0 +1,16 @@
+id: 數據
+category: technology
+fork_type: semantic
+
+display:
+  taiwan: 資料
+  china: 數據
+
+notes: |
+  data
+
+sources:
+  - 'google-sheets-crowdsource'
+
+added: '2026-03-31'
+updated: '2026-03-31'

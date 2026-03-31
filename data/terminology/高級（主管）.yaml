@@ -1,0 +1,16 @@
+id: 高級（主管）
+category: daily-life
+fork_type: semantic
+
+display:
+  taiwan: 高階 / 資深
+  china: 高級（主管）
+
+notes: |
+  senior
+
+sources:
+  - 'google-sheets-crowdsource'
+
+added: '2026-03-31'
+updated: '2026-03-31'

@@ -1,0 +1,16 @@
+id: 快退
+category: daily-life
+fork_type: semantic
+
+display:
+  taiwan: 倒帶
+  china: 快退
+
+notes: |
+  fast rewind
+
+sources:
+  - 'google-sheets-crowdsource'
+
+added: '2026-03-31'
+updated: '2026-03-31'

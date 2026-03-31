@@ -1,0 +1,15 @@
+id: 智能手機
+category: technology
+fork_type: semantic
+
+display:
+  taiwan: 智慧型手機
+  china: 智能手機
+
+notes: ''
+
+sources:
+  - 'fanhuaji-config'
+
+added: '2026-03-31'
+updated: '2026-03-31'

@@ -1,0 +1,16 @@
+id: 千兆
+category: daily-life
+fork_type: semantic
+
+display:
+  taiwan: 十億
+  china: 千兆
+
+notes: |
+  giga
+
+sources:
+  - 'google-sheets-crowdsource'
+
+added: '2026-03-31'
+updated: '2026-03-31'

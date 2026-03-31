@@ -1,0 +1,15 @@
+id: 筆記本
+category: daily-life
+fork_type: semantic
+
+display:
+  taiwan: 筆電
+  china: 筆記本
+
+notes: ''
+
+sources:
+  - 'fanhuaji-config'
+
+added: '2026-03-31'
+updated: '2026-03-31'

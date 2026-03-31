@@ -1,0 +1,15 @@
+id: 慢班
+category: education
+fork_type: semantic
+
+display:
+  taiwan: 後段班
+  china: 慢班
+
+notes: ''
+
+sources:
+  - 'fanhuaji-config'
+
+added: '2026-03-31'
+updated: '2026-03-31'

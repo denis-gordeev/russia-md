@@ -1,0 +1,15 @@
+id: 無用信息
+category: daily-life
+fork_type: semantic
+
+display:
+  taiwan: 雜訊
+  china: 無用信息
+
+notes: ''
+
+sources:
+  - 'fanhuaji-config'
+
+added: '2026-03-31'
+updated: '2026-03-31'

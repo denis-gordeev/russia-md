@@ -1,0 +1,15 @@
+id: 創口貼
+category: daily-life
+fork_type: semantic
+
+display:
+  taiwan: OK繃
+  china: 創口貼
+
+notes: ''
+
+sources:
+  - 'google-sheets-crowdsource'
+
+added: '2026-03-31'
+updated: '2026-03-31'

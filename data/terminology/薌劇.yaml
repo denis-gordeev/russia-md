@@ -1,0 +1,15 @@
+id: 薌劇
+category: daily-life
+fork_type: semantic
+
+display:
+  taiwan: 歌仔戲
+  china: 薌劇
+
+notes: ''
+
+sources:
+  - 'fanhuaji-config'
+
+added: '2026-03-31'
+updated: '2026-03-31'

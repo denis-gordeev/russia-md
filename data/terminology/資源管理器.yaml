@@ -1,0 +1,15 @@
+id: 資源管理器
+category: daily-life
+fork_type: semantic
+
+display:
+  taiwan: 資料總管
+  china: 資源管理器
+
+notes: ''
+
+sources:
+  - 'fanhuaji-config'
+
+added: '2026-03-31'
+updated: '2026-03-31'

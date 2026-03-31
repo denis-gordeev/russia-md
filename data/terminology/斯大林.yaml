@@ -1,0 +1,15 @@
+id: 斯大林
+category: proper-noun
+fork_type: orthographic
+
+display:
+  taiwan: 史達林
+  china: 斯大林
+
+notes: ''
+
+sources:
+  - 'fanhuaji-config'
+
+added: '2026-03-31'
+updated: '2026-03-31'

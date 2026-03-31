@@ -1,0 +1,15 @@
+id: 圓珠筆
+category: daily-life
+fork_type: semantic
+
+display:
+  taiwan: 原子筆
+  china: 圓珠筆
+
+notes: ''
+
+sources:
+  - 'google-sheets-crowdsource'
+
+added: '2026-03-31'
+updated: '2026-03-31'

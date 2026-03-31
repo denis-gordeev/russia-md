@@ -1,0 +1,15 @@
+id: 梵高
+category: proper-noun
+fork_type: orthographic
+
+display:
+  taiwan: 梵穀
+  china: 梵高
+
+notes: ''
+
+sources:
+  - 'fanhuaji-config'
+
+added: '2026-03-31'
+updated: '2026-03-31'

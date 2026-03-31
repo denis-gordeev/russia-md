@@ -1,0 +1,16 @@
+id: 演示
+category: daily-life
+fork_type: semantic
+
+display:
+  taiwan: 示範 / 展示
+  china: 演示
+
+notes: |
+  demo
+
+sources:
+  - 'google-sheets-crowdsource'
+
+added: '2026-03-31'
+updated: '2026-03-31'
