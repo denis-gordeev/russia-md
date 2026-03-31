@@ -475,6 +475,22 @@ async function getStagedRepoPaths() {
   );
 }
 
+function isWithinRepoSubtree(repoPath, subtreePath) {
+  return repoPath === subtreePath || repoPath.startsWith(`${subtreePath}/`);
+}
+
+async function expandTrackedMarkdownDirectory(repoPath, absolutePath) {
+  if (
+    !isWithinRepoSubtree(repoPath, 'docs') &&
+    !isWithinRepoSubtree(repoPath, 'skills/shared/references')
+  ) {
+    return null;
+  }
+
+  const markdownFiles = await listMarkdownFiles(absolutePath);
+  return markdownFiles.map((markdownPath) => path.relative(root, markdownPath).replace(/\\/g, '/'));
+}
+
 function shouldValidateAllSkillsForPath(changedPath) {
   return (
     changedPath.startsWith('skills/shared/schemas/') ||
@@ -482,22 +498,42 @@ function shouldValidateAllSkillsForPath(changedPath) {
   );
 }
 
-function getRepoPathsFromCli(paths) {
-  return new Set(
-    paths
-      .map((candidatePath) => candidatePath.trim())
-      .filter(Boolean)
-      .map((candidatePath) => {
-        const absolutePath = path.resolve(root, candidatePath);
-        const relativePath = path.relative(root, absolutePath);
+async function getRepoPathsFromCli(paths) {
+  const repoPaths = new Set();
 
-        if (relativePath.startsWith('..')) {
-          fail(`Path ${JSON.stringify(candidatePath)} is outside the repository root`);
-        }
+  for (const candidatePath of paths.map((item) => item.trim()).filter(Boolean)) {
+    const absolutePath = path.resolve(root, candidatePath);
+    const relativePath = path.relative(root, absolutePath);
 
-        return relativePath.replace(/\\/g, '/');
-      })
-  );
+    if (relativePath.startsWith('..')) {
+      fail(`Path ${JSON.stringify(candidatePath)} is outside the repository root`);
+    }
+
+    const normalizedPath = relativePath.replace(/\\/g, '/');
+
+    if (!(await pathExists(absolutePath))) {
+      repoPaths.add(normalizedPath);
+      continue;
+    }
+
+    const absolutePathStats = await stat(absolutePath);
+
+    if (!absolutePathStats.isDirectory()) {
+      repoPaths.add(normalizedPath);
+      continue;
+    }
+
+    const expandedMarkdownPaths = await expandTrackedMarkdownDirectory(normalizedPath, absolutePath);
+
+    if (expandedMarkdownPaths && expandedMarkdownPaths.length > 0) {
+      expandedMarkdownPaths.forEach((repoPath) => repoPaths.add(repoPath));
+      continue;
+    }
+
+    repoPaths.add(normalizedPath);
+  }
+
+  return repoPaths;
 }
 
 async function getValidationInputPaths(cliOptions) {
