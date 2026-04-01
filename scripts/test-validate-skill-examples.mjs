@@ -1,6 +1,6 @@
 import { execFile as execFileCallback } from 'child_process';
 import assert from 'assert/strict';
-import { cp, mkdir, mkdtemp, writeFile } from 'fs/promises';
+import { cp, mkdir, mkdtemp, rm, writeFile } from 'fs/promises';
 import os from 'os';
 import path from 'path';
 import { promisify } from 'util';
@@ -136,6 +136,71 @@ async function main() {
       assert.match(
         `${stdout}\n${stderr}`,
         /Ignoring scoped repo paths outside skill bundles and tracked markdown docs: "notes\/extra\.txt"\.[\s\S]*No changed skill folders or tracked repository markdown docs detected; nothing to validate\./
+      );
+    }
+  );
+
+  await withTempGitFixture(
+    'valid-minimal',
+    async (tempRoot) => {
+      await rm(path.join(tempRoot, 'docs', 'guide.md'));
+    },
+    async (tempRoot) => {
+      await assert.rejects(
+        execFile('node', [validatorPath, '--changed'], {
+          cwd: repoRoot,
+          env: {
+            ...process.env,
+            SKILL_VALIDATOR_ROOT: tempRoot
+          }
+        }),
+        (error) => {
+          const combinedOutput = `${error.stdout ?? ''}\n${error.stderr ?? ''}`;
+
+          assert.notEqual(error.code, 0, 'deleted markdown --changed case should exit non-zero');
+          assert.match(
+            combinedOutput,
+            /Deleted tracked repository markdown docs detected; validating all skill folders and repository markdown links to re-check inbound links\./
+          );
+          assert.match(
+            combinedOutput,
+            /skills\/shared\/references\/overview\.md:4: broken local link "\.\.\/\.\.\/\.\.\/docs\/guide\.md#fixture-guide"/
+          );
+          return true;
+        }
+      );
+    }
+  );
+
+  await withTempGitFixture(
+    'valid-minimal',
+    async (tempRoot) => {
+      await rm(path.join(tempRoot, 'docs', 'guide.md'));
+      await execFile('git', ['add', '-u', 'docs/guide.md'], { cwd: tempRoot });
+    },
+    async (tempRoot) => {
+      await assert.rejects(
+        execFile('node', [validatorPath, '--staged'], {
+          cwd: repoRoot,
+          env: {
+            ...process.env,
+            SKILL_VALIDATOR_ROOT: tempRoot
+          }
+        }),
+        (error) => {
+          const combinedOutput = `${error.stdout ?? ''}\n${error.stderr ?? ''}`;
+
+          assert.notEqual(error.code, 0, 'deleted markdown --staged case should exit non-zero');
+          assert.match(
+            combinedOutput,
+            /Deleted tracked repository markdown docs detected; validating all skill folders and repository markdown links to re-check inbound links\./
+          );
+          assert.match(
+            combinedOutput,
+            /skills\/shared\/references\/overview\.md:4: broken local link "\.\.\/\.\.\/\.\.\/docs\/guide\.md#fixture-guide"/
+          );
+          return true;
+        }
       );
     }
   );

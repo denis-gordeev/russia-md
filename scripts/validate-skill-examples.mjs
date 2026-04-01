@@ -442,6 +442,25 @@ function parseGitStatusPaths(statusOutput) {
   return changedPaths;
 }
 
+async function getDeletedRepoPathsFromGitDiff(args) {
+  let stdout = '';
+
+  try {
+    ({ stdout } = await execFile('git', args, {
+      cwd: root
+    }));
+  } catch (error) {
+    fail(`Unable to inspect deleted files via git: ${error.message}`);
+  }
+
+  return new Set(
+    stdout
+      .split('\n')
+      .map((line) => line.trim().replace(/\\/g, '/'))
+      .filter(Boolean)
+  );
+}
+
 async function getChangedRepoPaths() {
   let stdout = '';
 
@@ -453,26 +472,47 @@ async function getChangedRepoPaths() {
     fail(`Unable to inspect changed files via git: ${error.message}`);
   }
 
-  return parseGitStatusPaths(stdout);
+  const deletedRepoPaths = new Set([
+    ...(await getDeletedRepoPathsFromGitDiff(['diff', '--name-only', '--diff-filter=D', '--', '.'])),
+    ...(await getDeletedRepoPathsFromGitDiff(['diff', '--cached', '--name-only', '--diff-filter=D', '--', '.']))
+  ]);
+
+  return {
+    deletedRepoPaths,
+    repoPaths: parseGitStatusPaths(stdout)
+  };
 }
 
 async function getStagedRepoPaths() {
   let stdout = '';
 
   try {
-    ({ stdout } = await execFile('git', ['diff', '--cached', '--name-only', '--diff-filter=ACMR', '--', '.'], {
+    ({ stdout } = await execFile('git', ['diff', '--cached', '--name-only', '--diff-filter=ACMRD', '--', '.'], {
       cwd: root
     }));
   } catch (error) {
     fail(`Unable to inspect staged files via git: ${error.message}`);
   }
 
-  return new Set(
+  const repoPaths = new Set(
     stdout
       .split('\n')
       .map((line) => line.trim().replace(/\\/g, '/'))
       .filter(Boolean)
   );
+  const deletedRepoPaths = await getDeletedRepoPathsFromGitDiff([
+    'diff',
+    '--cached',
+    '--name-only',
+    '--diff-filter=D',
+    '--',
+    '.'
+  ]);
+
+  return {
+    deletedRepoPaths,
+    repoPaths
+  };
 }
 
 function shouldValidateAllSkillsForPath(changedPath) {
@@ -502,7 +542,10 @@ function getRepoPathsFromCli(paths) {
 
 async function getValidationInputPaths(cliOptions) {
   if (cliOptions.paths.length > 0) {
-    return getRepoPathsFromCli(cliOptions.paths);
+    return {
+      deletedRepoPaths: new Set(),
+      repoPaths: getRepoPathsFromCli(cliOptions.paths)
+    };
   }
 
   if (cliOptions.staged) {
@@ -532,7 +575,7 @@ function matchesRepositoryMarkdownPath(repoPath) {
   return false;
 }
 
-async function classifyScopedRepoPaths(repoPaths, skillNames) {
+async function classifyScopedRepoPaths(repoPaths, skillNames, deletedRepoPaths = new Set()) {
   const ignoredRepoPaths = [];
   const unmatchedRepoPaths = [];
 
@@ -550,6 +593,10 @@ async function classifyScopedRepoPaths(repoPaths, skillNames) {
     }
 
     if (matchesRepositoryMarkdownPath(repoPath)) {
+      continue;
+    }
+
+    if (deletedRepoPaths.has(repoPath)) {
       continue;
     }
 
@@ -589,9 +636,9 @@ function collectMarkdownDocsWithin(basePath, repoPaths) {
 }
 
 async function resolveValidationTargets(allSkillDirs, cliOptions) {
-  const changedRepoPaths = await getValidationInputPaths(cliOptions);
+  const validationInputs = await getValidationInputPaths(cliOptions);
 
-  if (!changedRepoPaths) {
+  if (!validationInputs) {
     return {
       changedRepoPaths: null,
       ignoredRepoPaths: [],
@@ -602,9 +649,18 @@ async function resolveValidationTargets(allSkillDirs, cliOptions) {
     };
   }
 
+  const { deletedRepoPaths, repoPaths: changedRepoPaths } = validationInputs;
+
   const skillNames = new Set(allSkillDirs.map((skillDir) => path.basename(skillDir)));
   const changedSkillNames = new Set();
   let validateAllSkills = false;
+  const deletedTrackedRepositoryMarkdownPaths = new Set(
+    [...deletedRepoPaths].filter((repoPath) => matchesRepositoryMarkdownPath(repoPath))
+  );
+
+  if (deletedTrackedRepositoryMarkdownPaths.size > 0) {
+    validateAllSkills = true;
+  }
 
   for (const changedPath of changedRepoPaths) {
     if (shouldValidateAllSkillsForPath(changedPath)) {
@@ -636,21 +692,38 @@ async function resolveValidationTargets(allSkillDirs, cliOptions) {
 
       if (documentStats.isDirectory()) {
         for (const markdownPath of collectMarkdownDocsWithin(repoDocumentPath, changedRepoPaths)) {
+          const repoMarkdownPath = path.relative(root, markdownPath).replace(/\\/g, '/');
+
+          if (deletedRepoPaths.has(repoMarkdownPath)) {
+            continue;
+          }
+
           repositoryMarkdownPaths.add(markdownPath);
         }
         continue;
       }
 
-      if (changedRepoPaths.has(repoDocumentPath)) {
+      if (changedRepoPaths.has(repoDocumentPath) && !deletedRepoPaths.has(repoDocumentPath)) {
         repositoryMarkdownPaths.add(documentPath);
       }
     }
   }
 
-  const { ignoredRepoPaths, unmatchedRepoPaths } = await classifyScopedRepoPaths(changedRepoPaths, skillNames);
+  const { ignoredRepoPaths, unmatchedRepoPaths } = await classifyScopedRepoPaths(
+    changedRepoPaths,
+    skillNames,
+    deletedRepoPaths
+  );
 
   if (validateAllSkills) {
-    console.log('Shared validation inputs changed; validating all skill folders.');
+    if (deletedTrackedRepositoryMarkdownPaths.size > 0) {
+      console.log(
+        'Deleted tracked repository markdown docs detected; validating all skill folders and repository markdown links to re-check inbound links.'
+      );
+    } else {
+      console.log('Shared validation inputs changed; validating all skill folders.');
+    }
+
     return {
       changedRepoPaths,
       ignoredRepoPaths,
