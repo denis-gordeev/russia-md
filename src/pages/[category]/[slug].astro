@@ -273,7 +273,10 @@ renderer.image = ({ href, title, text }) => {
   return `<img src="${href}" alt="${altText}"${titleAttr} loading="lazy" onerror="this.onerror=null;this.classList.add('img-broken')" />`;
 };
 
-const processedContent = marked.parse(resolvedContent, { renderer });
+const processedContent = marked.parse(resolvedContent, {
+  renderer,
+  breaks: true,
+});
 ---
 
 <Layout
@@ -712,7 +715,7 @@ const processedContent = marked.parse(resolvedContent, { renderer });
       .then(() => {
         const btn = document.querySelector('.copy-btn');
         const originalText = btn.innerHTML;
-        btn.innerHTML = '<span class="share-icon">✅</span><span>已複製</span>';
+        btn.innerHTML = '<span class="share-icon">✅</span><span>Copied</span>';
         btn.style.background = '#10b981';
         btn.style.color = 'white';
 
@@ -733,7 +736,7 @@ const processedContent = marked.parse(resolvedContent, { renderer });
 
         const btn = document.querySelector('.copy-btn');
         const originalText = btn.innerHTML;
-        btn.innerHTML = '<span class="share-icon">✅</span><span>已複製</span>';
+        btn.innerHTML = '<span class="share-icon">✅</span><span>Copied</span>';
         setTimeout(() => {
           btn.innerHTML = originalText;
         }, 2000);
@@ -1024,29 +1027,29 @@ const processedContent = marked.parse(resolvedContent, { renderer });
   }
 
   /* 標題層級系統 — 清晰的視覺層次 */
-  .content h1,
-  .content h2,
-  .content h3,
-  .content h4,
-  .content h5,
-  .content h6 {
+  .content :global(h1),
+  .content :global(h2),
+  .content :global(h3),
+  .content :global(h4),
+  .content :global(h5),
+  .content :global(h6) {
     font-family: var(--font-editorial);
     color: #1a1a1a;
     line-height: 1.4;
     letter-spacing: var(--title-letter-spacing);
   }
 
-  .content > h1:first-child {
+  .content :global(h1:first-child) {
     display: none;
   }
 
-  .content h1 {
+  .content :global(h1) {
     font-size: 2rem;
     font-weight: 700;
     margin: 4rem 0 1.5rem 0;
   }
 
-  .content h2 {
+  .content :global(h2) {
     font-size: 1.75rem;
     font-weight: 800;
     margin: 5rem 0 1.75rem 0;
@@ -1054,7 +1057,7 @@ const processedContent = marked.parse(resolvedContent, { renderer });
     border-bottom: 2px solid var(--categoryColor);
   }
 
-  .content h3 {
+  .content :global(h3) {
     font-size: 1.35rem;
     font-weight: 700;
     margin: 4rem 0 1.25rem 0;
@@ -1063,7 +1066,7 @@ const processedContent = marked.parse(resolvedContent, { renderer });
     border-left: 4px solid var(--categoryColor);
   }
 
-  .content h4 {
+  .content :global(h4) {
     font-size: 1.15rem;
     font-weight: 700;
     margin: 3rem 0 1rem 0;
@@ -1073,7 +1076,7 @@ const processedContent = marked.parse(resolvedContent, { renderer });
   }
 
   /* 段落 — 大呼吸感 */
-  .content p {
+  .content :global(p) {
     margin-bottom: 1.75rem;
     line-height: 2.1;
     text-align: justify;
@@ -1081,7 +1084,7 @@ const processedContent = marked.parse(resolvedContent, { renderer });
   }
 
   /* HR — 報導者風格大間距分隔 */
-  .content hr {
+  .content :global(hr) {
     border: none;
     border-top: 1px solid #e0e0e0;
     margin: 3.5rem auto;
@@ -1089,7 +1092,7 @@ const processedContent = marked.parse(resolvedContent, { renderer });
   }
 
   /* Blockquote — 沈靜引言 */
-  .content blockquote {
+  .content :global(blockquote) {
     border-left: 4px solid var(--categoryColor);
     background: linear-gradient(
       to right,
@@ -1105,55 +1108,55 @@ const processedContent = marked.parse(resolvedContent, { renderer });
     line-height: 2;
   }
 
-  .content blockquote p {
+  .content :global(blockquote p) {
     margin-bottom: 0.75rem;
   }
 
-  .content blockquote p:last-child {
+  .content :global(blockquote p:last-child) {
     margin-bottom: 0;
   }
 
   /* 列表 — 寬鬆行距，不突出 */
-  .content ul,
-  .content ol {
+  .content :global(ul),
+  .content :global(ol) {
     margin: 1.75rem 0;
     padding-left: 1.75rem;
   }
 
-  .content ul {
+  .content :global(ul) {
     list-style: disc;
   }
 
-  .content ol {
+  .content :global(ol) {
     list-style: decimal;
   }
 
-  .content ul > li,
-  .content ol > li {
+  .content :global(ul > li),
+  .content :global(ol > li) {
     margin-bottom: 0.6rem;
     padding-left: 0.35rem;
     line-height: 1.9;
   }
 
-  .content ul > li::marker {
+  .content :global(ul > li::marker) {
     color: var(--categoryColor);
   }
 
-  .content ol > li::marker {
+  .content :global(ol > li::marker) {
     color: var(--categoryColor);
     font-weight: 600;
   }
 
-  .content li > p {
+  .content :global(li > p) {
     margin-bottom: 0.75rem;
   }
 
-  .content li > p:last-child {
+  .content :global(li > p:last-child) {
     margin-bottom: 0;
   }
 
   /* 連結 */
-  .content a {
+  .content :global(a) {
     color: var(--categoryColor);
     text-decoration: underline;
     text-underline-offset: 3px;
@@ -1162,23 +1165,23 @@ const processedContent = marked.parse(resolvedContent, { renderer });
     transition: all 0.2s;
   }
 
-  .content a:hover {
+  .content :global(a:hover) {
     text-decoration-color: transparent;
     background: var(--categoryColorLight);
     border-radius: 2px;
   }
 
-  .content strong {
+  .content :global(strong) {
     font-weight: 700;
     color: #1a1a1a;
   }
 
-  .content em {
+  .content :global(em) {
     font-style: italic;
   }
 
   /* 圖片 */
-  .content img {
+  .content :global(img) {
     max-width: 100%;
     max-height: 450px;
     object-fit: cover;
@@ -1189,7 +1192,7 @@ const processedContent = marked.parse(resolvedContent, { renderer });
   }
 
   /* 圖片載入失敗的優雅降級 */
-  .content img.img-broken {
+  .content :global(img.img-broken) {
     min-height: 120px;
     max-height: 120px;
     background: #f8f9fa;
@@ -1209,7 +1212,7 @@ const processedContent = marked.parse(resolvedContent, { renderer });
   }
 
   /* 圖片說明文字 */
-  .content p > em:only-child {
+  .content :global(p > em:only-child) {
     display: block;
     text-align: center;
     font-size: 0.85rem;
@@ -1264,7 +1267,7 @@ const processedContent = marked.parse(resolvedContent, { renderer });
   }
 
   /* Code inline */
-  .content code {
+  .content :global(code) {
     background: #f5f5f5;
     padding: 0.15em 0.4em;
     border-radius: 3px;
@@ -1273,7 +1276,7 @@ const processedContent = marked.parse(resolvedContent, { renderer });
   }
 
   /* Pre code block */
-  .content pre {
+  .content :global(pre) {
     background: #f8f9fa;
     padding: 1.5rem;
     border-radius: 8px;
@@ -1283,14 +1286,14 @@ const processedContent = marked.parse(resolvedContent, { renderer });
     line-height: 1.6;
   }
 
-  .content pre code {
+  .content :global(pre code) {
     background: none;
     padding: 0;
     color: inherit;
   }
 
   /* 多元觀點 callout */
-  .content blockquote:has(strong:first-child) {
+  .content :global(blockquote:has(strong:first-child)) {
     border-left-color: #6b7fb5;
     background: linear-gradient(to right, #eef1f7, transparent);
   }

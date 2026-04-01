@@ -475,6 +475,22 @@ async function getStagedRepoPaths() {
   );
 }
 
+function isWithinRepoSubtree(repoPath, subtreePath) {
+  return repoPath === subtreePath || repoPath.startsWith(`${subtreePath}/`);
+}
+
+async function expandTrackedMarkdownDirectory(repoPath, absolutePath) {
+  if (
+    !isWithinRepoSubtree(repoPath, 'docs') &&
+    !isWithinRepoSubtree(repoPath, 'skills/shared/references')
+  ) {
+    return null;
+  }
+
+  const markdownFiles = await listMarkdownFiles(absolutePath);
+  return markdownFiles.map((markdownPath) => path.relative(root, markdownPath).replace(/\\/g, '/'));
+}
+
 function shouldValidateAllSkillsForPath(changedPath) {
   return (
     changedPath.startsWith('skills/shared/schemas/') ||
@@ -482,22 +498,42 @@ function shouldValidateAllSkillsForPath(changedPath) {
   );
 }
 
-function getRepoPathsFromCli(paths) {
-  return new Set(
-    paths
-      .map((candidatePath) => candidatePath.trim())
-      .filter(Boolean)
-      .map((candidatePath) => {
-        const absolutePath = path.resolve(root, candidatePath);
-        const relativePath = path.relative(root, absolutePath);
+async function getRepoPathsFromCli(paths) {
+  const repoPaths = new Set();
 
-        if (relativePath.startsWith('..')) {
-          fail(`Path ${JSON.stringify(candidatePath)} is outside the repository root`);
-        }
+  for (const candidatePath of paths.map((item) => item.trim()).filter(Boolean)) {
+    const absolutePath = path.resolve(root, candidatePath);
+    const relativePath = path.relative(root, absolutePath);
 
-        return relativePath.replace(/\\/g, '/');
-      })
-  );
+    if (relativePath.startsWith('..')) {
+      fail(`Path ${JSON.stringify(candidatePath)} is outside the repository root`);
+    }
+
+    const normalizedPath = relativePath.replace(/\\/g, '/');
+
+    if (!(await pathExists(absolutePath))) {
+      repoPaths.add(normalizedPath);
+      continue;
+    }
+
+    const absolutePathStats = await stat(absolutePath);
+
+    if (!absolutePathStats.isDirectory()) {
+      repoPaths.add(normalizedPath);
+      continue;
+    }
+
+    const expandedMarkdownPaths = await expandTrackedMarkdownDirectory(normalizedPath, absolutePath);
+
+    if (expandedMarkdownPaths && expandedMarkdownPaths.length > 0) {
+      expandedMarkdownPaths.forEach((repoPath) => repoPaths.add(repoPath));
+      continue;
+    }
+
+    repoPaths.add(normalizedPath);
+  }
+
+  return repoPaths;
 }
 
 async function getValidationInputPaths(cliOptions) {
@@ -534,6 +570,73 @@ function collectMarkdownDocsWithin(basePath, repoPaths) {
   return matchedDocs;
 }
 
+function isSkillPath(repoPath) {
+  if (!repoPath.startsWith('skills/')) {
+    return false;
+  }
+
+  const [, skillName] = repoPath.split('/');
+  return Boolean(skillName) && skillName !== 'shared';
+}
+
+function isRepositoryMarkdownPath(repoPath) {
+  return (
+    repoPath === 'README.md' ||
+    (repoPath.startsWith('docs/') && repoPath.endsWith('.md')) ||
+    (repoPath.startsWith('skills/shared/references/') && repoPath.endsWith('.md'))
+  );
+}
+
+async function classifyCliSelection(repoPaths) {
+  const ignoredMarkdownPaths = [];
+  const ignoredNonMarkdownPaths = [];
+  const unmatchedPaths = [];
+
+  for (const repoPath of [...repoPaths].sort()) {
+    if (isSkillPath(repoPath) || isRepositoryMarkdownPath(repoPath)) {
+      continue;
+    }
+
+    const absolutePath = path.join(root, repoPath);
+
+    if (!(await pathExists(absolutePath))) {
+      unmatchedPaths.push(repoPath);
+      continue;
+    }
+
+    if (repoPath.endsWith('.md')) {
+      ignoredMarkdownPaths.push(repoPath);
+      continue;
+    }
+
+    ignoredNonMarkdownPaths.push(repoPath);
+  }
+
+  return {
+    ignoredMarkdownPaths,
+    ignoredNonMarkdownPaths,
+    unmatchedPaths
+  };
+}
+
+function formatSelectedPathDiagnostics({ ignoredMarkdownPaths, ignoredNonMarkdownPaths, unmatchedPaths }) {
+  const details = [];
+
+  if (ignoredNonMarkdownPaths.length > 0) {
+    details.push(`ignored existing non-markdown path(s): ${ignoredNonMarkdownPaths.join(', ')}`);
+  }
+
+  if (ignoredMarkdownPaths.length > 0) {
+    details.push(`ignored existing markdown path(s) outside tracked docs: ${ignoredMarkdownPaths.join(', ')}`);
+  }
+
+  if (unmatchedPaths.length > 0) {
+    details.push(`unmatched path(s): ${unmatchedPaths.join(', ')}`);
+  }
+
+  return details.length > 0 ? `${details.join('; ')}.` : null;
+}
+
 async function resolveValidationTargets(allSkillDirs, cliOptions) {
   const changedRepoPaths = await getValidationInputPaths(cliOptions);
 
@@ -546,6 +649,8 @@ async function resolveValidationTargets(allSkillDirs, cliOptions) {
     };
   }
 
+  const selectedPathDiagnostics =
+    cliOptions.paths.length > 0 ? await classifyCliSelection(changedRepoPaths) : null;
   const changedSkillNames = new Set();
   let validateAllSkills = false;
 
@@ -602,18 +707,34 @@ async function resolveValidationTargets(allSkillDirs, cliOptions) {
 
   if (changedSkillNames.size === 0) {
     if (repositoryMarkdownPaths.size === 0) {
-      const noOpMessage =
-        cliOptions.paths.length > 0
-          ? 'No skill folders or repository markdown docs matched the selected --paths input; nothing to validate.'
-          : 'No changed skill folders or tracked repository markdown docs detected; nothing to validate.';
+      if (cliOptions.paths.length > 0) {
+        const noOpReason = selectedPathDiagnostics ? formatSelectedPathDiagnostics(selectedPathDiagnostics) : null;
+
+        return {
+          changedRepoPaths,
+          noOpMessage: noOpReason
+            ? `No skill folders or repository markdown docs matched the selected --paths input; nothing to validate (${noOpReason})`
+            : 'No skill folders or repository markdown docs matched the selected --paths input; nothing to validate.',
+          repositoryMarkdownPaths,
+          skillDirsToValidate: []
+        };
+      }
 
       return {
         changedRepoPaths,
-        noOpMessage,
+        noOpMessage: 'No changed skill folders or tracked repository markdown docs detected; nothing to validate.',
         repositoryMarkdownPaths,
         skillDirsToValidate: []
       };
     } else {
+      if (selectedPathDiagnostics) {
+        const scopedSelectionMessage = formatSelectedPathDiagnostics(selectedPathDiagnostics);
+
+        if (scopedSelectionMessage) {
+          console.log(`Additional --paths selection details: ${scopedSelectionMessage}`);
+        }
+      }
+
       console.log('No changed skill folders detected; validating changed repository markdown links only.');
     }
 
@@ -623,6 +744,14 @@ async function resolveValidationTargets(allSkillDirs, cliOptions) {
       repositoryMarkdownPaths,
       skillDirsToValidate: []
     };
+  }
+
+  if (selectedPathDiagnostics) {
+    const scopedSelectionMessage = formatSelectedPathDiagnostics(selectedPathDiagnostics);
+
+    if (scopedSelectionMessage) {
+      console.log(`Additional --paths selection details: ${scopedSelectionMessage}`);
+    }
   }
 
   return {
