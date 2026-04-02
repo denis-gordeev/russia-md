@@ -32,6 +32,8 @@ jobs:
         run: npm run check:skills
       - name: Validate skill fixtures
         run: npm run check:skills:fixtures
+      - name: Validate content frontmatter
+        run: npm run test:content
       - name: Build
         run: npm run build
       - name: Upload artifact
