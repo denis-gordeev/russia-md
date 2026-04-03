@@ -349,9 +349,9 @@ async function main() {
       const commitHash = getGitCommitHash(raw.filePath);
 
       const wordCount = countWords(body);
-      const lastHumanReview =
-        frontmatter.lastHumanReview === true ||
-        frontmatter.lastHumanReview === 'true';
+      const lastHumanReview = frontmatter.lastHumanReview
+        ? String(frontmatter.lastHumanReview)
+        : false;
       const featured =
         frontmatter.featured === true || frontmatter.featured === 'true';
       const tagCount = tags.length;
