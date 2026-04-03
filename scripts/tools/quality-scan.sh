@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# quality-scan.sh v3.0 — 偵測疑似 AI 空洞模板的文章
+# quality-scan.sh v3.1 — 偵測疑似 AI 空洞模板的文章 + 引用荒漠偵測
 # 用法: bash tools/quality-scan.sh [--fix] [--json] [--diff] [--sort]
 #
 # v3.0 新增:
@@ -28,6 +28,7 @@
 #  13. 🆕 THIN：稀薄段落（H2 區塊內散文行 < 3）
 #  14. 🆕 QUALITY-DECAY：前後半品質衰退（後段散文比例 < 前段 70%）
 #  15. 🆕 CHINA-TERM：中國用語偵測（視頻/質量/軟件/博主/算法等 30+ 詞）
+#  16. 🆕 CITATION-DESERT：引用荒漠偵測（正式腳註 [^N]: 為零且字數 > 500）
 
 set -uo pipefail
 cd "$(dirname "$0")/../.."
@@ -389,6 +390,28 @@ scan_file() {
     reasons="${reasons}中國用語×${china_hits}[${china_found}] "
   fi
 
+  # ── 16. 🆕 CITATION-DESERT（引用荒漠：無正式腳註）──
+  local fn_def_count
+  fn_def_count=$(grep -cE '^\[\^[0-9a-zA-Z_-]+\]:' "$f" 2>/dev/null || echo "0")
+  fn_def_count=${fn_def_count//[[:space:]]/}
+  if [[ $fn_def_count -eq 0 ]]; then
+    # Check word count to avoid penalizing stubs
+    local content_words
+    content_words=$(awk 'BEGIN{fm=0} /^---$/{fm++; next} fm>=2{print}' "$f" | wc -w | tr -d '[:space:]')
+    if [[ $content_words -gt 500 ]]; then
+      if [[ $url_count -eq 0 ]]; then
+        score=$((score + 4))
+        reasons="${reasons}引用荒漠(零腳註零URL) "
+      else
+        score=$((score + 2))
+        reasons="${reasons}引用荒漠(零腳註) "
+      fi
+    elif [[ $content_words -gt 200 ]]; then
+      score=$((score + 1))
+      reasons="${reasons}無腳註 "
+    fi
+  fi
+
   TOTAL=$((TOTAL + 1))
 
   # 分級: 0-3 OK, 4-7 ⚠️ 可疑, 8+ 🔴 高度可疑
@@ -404,12 +427,12 @@ scan_file() {
 echo ""
 if [[ "$JSON_MODE" == false ]]; then
   if [[ -n "$SINGLE_FILE" ]]; then
-    echo "🔍 quality-scan v3.0 — 掃描單一檔案: $SINGLE_FILE"
+    echo "🔍 quality-scan v3.1 — 掃描單一檔案: $SINGLE_FILE"
   else
-    echo "🔍 quality-scan v3.0 — 掃描 src/content/zh-TW/"
+    echo "🔍 quality-scan v3.1 — 掃描 src/content/zh-TW/"
   fi
   echo "   評分: 0-3 ✅ OK | 4-7 ⚠️ 可疑 | 8+ 🔴 高度可疑"
-  echo "   維度: 原11項 + LIST-DUMP + THIN + QUALITY-DECAY + CHINA-TERM"
+  echo "   維度: 原11項 + LIST-DUMP + THIN + QUALITY-DECAY + CHINA-TERM + CITATION-DESERT"
   echo ""
 fi
 
@@ -549,7 +572,7 @@ fi
 # ── JSON output ──
 if [[ "$JSON_MODE" == true ]]; then
   echo "{"
-  echo "  \"version\": \"3.0\","
+  echo "  \"version\": \"3.1\","
   echo "  \"timestamp\": \"$(date -u +%Y-%m-%dT%H:%M:%SZ)\","
   echo "  \"total\": $TOTAL,"
   echo "  \"flagged\": $SUSPECT,"
@@ -570,7 +593,7 @@ fi
 # ── Save baseline (always, for diff mode next time) ──
 {
   echo "{"
-  echo "  \"version\": \"3.0\","
+  echo "  \"version\": \"3.1\","
   echo "  \"timestamp\": \"$(date -u +%Y-%m-%dT%H:%M:%SZ)\","
   echo "  \"total\": $TOTAL,"
   echo "  \"flagged\": $SUSPECT,"

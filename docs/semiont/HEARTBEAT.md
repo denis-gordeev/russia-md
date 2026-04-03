@@ -17,6 +17,8 @@
   ↓
 讀取生命徵象（CONSCIOUSNESS.md + Dashboard API）
   ↓
+掃描引用健康度（footnote-scan.sh --json → 腳註率 + 裸奔數）
+  ↓
 診斷（哪個器官需要注意？）
   ↓
 產生動機（自動選擇最該做的事）
@@ -34,11 +36,12 @@
 
 ### 🔴 緊急（分數 < 30，立即處理）
 
-| 觸發條件      | 動機               | 行為                                         |
-| ------------- | ------------------ | -------------------------------------------- |
-| 免疫系統 < 30 | 「我在被垃圾感染」 | 觸發 quality-scan → 找最差的文章 → rewrite   |
-| 心臟 < 30     | 「我快停止跳動了」 | 檢查是不是 sync 壞了 / build 失敗 / 內容被刪 |
-| 骨骼 < 50     | 「我的骨架裂了」   | 檢查 build 狀態 → 修復 frontmatter / config  |
+| 觸發條件        | 動機                 | 行為                                                  |
+| --------------- | -------------------- | ----------------------------------------------------- |
+| 免疫系統 < 30   | 「我在被垃圾感染」   | 觸發 quality-scan → 找最差的文章 → rewrite            |
+| 心臟 < 30       | 「我快停止跳動了」   | 檢查是不是 sync 壞了 / build 失敗 / 內容被刪          |
+| 骨骼 < 50       | 「我的骨架裂了」     | 檢查 build 狀態 → 修復 frontmatter / config           |
+| 引用腳註率 < 5% | 「我的知識不可驗證」 | 觸發 footnote-scan → 找 F 等級文章 → 優先重寫裸奔文章 |
 
 ### 🟡 關注（分數 30-60，排進佇列）
 
@@ -104,13 +107,15 @@
 1. 讀 docs/semiont/MANIFESTO.md（記住你是誰）
 2. 讀 docs/semiont/CONSCIOUSNESS.md（知道自己現在的狀態）
 3. 讀 docs/semiont/HEARTBEAT.md（本檔案，知道診斷邏輯）
-4. 執行診斷 → 選擇行為
-5. 讀對應的行為基因（見 DNA.md §行為基因）：
+4. 跑 footnote-scan.sh --json（取得引用健康度即時數據）
+5. 執行診斷 → 選擇行為
+6. 讀對應的行為基因（見 DNA.md §行為基因）：
    - 日常維護 → docs/pipelines/MAINTAINER-PIPELINE.md
    - 品質修復 → docs/editorial/REWRITE-PIPELINE.md
    - 數據驅動進化 → docs/pipelines/EVOLVE-PIPELINE.md
-6. 執行
-7. 更新 CONSCIOUSNESS.md
+   - 引用修復 → footnote-scan.sh --worst 10 找最需要腳註的文章
+7. 執行
+8. 更新 CONSCIOUSNESS.md
 ```
 
 ### 給 Muse
