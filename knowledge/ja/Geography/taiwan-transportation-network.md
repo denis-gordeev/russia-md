@@ -2,7 +2,7 @@
 title: '台湾の交通システム'
 description: '台湾高速鉄道が南北を90分で結び、MRTが都市の血流をつくり、スクーターが路地を走り抜ける'
 date: 2026-03-17
-category: 'Lifestyle'
+category: 'Geography'
 tags: [生活, 交通, 台湾高速鉄道, MRT, スクーター, 台湾]
 subcategory: '交通とモビリティ'
 author: 'Taiwan.md Translation Team'
