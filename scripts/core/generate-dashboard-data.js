@@ -219,9 +219,16 @@ function buildGitCache() {
     if (cur) commits.push(cur);
 
     // --- Pass 2: build per-file cache, skipping batch commits for lastModified ---
+    // Batch = touches many files AND is not a content rewrite
+    const BATCH_SUBJECT_OK = /rewrite:|feat\(|feat:/i; // these are real content changes
     const batchHashes = new Set();
     for (const c of commits) {
-      if (c.files.length > BATCH_THRESHOLD) batchHashes.add(c.hash);
+      if (c.files.length > BATCH_THRESHOLD) {
+        batchHashes.add(c.hash);
+      } else if (c.files.length > 5 && !BATCH_SUBJECT_OK.test(c.subject)) {
+        // 5-50 files: only skip if subject looks like batch fix/heal/evolve/cross-link
+        batchHashes.add(c.hash);
+      }
     }
 
     for (const c of commits) {
