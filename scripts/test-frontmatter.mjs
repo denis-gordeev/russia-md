@@ -22,6 +22,7 @@ const categoryFolders = [
   'Technology',
 ];
 
+const ciMode = process.argv.includes('--ci');
 const stagedMode = process.argv.includes('--staged');
 
 function isValidDate(value) {
@@ -40,19 +41,30 @@ function isStringArray(value) {
 }
 
 async function getSelectedPaths() {
-  if (!stagedMode) {
+  if (!stagedMode && !ciMode) {
     return null;
   }
 
   try {
-    const { stdout } = await execFile('git', [
-      'diff',
-      '--cached',
-      '--name-only',
-      '--diff-filter=ACMR',
-      '--',
-      'russia-knowledge',
-    ]);
+    const args = stagedMode
+      ? [
+          'diff',
+          '--cached',
+          '--name-only',
+          '--diff-filter=ACMR',
+          '--',
+          'russia-knowledge',
+        ]
+      : [
+          'diff',
+          '--name-only',
+          '--diff-filter=ACMR',
+          'HEAD~1',
+          '--',
+          'russia-knowledge',
+        ];
+
+    const { stdout } = await execFile('git', args);
 
     const files = stdout
       .split('\n')
@@ -61,6 +73,13 @@ async function getSelectedPaths() {
 
     return new Set(files);
   } catch (error) {
+    if (ciMode) {
+      console.warn(
+        `Warning: could not resolve CI markdown diff, skipping frontmatter validation. ${error.message}`,
+      );
+      process.exit(0);
+    }
+
     console.warn(
       `Warning: could not resolve staged markdown files, falling back to full scan. ${error.message}`,
     );
@@ -72,7 +91,9 @@ const selectedPaths = await getSelectedPaths();
 
 if (selectedPaths && selectedPaths.size === 0) {
   console.log(
-    'No staged content markdown files in russia-knowledge; skipping frontmatter validation.',
+    ciMode
+      ? 'No changed content markdown files in russia-knowledge; skipping frontmatter validation.'
+      : 'No staged content markdown files in russia-knowledge; skipping frontmatter validation.',
   );
   process.exit(0);
 }

@@ -9,6 +9,7 @@
     "dev": "astro dev",
     "build": "astro build",
     "test:content": "node scripts/test-frontmatter.mjs",
+    "test:content:ci": "node scripts/test-frontmatter.mjs --ci",
     "test:content:staged": "node scripts/test-frontmatter.mjs --staged",
     "postbuild": "node scripts/post-build-check.mjs",
     "preview": "astro preview",
