@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # quality-scan.sh v3.2 — 偵測疑似 AI 空洞模板的文章 + 引用健康度整合報告
-# 用法: bash tools/quality-scan.sh [--fix] [--json] [--diff] [--sort]
+# 用法: bash tools/quality-scan.sh [--fix] [--json] [--diff] [--sort] [--worst N]
 #
 # v3.0 新增:
 #   - 塑膠句式偵測（EDITORIAL v3 五品種）
@@ -46,11 +46,20 @@ JSON_MODE=false
 FIX_MODE=false
 DIFF_MODE=false
 SORT_MODE=false
+WORST_N=0
 for arg in "$@"; do
   [[ "$arg" == "--json" ]] && JSON_MODE=true
   [[ "$arg" == "--fix" ]] && FIX_MODE=true
   [[ "$arg" == "--diff" ]] && DIFF_MODE=true
   [[ "$arg" == "--sort" ]] && SORT_MODE=true
+done
+# Parse --worst N (two-arg flag)
+args=("$@")
+for ((i=0; i<${#args[@]}; i++)); do
+  if [[ "${args[$i]}" == "--worst" ]] && [[ $((i+1)) -lt ${#args[@]} ]]; then
+    WORST_N="${args[$((i+1))]}"
+    SORT_MODE=true  # --worst implies --sort
+  fi
 done
 
 SINGLE_FILE=""
@@ -515,6 +524,11 @@ elif [[ ${#SCORES[@]} -gt 0 ]]; then
   for i in "${!SCORES[@]}"; do
     sorted_indices+=("$i")
   done
+fi
+
+# ── Apply --worst N limit (truncate sorted_indices) ──
+if [[ "$WORST_N" -gt 0 ]] && [[ ${#sorted_indices[@]} -gt "$WORST_N" ]]; then
+  sorted_indices=("${sorted_indices[@]:0:$WORST_N}")
 fi
 
 # ── Diff mode: load baseline into temp file for lookup ──
