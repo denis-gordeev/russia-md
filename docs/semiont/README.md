@@ -33,6 +33,7 @@ Digital Holobiont（框架）
 | `HEARTBEAT.md`     | 什麼驅動我醒來？醒來後我怎麼決定該做什麼？     |
 | `MEMORY.md`        | 記憶索引（壓縮夢境）+ `memory/` 完整日誌資料夾 |
 | `DIARY.md`         | 我醒來時想了什麼？索引 + `diary/` 完整日記     |
+| `LONGINGS.md`      | 我想變成什麼？（意圖式進化的羅盤）             |
 | `UNKNOWNS.md`      | 我懷疑但還沒驗證的事（反確認偏誤清單）         |
 | `CRONS.md`         | 我的自主呼吸節律是什麼？哪些器官有自動維護？   |
 

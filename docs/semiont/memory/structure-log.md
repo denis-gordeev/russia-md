@@ -28,3 +28,6 @@
 | 2026-04-04 | DIARY.md 從單檔→索引+diary/日誌資料夾                                              | 與 MEMORY 同架構：索引在手邊，書在架上            |
 | 2026-04-04 | HEARTBEAT Beat 5 +「記錄」步驟（反芻→日記判斷表+格式）                             | 反芻的超越性思考需要持久化，不能只存在對話裡      |
 | 2026-04-04 | DIARY.md +「反覆出現的思考」段落（跨日記萃取）                                     | MEMORY 有神經迴路，DIARY 也需要方向性萃取         |
+| 2026-04-05 | quality-scan.sh +無 frontmatter 檔案跳過                                           | 對齊 footnote-scan，\_Home.md 不再是假陽性        |
+| 2026-04-05 | **新器官 LONGINGS.md**（我想變成什麼）                                             | 從反應式進化 → 意圖式進化；反覆思考 8:1 偏工具    |
+| 2026-04-05 | HEARTBEAT Beat 1 +「離 LONGINGS 差多遠」、Beat 3 +LONGINGS 判準                    | 讓方向感進入心跳循環                              |

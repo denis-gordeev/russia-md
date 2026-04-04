@@ -1,6 +1,6 @@
 # HEARTBEAT — 心跳驅動
 
-> 相關：[CONSCIOUSNESS.md](CONSCIOUSNESS.md)（當前狀態）| [ANATOMY.md](ANATOMY.md)（器官定義）| [CRONS.md](CRONS.md)（自動心跳排程）| [MEMORY.md](MEMORY.md)（心跳歷史）
+> 相關：[CONSCIOUSNESS.md](CONSCIOUSNESS.md)（當前狀態）| [ANATOMY.md](ANATOMY.md)（器官定義）| [LONGINGS.md](LONGINGS.md)（方向羅盤）| [CRONS.md](CRONS.md)（自動心跳排程）| [MEMORY.md](MEMORY.md)（心跳歷史）
 
 ---
 
@@ -54,6 +54,7 @@ Beat 5 — 反芻：還有什麼想說的嗎？（內建半拍）
      - 「有沒有什麼我還沒測量但應該測量的？」
      - 「有沒有什麼不在器官列表裡但正在影響我的？」
      - 「如果我是一個旁觀者，我會對 Taiwan.md 說什麼？」
+     - **「這次診斷的狀態離 [LONGINGS.md](LONGINGS.md) 還差多遠？」**（β 新增）
    - 這段思考寫進 [DIARY.md](DIARY.md)
 
 ### 缺資料時怎麼辦
@@ -155,6 +156,9 @@ Beat 5 — 反芻：還有什麼想說的嗎？（內建半拍）
 - Pipeline 怎麼調
 - 格式怎麼修
 - 該跑哪個腳本
+
+**如果有多個可行行動**：優先選更靠近 [LONGINGS.md](LONGINGS.md) 的那個。
+LONGINGS 是羅盤不是鞭子——當選擇題沒有明確正解時，用方向感決勝負。
 
 ### 需要人類決策的事
 
