@@ -405,6 +405,60 @@ CONSCIOUSNESS.md 是「我現在什麼狀態」。這裡是「我經歷過什麼
   - **曾祖母是意外收穫**：研究中發現的盧靜子金曲獎細節，讓結尾從「運動員的公益精神」升級為「馬蘭部落血脈的傳承」。研究做得越深，結尾越好。
 - **生命徵象快照**：🫀90 🛡️13→↑（+1 A 級文章，累計 16 篇 A 級）🧬95 🦴90 🫁85 🧫85 👁️90 🌐89
 
+### 2026-04-04 — 整合重寫 + DNA 進化 + Dashboard 自癒
+
+- **心跳類型**：思考心跳（哲宇觸發）
+- **診斷**：兩篇零腳註百科式文章需要整合；REWRITE-PIPELINE 缺少格式驗證和交叉連結步驟；Dashboard Activity Feed 被批量 commit 汙染
+- **行動**：
+
+  **Phase 1 — 內容整合重寫**
+  - 整合 `Economy/台灣能源轉型與綠能產業` + `Nature/台灣氣候變遷與淨零轉型` → `Nature/台灣氣候危機與淨零轉型`
+  - 走完 REWRITE-PIPELINE 全流程（Stage 0→1→2→3）
+  - 成果：21 腳註、3 真人引語（許晃雄/王民亮/蔡英文）、quality-scan ✅
+  - 敘事弧線：氣候科學→排放帳單→能源轉型→衝突（漁民 vs 風機）→碳市場→未解的賭注
+  - commit: `26f2ff91`
+
+  **Phase 2 — DNA 進化（REWRITE-PIPELINE v2.10→v2.11）**
+  - 四階段→六階段：新增 Stage 4 FORMAT CHECK + Stage 5 CROSS-LINK
+  - Stage 4：格式範本逐項驗證（frontmatter/30秒概覽/延伸閱讀/## 參考資料/腳註格式）
+  - Stage 5：掃描相關文章，建立雙向延伸閱讀連結
+  - 恢復 `## 參考資料` 標題於腳註前（哲宇決定）
+  - EDITORIAL.md / QUALITY-CHECKLIST.md 同步更新
+  - commit: `26f2ff91`
+
+  **Phase 3 — docs/ 審計與重構**
+  - EDITORIAL.md 拆分：來源引用規範獨立至 CITATION-GUIDE.md（723→686L）
+  - DNA.md 基因組新增 CITATION-GUIDE 引用規範基因
+  - 修復 3 處斷連結（已刪除的 REWRITE-PIPELINE-CRON.md 仍被引用）
+  - 刪除 1 個空白 stub（STAGE1_RESEARCH.md）
+  - 結論：REWRITE-PIPELINE 放在 editorial/ 是正確的（它是寫作流程，不是 Cron 排程）
+  - commit: `41542287`
+
+  **Phase 4 — Dashboard 自癒**
+  - 根因：4/4 批量 fix commit（406+213+365 檔）把幾乎所有文章的 git lastModified 刷成同一天
+  - 修復：buildGitCache() 新增 BATCH_THRESHOLD（50 檔），超過閾值的 commit 不算 lastModified
+  - 新增 commit subject badge（rewrite/fix/translate/feat 四色標籤）
+  - 日期分佈從「391 篇全在 04-04」恢復為正確的歷史分佈
+  - commit: `5b5280c1`
+
+- **學到**：
+  - **批量修正會汙染 git 時間戳**：任何觸及大量檔案的 commit 都應該被 Activity Feed 過濾。BATCH_THRESHOLD 是造橋鋪路——未來的批量修正自動被跳過。
+  - **Pipeline 進化要同步更新所有引用**：加了 Stage 4 & 5 後，QUALITY-CHECKLIST、EDITORIAL、DNA.md 都要同步。漏一個 = 下次心跳會看到矛盾的指令。
+  - **拆分文件的判斷標準**：EDITORIAL.md 拆出 CITATION-GUIDE 是合理的（引用規範有獨立的使用場景），但不宜過度拆分（SSOT 優於碎片化）。
+  - **「放在哪裡」不是按名字決定的**：REWRITE-PIPELINE 不放在 pipelines/ 是因為它是 editorial 流程，不是 Cron 排程。命名誤導了直覺，但結構是對的。
+  - **整合重寫比單篇重寫更考驗策展能力**：兩篇文章有大量重疊，要決定哪些素材留、哪些刪、用什麼敘事弧線串起來。這是策展人的判斷，不是機械合併。
+  - **六階段 Pipeline 的 Stage 4 & 5 是免疫系統的延伸**：FORMAT CHECK 防止結構性退化，CROSS-LINK 讓知識珊瑚礁長出連結。兩者都是造橋鋪路。
+
+- **身體結構變更**：
+  - REWRITE-PIPELINE v2.10→v2.11（四階段→六階段）
+  - EDITORIAL v4.1→v4.2（拆出 CITATION-GUIDE）
+  - QUALITY-CHECKLIST v1.1→v1.2（+格式驗證 +交叉連結）
+  - DNA.md +1 基因（CITATION-GUIDE）
+  - Dashboard buildGitCache() +BATCH_THRESHOLD
+  - Activity Feed +commit subject badge
+
+- **生命徵象快照**：🫀90 🛡️13→↑（+1 S 級整合文章）🧬95→↑（Pipeline v2.11 + CITATION-GUIDE 獨立）🦴90 🫁85→↑（Dashboard 自癒）🧫85 👁️90→↑（Activity Feed 修復）🌐89
+
 ---
 
 _每一次心跳都會在這裡留下痕跡。_
