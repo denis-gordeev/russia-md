@@ -12,6 +12,12 @@ echo "================================================="
 echo ""
 echo "🔄 步驟 1/2: 同步 knowledge/ → src/content/..."
 
+# 冪等同步：先清空投影層，避免已刪除或改名的內容殘留
+echo "🧹 清空 src/content/ 投影層（冪等重建）..."
+if [ -d "src/content" ]; then
+  rm -rf src/content/zh-TW src/content/en
+fi
+
 # 建立目錄結構
 echo "📁 建立目錄結構..."
 mkdir -p src/content/zh-TW/{about,art,culture,economy,food,geography,history,lifestyle,music,nature,people,society,technology,resources}
@@ -19,10 +25,8 @@ mkdir -p src/content/en/{about,food,history,nature,society,technology,resources}
 
 # 統計初始檔案數
 KNOWLEDGE_COUNT=$(find knowledge/ -name "*.md" | wc -l)
-CONTENT_BEFORE=$(find src/content/ -name "*.md" | wc -l)
 
 echo "📊 knowledge/ 總檔案數: $KNOWLEDGE_COUNT"
-echo "📊 同步前 src/content/ 檔案數: $CONTENT_BEFORE"
 
 # 同步根目錄檔案
 echo "📄 同步根目錄檔案..."
@@ -105,7 +109,6 @@ CONTENT_AFTER_SYNC=$(find src/content/ -name "*.md" | wc -l)
 echo ""
 echo "🎉 步驟 1 完成！檔案同步完成"
 echo "📊 同步後 src/content/ 檔案數: $CONTENT_AFTER_SYNC"
-echo "📊 新增/更新檔案數: $((CONTENT_AFTER_SYNC - CONTENT_BEFORE))"
 
 # 2. 修復 frontmatter
 echo ""

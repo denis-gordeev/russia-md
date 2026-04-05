@@ -8,7 +8,13 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
+    "test:content": "node scripts/test-frontmatter.mjs",
+    "test:content:ci": "node scripts/test-frontmatter.mjs --ci",
+    "test:content:staged": "node scripts/test-frontmatter.mjs --staged",
+    "postbuild": "node scripts/post-build-check.mjs",
     "preview": "astro preview",
+    "check:hollow": "bash tools/detect-ai-hollow.sh",
+    "check:hollow:diff": "bash tools/detect-ai-hollow.sh --diff --sort",
     "check-links": "bash scripts/check-links.sh",
     "check:skills": "node scripts/validate-skill-examples.mjs",
     "check:skills:changed": "node scripts/validate-skill-examples.mjs --changed",

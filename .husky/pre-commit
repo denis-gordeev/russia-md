@@ -1,1 +1,2 @@
-bunx lint-staged
+npm run test:content:staged
+npx --no-install lint-staged

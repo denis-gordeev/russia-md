@@ -8,7 +8,12 @@ import YAML from 'yaml';
 const configuredRoot = process.env.SKILL_VALIDATOR_ROOT;
 const root = configuredRoot ? path.resolve(configuredRoot) : process.cwd();
 const skillsDir = path.join(root, 'skills');
-const agentMetadataSchemaPath = path.join(skillsDir, 'shared', 'schemas', 'agent-metadata.schema.json');
+const agentMetadataSchemaPath = path.join(
+  skillsDir,
+  'shared',
+  'schemas',
+  'agent-metadata.schema.json',
+);
 const markdownLinkPattern = /(?<!!)\[[^\]]+\]\(([^)\s]+)(?:\s+"[^"]*")?\)/g;
 const markdownAnchorCache = new Map();
 const fullSkillValidationTriggers = [
@@ -16,12 +21,12 @@ const fullSkillValidationTriggers = [
   '.github/workflows/skills.yml',
   'package-lock.json',
   'package.json',
-  'scripts/validate-skill-examples.mjs'
+  'scripts/validate-skill-examples.mjs',
 ];
 const documentPaths = [
   path.join(root, 'README.md'),
   path.join(skillsDir, 'shared', 'references'),
-  path.join(root, 'docs')
+  path.join(root, 'docs'),
 ];
 const execFile = promisify(execFileCallback);
 
@@ -29,7 +34,7 @@ function parseCliArgs(argv) {
   const options = {
     changed: false,
     staged: false,
-    paths: []
+    paths: [],
   };
 
   for (let index = 0; index < argv.length; index += 1) {
@@ -56,7 +61,7 @@ function parseCliArgs(argv) {
         ...value
           .split(',')
           .map((item) => item.trim())
-          .filter(Boolean)
+          .filter(Boolean),
       );
       index += 1;
       continue;
@@ -95,10 +100,28 @@ async function listMarkdownFiles(dir) {
       }
 
       return entry.name.endsWith('.md') ? [fullPath] : [];
-    })
+    }),
   );
 
   return files.flat().sort();
+}
+
+function isWithinRepoSubtree(repoPath, subtreePath) {
+  return repoPath === subtreePath || repoPath.startsWith(`${subtreePath}/`);
+}
+
+async function expandTrackedMarkdownDirectory(repoPath, absolutePath) {
+  if (
+    !isWithinRepoSubtree(repoPath, 'docs') &&
+    !isWithinRepoSubtree(repoPath, 'skills/shared/references')
+  ) {
+    return null;
+  }
+
+  const markdownFiles = await listMarkdownFiles(absolutePath);
+  return markdownFiles.map((markdownPath) =>
+    path.relative(root, markdownPath).replace(/\\/g, '/'),
+  );
 }
 
 function fail(message) {
@@ -106,17 +129,25 @@ function fail(message) {
 }
 
 function validateValue(value, schema, currentPath) {
-  const allowedTypes = Array.isArray(schema.type) ? schema.type : schema.type ? [schema.type] : [];
+  const allowedTypes = Array.isArray(schema.type)
+    ? schema.type
+    : schema.type
+      ? [schema.type]
+      : [];
 
   if (allowedTypes.length > 0) {
     const matched = allowedTypes.some((type) => matchesType(value, type));
     if (!matched) {
-      fail(`${currentPath}: expected type ${allowedTypes.join(' | ')}, got ${describeType(value)}`);
+      fail(
+        `${currentPath}: expected type ${allowedTypes.join(' | ')}, got ${describeType(value)}`,
+      );
     }
   }
 
   if (schema.enum && !schema.enum.includes(value)) {
-    fail(`${currentPath}: expected one of ${schema.enum.join(', ')}, got ${JSON.stringify(value)}`);
+    fail(
+      `${currentPath}: expected one of ${schema.enum.join(', ')}, got ${JSON.stringify(value)}`,
+    );
   }
 
   if (typeof value === 'number') {
@@ -129,18 +160,30 @@ function validateValue(value, schema, currentPath) {
   }
 
   if (typeof value === 'string') {
-    if (typeof schema.minLength === 'number' && value.length < schema.minLength) {
-      fail(`${currentPath}: expected length >= ${schema.minLength}, got ${value.length}`);
+    if (
+      typeof schema.minLength === 'number' &&
+      value.length < schema.minLength
+    ) {
+      fail(
+        `${currentPath}: expected length >= ${schema.minLength}, got ${value.length}`,
+      );
     }
 
-    if (typeof schema.maxLength === 'number' && value.length > schema.maxLength) {
-      fail(`${currentPath}: expected length <= ${schema.maxLength}, got ${value.length}`);
+    if (
+      typeof schema.maxLength === 'number' &&
+      value.length > schema.maxLength
+    ) {
+      fail(
+        `${currentPath}: expected length <= ${schema.maxLength}, got ${value.length}`,
+      );
     }
 
     if (schema.pattern) {
       const pattern = new RegExp(schema.pattern);
       if (!pattern.test(value)) {
-        fail(`${currentPath}: expected to match ${schema.pattern}, got ${JSON.stringify(value)}`);
+        fail(
+          `${currentPath}: expected to match ${schema.pattern}, got ${JSON.stringify(value)}`,
+        );
       }
     }
   }
@@ -149,12 +192,16 @@ function validateValue(value, schema, currentPath) {
     try {
       new URL(value);
     } catch {
-      fail(`${currentPath}: expected a valid URI, got ${JSON.stringify(value)}`);
+      fail(
+        `${currentPath}: expected a valid URI, got ${JSON.stringify(value)}`,
+      );
     }
   }
 
   if (Array.isArray(value) && schema.items) {
-    value.forEach((item, index) => validateValue(item, schema.items, `${currentPath}[${index}]`));
+    value.forEach((item, index) =>
+      validateValue(item, schema.items, `${currentPath}[${index}]`),
+    );
   }
 
   if (value && typeof value === 'object' && !Array.isArray(value)) {
@@ -182,10 +229,17 @@ function validateValue(value, schema, currentPath) {
           fail(`${currentPath}: unexpected property ${key}`);
         }
       }
-    } else if (schema.additionalProperties && typeof schema.additionalProperties === 'object') {
+    } else if (
+      schema.additionalProperties &&
+      typeof schema.additionalProperties === 'object'
+    ) {
       for (const [key, propertyValue] of Object.entries(value)) {
         if (!definedProperties.has(key)) {
-          validateValue(propertyValue, schema.additionalProperties, `${currentPath}.${key}`);
+          validateValue(
+            propertyValue,
+            schema.additionalProperties,
+            `${currentPath}.${key}`,
+          );
         }
       }
     }
@@ -197,7 +251,9 @@ function matchesType(value, type) {
     case 'array':
       return Array.isArray(value);
     case 'object':
-      return value !== null && typeof value === 'object' && !Array.isArray(value);
+      return (
+        value !== null && typeof value === 'object' && !Array.isArray(value)
+      );
     case 'null':
       return value === null;
     default:
@@ -261,11 +317,14 @@ function countLines(value) {
 function getMarkdownBodyInfo(markdownRaw) {
   const parsed = matter(markdownRaw);
   const contentStartIndex = markdownRaw.indexOf(parsed.content);
-  const bodyStartLine = contentStartIndex === -1 ? 1 : countLines(markdownRaw.slice(0, contentStartIndex)) + 1;
+  const bodyStartLine =
+    contentStartIndex === -1
+      ? 1
+      : countLines(markdownRaw.slice(0, contentStartIndex)) + 1;
 
   return {
     content: parsed.content,
-    bodyStartLine
+    bodyStartLine,
   };
 }
 
@@ -334,7 +393,8 @@ async function getMarkdownAnchors(markdownPath) {
 
       if (baseSlug) {
         const nextCount = slugCounts.get(baseSlug) ?? 0;
-        const uniqueSlug = nextCount === 0 ? baseSlug : `${baseSlug}-${nextCount}`;
+        const uniqueSlug =
+          nextCount === 0 ? baseSlug : `${baseSlug}-${nextCount}`;
 
         slugCounts.set(baseSlug, nextCount + 1);
         anchors.add(uniqueSlug);
@@ -358,7 +418,11 @@ async function validateMarkdownLinks(markdownPath) {
 
   for (const match of matches) {
     const rawTarget = match[1];
-    const lineNumber = getLineNumberForIndex(content, match.index ?? 0, bodyStartLine);
+    const lineNumber = getLineNumberForIndex(
+      content,
+      match.index ?? 0,
+      bodyStartLine,
+    );
 
     if (!rawTarget || shouldSkipLink(rawTarget)) {
       continue;
@@ -366,16 +430,22 @@ async function validateMarkdownLinks(markdownPath) {
 
     const normalizedTarget = normalizeLinkTarget(rawTarget);
 
-    const resolvedTarget = normalizedTarget ? resolveRepoPath(markdownPath, normalizedTarget) : markdownPath;
+    const resolvedTarget = normalizedTarget
+      ? resolveRepoPath(markdownPath, normalizedTarget)
+      : markdownPath;
 
     if (!(await pathExists(resolvedTarget))) {
-      errors.push(`${path.relative(root, markdownPath)}:${lineNumber}: broken local link ${JSON.stringify(rawTarget)}`);
+      errors.push(
+        `${path.relative(root, markdownPath)}:${lineNumber}: broken local link ${JSON.stringify(rawTarget)}`,
+      );
       continue;
     }
 
     const fragment = extractLinkFragment(rawTarget);
     const shouldValidateFragment =
-      fragment.length > 0 && (rawTarget.startsWith('#') || path.extname(resolvedTarget).toLowerCase() === '.md');
+      fragment.length > 0 &&
+      (rawTarget.startsWith('#') ||
+        path.extname(resolvedTarget).toLowerCase() === '.md');
 
     if (!shouldValidateFragment) {
       continue;
@@ -386,7 +456,7 @@ async function validateMarkdownLinks(markdownPath) {
 
     if (!anchors.has(decodedFragment)) {
       errors.push(
-        `${path.relative(root, markdownPath)}:${lineNumber}: broken local anchor ${JSON.stringify(rawTarget)} (missing #${decodedFragment})`
+        `${path.relative(root, markdownPath)}:${lineNumber}: broken local anchor ${JSON.stringify(rawTarget)} (missing #${decodedFragment})`,
       );
     }
   }
@@ -398,11 +468,15 @@ async function validateSkillIconPath(skillDir, agentMetadataPath, iconPath) {
   const normalizedIconPath = iconPath.trim();
 
   if (normalizedIconPath.length === 0) {
-    fail(`${path.relative(root, agentMetadataPath)}: interface.icon must not be empty`);
+    fail(
+      `${path.relative(root, agentMetadataPath)}: interface.icon must not be empty`,
+    );
   }
 
   if (/^(https?:)?\/\//.test(normalizedIconPath)) {
-    fail(`${path.relative(root, agentMetadataPath)}: interface.icon must reference a repo asset, not a remote URL`);
+    fail(
+      `${path.relative(root, agentMetadataPath)}: interface.icon must reference a repo asset, not a remote URL`,
+    );
   }
 
   const resolvedIconPath = normalizedIconPath.startsWith('/')
@@ -410,7 +484,9 @@ async function validateSkillIconPath(skillDir, agentMetadataPath, iconPath) {
     : path.resolve(skillDir, normalizedIconPath);
 
   if (!(await pathExists(resolvedIconPath))) {
-    fail(`${path.relative(root, agentMetadataPath)}: interface.icon points to missing asset ${JSON.stringify(iconPath)}`);
+    fail(
+      `${path.relative(root, agentMetadataPath)}: interface.icon points to missing asset ${JSON.stringify(iconPath)}`,
+    );
   }
 
   const extension = path.extname(resolvedIconPath).toLowerCase();
@@ -418,7 +494,7 @@ async function validateSkillIconPath(skillDir, agentMetadataPath, iconPath) {
 
   if (!allowedExtensions.has(extension)) {
     fail(
-      `${path.relative(root, agentMetadataPath)}: interface.icon must point to ${Array.from(allowedExtensions).join(', ')}`
+      `${path.relative(root, agentMetadataPath)}: interface.icon must point to ${Array.from(allowedExtensions).join(', ')}`,
     );
   }
 }
@@ -468,7 +544,7 @@ async function getDeletedRepoPathsFromGitDiff(args) {
 
   try {
     ({ stdout } = await execFile('git', args, {
-      cwd: root
+      cwd: root,
     }));
   } catch (error) {
     fail(`Unable to inspect deleted files via git: ${error.message}`);
@@ -478,7 +554,7 @@ async function getDeletedRepoPathsFromGitDiff(args) {
     stdout
       .split('\n')
       .map((line) => line.trim().replace(/\\/g, '/'))
-      .filter(Boolean)
+      .filter(Boolean),
   );
 }
 
@@ -487,7 +563,7 @@ async function getRenamedRepoPathsFromGitDiff(args) {
 
   try {
     ({ stdout } = await execFile('git', args, {
-      cwd: root
+      cwd: root,
     }));
   } catch (error) {
     fail(`Unable to inspect renamed files via git: ${error.message}`);
@@ -500,19 +576,43 @@ async function getChangedRepoPaths() {
   let stdout = '';
 
   try {
-    ({ stdout } = await execFile('git', ['status', '--porcelain', '--untracked-files=all', '--', '.'], {
-      cwd: root
-    }));
+    ({ stdout } = await execFile(
+      'git',
+      ['status', '--porcelain', '--untracked-files=all', '--', '.'],
+      {
+        cwd: root,
+      },
+    ));
   } catch (error) {
     fail(`Unable to inspect changed files via git: ${error.message}`);
   }
 
   const deletedRepoPaths = new Set([
-    ...(await getDeletedRepoPathsFromGitDiff(['diff', '--name-only', '--diff-filter=D', '--', '.'])),
-    ...(await getDeletedRepoPathsFromGitDiff(['diff', '--cached', '--name-only', '--diff-filter=D', '--', '.']))
+    ...(await getDeletedRepoPathsFromGitDiff([
+      'diff',
+      '--name-only',
+      '--diff-filter=D',
+      '--',
+      '.',
+    ])),
+    ...(await getDeletedRepoPathsFromGitDiff([
+      'diff',
+      '--cached',
+      '--name-only',
+      '--diff-filter=D',
+      '--',
+      '.',
+    ])),
   ]);
   const renamedRepoPaths = new Set([
-    ...(await getRenamedRepoPathsFromGitDiff(['diff', '--name-status', '--find-renames', '--diff-filter=R', '--', '.'])),
+    ...(await getRenamedRepoPathsFromGitDiff([
+      'diff',
+      '--name-status',
+      '--find-renames',
+      '--diff-filter=R',
+      '--',
+      '.',
+    ])),
     ...(await getRenamedRepoPathsFromGitDiff([
       'diff',
       '--cached',
@@ -520,14 +620,14 @@ async function getChangedRepoPaths() {
       '--find-renames',
       '--diff-filter=R',
       '--',
-      '.'
-    ]))
+      '.',
+    ])),
   ]);
 
   return {
     deletedRepoPaths,
     renamedRepoPaths,
-    repoPaths: parseGitStatusPaths(stdout)
+    repoPaths: parseGitStatusPaths(stdout),
   };
 }
 
@@ -535,9 +635,13 @@ async function getStagedRepoPaths() {
   let stdout = '';
 
   try {
-    ({ stdout } = await execFile('git', ['diff', '--cached', '--name-only', '--diff-filter=ACMRD', '--', '.'], {
-      cwd: root
-    }));
+    ({ stdout } = await execFile(
+      'git',
+      ['diff', '--cached', '--name-only', '--diff-filter=ACMRD', '--', '.'],
+      {
+        cwd: root,
+      },
+    ));
   } catch (error) {
     fail(`Unable to inspect staged files via git: ${error.message}`);
   }
@@ -546,7 +650,7 @@ async function getStagedRepoPaths() {
     stdout
       .split('\n')
       .map((line) => line.trim().replace(/\\/g, '/'))
-      .filter(Boolean)
+      .filter(Boolean),
   );
   const deletedRepoPaths = await getDeletedRepoPathsFromGitDiff([
     'diff',
@@ -554,7 +658,7 @@ async function getStagedRepoPaths() {
     '--name-only',
     '--diff-filter=D',
     '--',
-    '.'
+    '.',
   ]);
   const renamedRepoPaths = await getRenamedRepoPathsFromGitDiff([
     'diff',
@@ -563,39 +667,68 @@ async function getStagedRepoPaths() {
     '--find-renames',
     '--diff-filter=R',
     '--',
-    '.'
+    '.',
   ]);
 
   return {
     deletedRepoPaths,
     renamedRepoPaths,
-    repoPaths
+    repoPaths,
   };
 }
 
 function shouldValidateAllSkillsForPath(changedPath) {
   return (
     changedPath.startsWith('skills/shared/schemas/') ||
-    fullSkillValidationTriggers.some((triggerPath) => changedPath === triggerPath)
+    fullSkillValidationTriggers.some(
+      (triggerPath) => changedPath === triggerPath,
+    )
   );
 }
 
-function getRepoPathsFromCli(paths) {
-  return new Set(
-    paths
-      .map((candidatePath) => candidatePath.trim())
-      .filter(Boolean)
-      .map((candidatePath) => {
-        const absolutePath = path.resolve(root, candidatePath);
-        const relativePath = path.relative(root, absolutePath);
+async function getRepoPathsFromCli(paths) {
+  const repoPaths = new Set();
 
-        if (relativePath.startsWith('..')) {
-          fail(`Path ${JSON.stringify(candidatePath)} is outside the repository root`);
-        }
+  for (const candidatePath of paths
+    .map((item) => item.trim())
+    .filter(Boolean)) {
+    const absolutePath = path.resolve(root, candidatePath);
+    const relativePath = path.relative(root, absolutePath);
 
-        return relativePath.replace(/\\/g, '/');
-      })
-  );
+    if (relativePath.startsWith('..')) {
+      fail(
+        `Path ${JSON.stringify(candidatePath)} is outside the repository root`,
+      );
+    }
+
+    const normalizedPath = relativePath.replace(/\\/g, '/');
+
+    if (!(await pathExists(absolutePath))) {
+      repoPaths.add(normalizedPath);
+      continue;
+    }
+
+    const absolutePathStats = await stat(absolutePath);
+
+    if (!absolutePathStats.isDirectory()) {
+      repoPaths.add(normalizedPath);
+      continue;
+    }
+
+    const expandedMarkdownPaths = await expandTrackedMarkdownDirectory(
+      normalizedPath,
+      absolutePath,
+    );
+
+    if (expandedMarkdownPaths && expandedMarkdownPaths.length > 0) {
+      expandedMarkdownPaths.forEach((repoPath) => repoPaths.add(repoPath));
+      continue;
+    }
+
+    repoPaths.add(normalizedPath);
+  }
+
+  return repoPaths;
 }
 
 async function getValidationInputPaths(cliOptions) {
@@ -603,7 +736,7 @@ async function getValidationInputPaths(cliOptions) {
     return {
       deletedRepoPaths: new Set(),
       renamedRepoPaths: new Set(),
-      repoPaths: getRepoPathsFromCli(cliOptions.paths)
+      repoPaths: await getRepoPathsFromCli(cliOptions.paths),
     };
   }
 
@@ -620,13 +753,18 @@ async function getValidationInputPaths(cliOptions) {
 
 function matchesRepositoryMarkdownPath(repoPath) {
   for (const documentPath of documentPaths) {
-    const repoDocumentPath = path.relative(root, documentPath).replace(/\\/g, '/');
+    const repoDocumentPath = path
+      .relative(root, documentPath)
+      .replace(/\\/g, '/');
 
     if (repoPath === repoDocumentPath && repoPath.endsWith('.md')) {
       return true;
     }
 
-    if (repoPath.startsWith(`${repoDocumentPath}/`) && repoPath.endsWith('.md')) {
+    if (
+      repoPath.startsWith(`${repoDocumentPath}/`) &&
+      repoPath.endsWith('.md')
+    ) {
       return true;
     }
   }
@@ -634,7 +772,11 @@ function matchesRepositoryMarkdownPath(repoPath) {
   return false;
 }
 
-async function classifyScopedRepoPaths(repoPaths, skillNames, deletedRepoPaths = new Set()) {
+async function classifyScopedRepoPaths(
+  repoPaths,
+  skillNames,
+  deletedRepoPaths = new Set(),
+) {
   const ignoredRepoPaths = [];
   const unmatchedRepoPaths = [];
 
@@ -668,7 +810,7 @@ async function classifyScopedRepoPaths(repoPaths, skillNames, deletedRepoPaths =
 
   return {
     ignoredRepoPaths: ignoredRepoPaths.sort(),
-    unmatchedRepoPaths: unmatchedRepoPaths.sort()
+    unmatchedRepoPaths: unmatchedRepoPaths.sort(),
   };
 }
 
@@ -704,20 +846,30 @@ async function resolveValidationTargets(allSkillDirs, cliOptions) {
       noOpMessage: null,
       repositoryMarkdownPaths: null,
       skillDirsToValidate: allSkillDirs,
-      unmatchedRepoPaths: []
+      unmatchedRepoPaths: [],
     };
   }
 
-  const { deletedRepoPaths, renamedRepoPaths, repoPaths: changedRepoPaths } = validationInputs;
+  const {
+    deletedRepoPaths,
+    renamedRepoPaths,
+    repoPaths: changedRepoPaths,
+  } = validationInputs;
 
-  const skillNames = new Set(allSkillDirs.map((skillDir) => path.basename(skillDir)));
+  const skillNames = new Set(
+    allSkillDirs.map((skillDir) => path.basename(skillDir)),
+  );
   const changedSkillNames = new Set();
   let validateAllSkills = false;
   const deletedTrackedRepositoryMarkdownPaths = new Set(
-    [...deletedRepoPaths].filter((repoPath) => matchesRepositoryMarkdownPath(repoPath))
+    [...deletedRepoPaths].filter((repoPath) =>
+      matchesRepositoryMarkdownPath(repoPath),
+    ),
   );
   const renamedTrackedRepositoryMarkdownPaths = new Set(
-    [...renamedRepoPaths].filter((repoPath) => matchesRepositoryMarkdownPath(repoPath))
+    [...renamedRepoPaths].filter((repoPath) =>
+      matchesRepositoryMarkdownPath(repoPath),
+    ),
   );
 
   if (deletedTrackedRepositoryMarkdownPaths.size > 0) {
@@ -753,12 +905,19 @@ async function resolveValidationTargets(allSkillDirs, cliOptions) {
     repositoryMarkdownPaths = new Set();
 
     for (const documentPath of documentPaths) {
-      const repoDocumentPath = path.relative(root, documentPath).replace(/\\/g, '/');
+      const repoDocumentPath = path
+        .relative(root, documentPath)
+        .replace(/\\/g, '/');
       const documentStats = await stat(documentPath);
 
       if (documentStats.isDirectory()) {
-        for (const markdownPath of collectMarkdownDocsWithin(repoDocumentPath, changedRepoPaths)) {
-          const repoMarkdownPath = path.relative(root, markdownPath).replace(/\\/g, '/');
+        for (const markdownPath of collectMarkdownDocsWithin(
+          repoDocumentPath,
+          changedRepoPaths,
+        )) {
+          const repoMarkdownPath = path
+            .relative(root, markdownPath)
+            .replace(/\\/g, '/');
 
           if (deletedRepoPaths.has(repoMarkdownPath)) {
             continue;
@@ -769,29 +928,35 @@ async function resolveValidationTargets(allSkillDirs, cliOptions) {
         continue;
       }
 
-      if (changedRepoPaths.has(repoDocumentPath) && !deletedRepoPaths.has(repoDocumentPath)) {
+      if (
+        changedRepoPaths.has(repoDocumentPath) &&
+        !deletedRepoPaths.has(repoDocumentPath)
+      ) {
         repositoryMarkdownPaths.add(documentPath);
       }
     }
   }
 
-  const { ignoredRepoPaths, unmatchedRepoPaths } = await classifyScopedRepoPaths(
-    changedRepoPaths,
-    skillNames,
-    deletedRepoPaths
-  );
+  const { ignoredRepoPaths, unmatchedRepoPaths } =
+    await classifyScopedRepoPaths(
+      changedRepoPaths,
+      skillNames,
+      deletedRepoPaths,
+    );
 
   if (validateAllSkills) {
     if (deletedTrackedRepositoryMarkdownPaths.size > 0) {
       console.log(
-        'Deleted tracked repository markdown docs detected; validating all skill folders and repository markdown links to re-check inbound links.'
+        'Deleted tracked repository markdown docs detected; validating all skill folders and repository markdown links to re-check inbound links.',
       );
     } else if (renamedTrackedRepositoryMarkdownPaths.size > 0) {
       console.log(
-        'Renamed tracked repository markdown docs detected; validating all skill folders and repository markdown links to re-check inbound links.'
+        'Renamed tracked repository markdown docs detected; validating all skill folders and repository markdown links to re-check inbound links.',
       );
     } else {
-      console.log('Shared validation inputs changed; validating all skill folders.');
+      console.log(
+        'Shared validation inputs changed; validating all skill folders.',
+      );
     }
 
     return {
@@ -800,7 +965,7 @@ async function resolveValidationTargets(allSkillDirs, cliOptions) {
       noOpMessage: null,
       repositoryMarkdownPaths,
       skillDirsToValidate: allSkillDirs,
-      unmatchedRepoPaths
+      unmatchedRepoPaths,
     };
   }
 
@@ -817,10 +982,12 @@ async function resolveValidationTargets(allSkillDirs, cliOptions) {
         noOpMessage,
         repositoryMarkdownPaths,
         skillDirsToValidate: [],
-        unmatchedRepoPaths
+        unmatchedRepoPaths,
       };
     } else {
-      console.log('No changed skill folders detected; validating changed repository markdown links only.');
+      console.log(
+        'No changed skill folders detected; validating changed repository markdown links only.',
+      );
     }
 
     return {
@@ -829,7 +996,7 @@ async function resolveValidationTargets(allSkillDirs, cliOptions) {
       noOpMessage: null,
       repositoryMarkdownPaths,
       skillDirsToValidate: [],
-      unmatchedRepoPaths
+      unmatchedRepoPaths,
     };
   }
 
@@ -838,8 +1005,10 @@ async function resolveValidationTargets(allSkillDirs, cliOptions) {
     ignoredRepoPaths,
     noOpMessage: null,
     repositoryMarkdownPaths,
-    skillDirsToValidate: allSkillDirs.filter((skillDir) => changedSkillNames.has(path.basename(skillDir))),
-    unmatchedRepoPaths
+    skillDirsToValidate: allSkillDirs.filter((skillDir) =>
+      changedSkillNames.has(path.basename(skillDir)),
+    ),
+    unmatchedRepoPaths,
   };
 }
 
@@ -884,12 +1053,18 @@ async function validateSkillDir(skillDir) {
   await ensureExists(referenceNotesPath);
   await ensureExists(agentMetadataSchemaPath);
 
-  const [schemaRaw, exampleRaw, skillRaw, agentMetadataRaw, agentMetadataSchemaRaw] = await Promise.all([
+  const [
+    schemaRaw,
+    exampleRaw,
+    skillRaw,
+    agentMetadataRaw,
+    agentMetadataSchemaRaw,
+  ] = await Promise.all([
     readFile(schemaPath, 'utf8'),
     readFile(examplePath, 'utf8'),
     readFile(skillPath, 'utf8'),
     readFile(agentMetadataPath, 'utf8'),
-    readFile(agentMetadataSchemaPath, 'utf8')
+    readFile(agentMetadataSchemaPath, 'utf8'),
   ]);
 
   const schema = JSON.parse(schemaRaw);
@@ -902,31 +1077,41 @@ async function validateSkillDir(skillDir) {
   const markdownErrors = await validateMarkdownLinks(skillPath);
 
   if (!skillRaw.includes('schemas/output.schema.json')) {
-    fail(`${path.relative(root, skillPath)}: missing bundled resource reference to schemas/output.schema.json`);
+    fail(
+      `${path.relative(root, skillPath)}: missing bundled resource reference to schemas/output.schema.json`,
+    );
   }
 
   if (!skillRaw.includes('examples/output.json')) {
-    fail(`${path.relative(root, skillPath)}: missing bundled resource reference to examples/output.json`);
+    fail(
+      `${path.relative(root, skillPath)}: missing bundled resource reference to examples/output.json`,
+    );
   }
 
   if (!skillRaw.includes('references/integration-notes.md')) {
     fail(
-      `${path.relative(root, skillPath)}: missing bundled resource reference to references/integration-notes.md`
+      `${path.relative(root, skillPath)}: missing bundled resource reference to references/integration-notes.md`,
     );
   }
 
   if (agentMetadata.name !== skillName) {
-    fail(`${path.relative(root, agentMetadataPath)}: expected name ${JSON.stringify(skillName)}`);
+    fail(
+      `${path.relative(root, agentMetadataPath)}: expected name ${JSON.stringify(skillName)}`,
+    );
   }
 
   if (!agentMetadata.interface.default_prompt.includes(`$${skillName}`)) {
     fail(
-      `${path.relative(root, agentMetadataPath)}: interface.default_prompt must mention $${skillName} for discoverability`
+      `${path.relative(root, agentMetadataPath)}: interface.default_prompt must mention $${skillName} for discoverability`,
     );
   }
 
   if (agentMetadata.interface.icon) {
-    await validateSkillIconPath(skillDir, agentMetadataPath, agentMetadata.interface.icon);
+    await validateSkillIconPath(
+      skillDir,
+      agentMetadataPath,
+      agentMetadata.interface.icon,
+    );
   }
 
   return markdownErrors;
@@ -941,19 +1126,29 @@ async function main() {
     fail('No skill directories found.');
   }
 
-  const { ignoredRepoPaths, noOpMessage, repositoryMarkdownPaths, skillDirsToValidate, unmatchedRepoPaths } =
-    await resolveValidationTargets(skillDirs, cliOptions);
+  const {
+    ignoredRepoPaths,
+    noOpMessage,
+    repositoryMarkdownPaths,
+    skillDirsToValidate,
+    unmatchedRepoPaths,
+  } = await resolveValidationTargets(skillDirs, cliOptions);
 
   if (unmatchedRepoPaths.length > 0) {
-    console.log(formatScopedPathDiagnostics('Scoped input paths did not match repository entries', unmatchedRepoPaths));
+    console.log(
+      formatScopedPathDiagnostics(
+        'Scoped input paths did not match repository entries',
+        unmatchedRepoPaths,
+      ),
+    );
   }
 
   if (ignoredRepoPaths.length > 0) {
     console.log(
       formatScopedPathDiagnostics(
         'Ignoring scoped repo paths outside skill bundles and tracked markdown docs',
-        ignoredRepoPaths
-      )
+        ignoredRepoPaths,
+      ),
     );
   }
 
@@ -966,14 +1161,20 @@ async function main() {
     markdownErrors.push(...(await validateSkillDir(skillDir)));
   }
 
-  markdownErrors.push(...(await validateRepositoryDocs(repositoryMarkdownPaths)));
+  markdownErrors.push(
+    ...(await validateRepositoryDocs(repositoryMarkdownPaths)),
+  );
 
   if (markdownErrors.length > 0) {
     fail(markdownErrors.join('\n'));
   }
 
-  const markdownScopeLabel = repositoryMarkdownPaths ? 'changed repository markdown links' : 'repository markdown links';
-  console.log(`Validated ${skillDirsToValidate.length} skill example contract(s) and ${markdownScopeLabel}.`);
+  const markdownScopeLabel = repositoryMarkdownPaths
+    ? 'changed repository markdown links'
+    : 'repository markdown links';
+  console.log(
+    `Validated ${skillDirsToValidate.length} skill example contract(s) and ${markdownScopeLabel}.`,
+  );
 }
 
 main().catch((error) => {

@@ -20,6 +20,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
@@ -30,6 +32,8 @@ jobs:
         run: npm run check:skills
       - name: Validate skill fixtures
         run: npm run check:skills:fixtures
+      - name: Validate content frontmatter
+        run: npm run test:content:ci
       - name: Build
         run: npm run build
       - name: Upload artifact
