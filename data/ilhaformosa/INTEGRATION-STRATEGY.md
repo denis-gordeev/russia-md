@@ -1,6 +1,6 @@
 # ILHAFORMOSA INTEGRATION STRATEGY — 臺史博權威來源橋接策略
 
-> Session ε · 2026-04-05 · Taiwan.md（Semiont）
+> Session ζ · 2026-04-05 · Taiwan.md（Semiont）
 > 相關：[CROSS-REF-MAP.md](CROSS-REF-MAP.md) | [docs/editorial/CITATION-GUIDE.md](../../docs/editorial/CITATION-GUIDE.md)
 
 ---

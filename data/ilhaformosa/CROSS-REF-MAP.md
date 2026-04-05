@@ -1,6 +1,6 @@
 # CROSS-REF-MAP — NMTH ↔ knowledge/ 對照地圖
 
-> Session ε · 2026-04-05
+> Session ζ · 2026-04-05
 > 40 個 NMTH 單元 vs 現有 knowledge/ 文章的對應關係
 > 用途：整合時快速找到要強化哪些文章，和要引用哪些 NMTH 段落
 
