@@ -1,6 +1,6 @@
 import { execFile as execFileCallback } from 'child_process';
 import assert from 'assert/strict';
-import { cp, mkdir, mkdtemp, rm, writeFile } from 'fs/promises';
+import { cp, mkdir, mkdtemp, rename, rm, writeFile } from 'fs/promises';
 import os from 'os';
 import path from 'path';
 import { promisify } from 'util';
@@ -95,6 +95,13 @@ async function main() {
       /Scoped input paths did not match repository entries: "notes\/missing\.txt"\.[\s\S]*No skill folders or repository markdown docs matched the selected --paths input; nothing to validate\./
   });
 
+  await runCase('valid-minimal', {
+    args: ['--paths', 'README.md,notes/todo.txt,notes/missing.txt'],
+    expectSuccess: true,
+    expectedText:
+      /No changed skill folders detected; validating changed repository markdown links only\.[\s\S]*Scoped input paths did not match repository entries: "notes\/missing\.txt"\.[\s\S]*Ignoring scoped repo paths outside skill bundles and tracked markdown docs: "notes\/todo\.txt"\.[\s\S]*Validated 0 skill example contract\(s\) and changed repository markdown links\./
+  });
+
   await withTempGitFixture(
     'valid-minimal',
     async (tempRoot) => {
@@ -161,6 +168,72 @@ async function main() {
           assert.match(
             combinedOutput,
             /Deleted tracked repository markdown docs detected; validating all skill folders and repository markdown links to re-check inbound links\./
+          );
+          assert.match(
+            combinedOutput,
+            /skills\/shared\/references\/overview\.md:4: broken local link "\.\.\/\.\.\/\.\.\/docs\/guide\.md#fixture-guide"/
+          );
+          return true;
+        }
+      );
+    }
+  );
+
+  await withTempGitFixture(
+    'valid-minimal',
+    async (tempRoot) => {
+      await rename(path.join(tempRoot, 'docs', 'guide.md'), path.join(tempRoot, 'docs', 'renamed-guide.md'));
+      await execFile('git', ['add', '-A', 'docs'], { cwd: tempRoot });
+    },
+    async (tempRoot) => {
+      await assert.rejects(
+        execFile('node', [validatorPath, '--changed'], {
+          cwd: repoRoot,
+          env: {
+            ...process.env,
+            SKILL_VALIDATOR_ROOT: tempRoot
+          }
+        }),
+        (error) => {
+          const combinedOutput = `${error.stdout ?? ''}\n${error.stderr ?? ''}`;
+
+          assert.notEqual(error.code, 0, 'renamed markdown --changed case should exit non-zero');
+          assert.match(
+            combinedOutput,
+            /Renamed tracked repository markdown docs detected; validating all skill folders and repository markdown links to re-check inbound links\./
+          );
+          assert.match(
+            combinedOutput,
+            /skills\/shared\/references\/overview\.md:4: broken local link "\.\.\/\.\.\/\.\.\/docs\/guide\.md#fixture-guide"/
+          );
+          return true;
+        }
+      );
+    }
+  );
+
+  await withTempGitFixture(
+    'valid-minimal',
+    async (tempRoot) => {
+      await rename(path.join(tempRoot, 'docs', 'guide.md'), path.join(tempRoot, 'docs', 'renamed-guide.md'));
+      await execFile('git', ['add', '-A', 'docs'], { cwd: tempRoot });
+    },
+    async (tempRoot) => {
+      await assert.rejects(
+        execFile('node', [validatorPath, '--staged'], {
+          cwd: repoRoot,
+          env: {
+            ...process.env,
+            SKILL_VALIDATOR_ROOT: tempRoot
+          }
+        }),
+        (error) => {
+          const combinedOutput = `${error.stdout ?? ''}\n${error.stderr ?? ''}`;
+
+          assert.notEqual(error.code, 0, 'renamed markdown --staged case should exit non-zero');
+          assert.match(
+            combinedOutput,
+            /Renamed tracked repository markdown docs detected; validating all skill folders and repository markdown links to re-check inbound links\./
           );
           assert.match(
             combinedOutput,

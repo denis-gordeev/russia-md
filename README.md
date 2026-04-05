@@ -89,7 +89,10 @@ This is still a foundation fork, not a finished editorial product. The active si
 - [x] Add fixture coverage for staged and changed no-op validator runs outside `--paths`
 - [x] Add diff-aware handling for deleted markdown files in incremental validator runs
 - [ ] Add diff-aware handling for renamed markdown files in incremental validator runs
-- [ ] Add fixture coverage for mixed scoped runs that combine valid docs with ignored or unmatched paths
+- [x] Add fixture coverage for mixed scoped runs that combine valid docs with ignored or unmatched paths
+- [x] Add diff-aware handling for renamed markdown files in incremental validator runs
+- [ ] Add diff-aware handling for renamed non-markdown local assets so unchanged docs are re-checked when images or downloads move
+- [ ] Add fixture coverage for staged rename cases that also touch shared schemas or validator wiring in the same change set
 
 ## Development
 
@@ -104,11 +107,11 @@ npm run build
 
 `npm run check:skills` now validates that every repo-local skill ships its core bundle together: `SKILL.md`, `agents/openai.yaml`, `references/integration-notes.md`, `examples/output.json`, and `schemas/output.schema.json`. It also validates `agents/openai.yaml` against a shared metadata schema, rejects unknown UI keys, checks that each default prompt explicitly mentions the matching `$skill-name`, verifies local markdown links across `README.md`, `skills/**/SKILL.md`, and docs/reference pages, ignores YAML front matter while scanning markdown bodies, validates local markdown `#fragment` anchors against headings and explicit `id=""` anchors, reports broken markdown references with source line numbers, and lints local `interface.icon` asset paths when icons are present.
 
-`npm run check:skills:changed` validates only skill folders currently changed in git status, but automatically falls back to validating all skills when shared schema inputs or validator wiring change. When the change set only touches repository docs such as `README.md`, `docs/**`, or `skills/shared/references/**`, it now scopes markdown-link checks to those changed markdown files instead of re-scanning every tracked doc. If an incremental run includes a deleted tracked markdown doc, the validator now escalates to a full markdown and skill pass so inbound links from unchanged files are re-checked instead of failing with a missing-file read. Scoped runs also distinguish unmatched input paths from existing repo files that are intentionally ignored because they are outside tracked markdown docs or skill bundles, so no-op output is easier to interpret. Pull requests now run this incremental pass first in CI before the full validation and fixture jobs, while pushes to `main` continue running the full suite directly.
+`npm run check:skills:changed` validates only skill folders currently changed in git status, but automatically falls back to validating all skills when shared schema inputs or validator wiring change. When the change set only touches repository docs such as `README.md`, `docs/**`, or `skills/shared/references/**`, it now scopes markdown-link checks to those changed markdown files instead of re-scanning every tracked doc. If an incremental run includes a deleted or renamed tracked markdown doc, the validator now escalates to a full markdown and skill pass so inbound links from unchanged files are re-checked instead of slipping past the scoped run. Scoped runs also distinguish unmatched input paths from existing repo files that are intentionally ignored because they are outside tracked markdown docs or skill bundles, and fixture coverage now locks mixed `--paths` runs that combine valid docs with ignored or unmatched inputs so no-op diagnostics stay easy to interpret. Pull requests now run this incremental pass first in CI before the full validation and fixture jobs, while pushes to `main` continue running the full suite directly.
 
 `npm run check:skills:staged` applies the same incremental logic to the staged git index, which is useful before commits. For ad hoc path-scoped runs outside git-status heuristics, use `npm run check:skills -- --paths README.md,skills/esia/SKILL.md`; path-scoped runs now validate only the selected repo docs plus any directly targeted skill folders, and return an explicit no-op message when the selected paths do not match any skill bundle or tracked markdown document.
 
-`npm run check:skills:fixtures` runs a small fixture suite for the validator itself, including front-matter-aware markdown regression coverage plus negative cases for broken markdown anchors, aggregated markdown-link failures with line-aware diagnostics, missing shared metadata schema files, invalid `interface.icon` metadata, path-scoped unmatched-vs-ignored diagnostics, deleted-markdown incremental rechecks, and no-op coverage for `--changed` / `--staged` runs that only touch out-of-scope files.
+`npm run check:skills:fixtures` runs a small fixture suite for the validator itself, including front-matter-aware markdown regression coverage plus negative cases for broken markdown anchors, aggregated markdown-link failures with line-aware diagnostics, missing shared metadata schema files, invalid `interface.icon` metadata, path-scoped unmatched-vs-ignored diagnostics, deleted/renamed-markdown incremental rechecks, mixed `--paths` coverage, and no-op coverage for `--changed` / `--staged` runs that only touch out-of-scope files.
 
 ## Key Paths
 
@@ -124,7 +127,7 @@ npm run build
 - `skills/*/examples/` example payloads and output contracts
 - `skills/*/schemas/` per-skill JSON schema definitions for output contracts
 - `scripts/validate-skill-examples.mjs` local and CI validator for skill bundle completeness, metadata schema checks, markdown-link and anchor validation, optional icon asset path linting, and changed-skill filtering
-- `scripts/test-validate-skill-examples.mjs` validator fixture runner covering valid and negative bundle cases
+- `scripts/test-validate-skill-examples.mjs` validator fixture runner covering valid and negative bundle cases, mixed path-scoping diagnostics, and deleted/renamed markdown incremental regressions
 - `scripts/fixtures/skill-validator/` minimal fixture repositories for validator regression checks
 - GitHub Actions skill validation and deploy workflows now run on Node 24
 - `.github/workflows/skills.yml` standalone CI workflow for incremental PR validation plus full skill and fixture validation

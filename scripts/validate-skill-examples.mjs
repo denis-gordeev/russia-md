@@ -442,6 +442,27 @@ function parseGitStatusPaths(statusOutput) {
   return changedPaths;
 }
 
+function parseRenamedPathsFromGitNameStatus(stdout) {
+  const renamedPaths = new Set();
+
+  for (const line of stdout.split('\n').filter(Boolean)) {
+    const parts = line
+      .split('\t')
+      .map((part) => part.trim())
+      .filter(Boolean);
+
+    if (parts.length < 3 || !parts[0].startsWith('R')) {
+      continue;
+    }
+
+    for (const renamedPath of parts.slice(1, 3)) {
+      renamedPaths.add(renamedPath.replace(/\\/g, '/'));
+    }
+  }
+
+  return renamedPaths;
+}
+
 async function getDeletedRepoPathsFromGitDiff(args) {
   let stdout = '';
 
@@ -461,6 +482,20 @@ async function getDeletedRepoPathsFromGitDiff(args) {
   );
 }
 
+async function getRenamedRepoPathsFromGitDiff(args) {
+  let stdout = '';
+
+  try {
+    ({ stdout } = await execFile('git', args, {
+      cwd: root
+    }));
+  } catch (error) {
+    fail(`Unable to inspect renamed files via git: ${error.message}`);
+  }
+
+  return parseRenamedPathsFromGitNameStatus(stdout);
+}
+
 async function getChangedRepoPaths() {
   let stdout = '';
 
@@ -476,9 +511,22 @@ async function getChangedRepoPaths() {
     ...(await getDeletedRepoPathsFromGitDiff(['diff', '--name-only', '--diff-filter=D', '--', '.'])),
     ...(await getDeletedRepoPathsFromGitDiff(['diff', '--cached', '--name-only', '--diff-filter=D', '--', '.']))
   ]);
+  const renamedRepoPaths = new Set([
+    ...(await getRenamedRepoPathsFromGitDiff(['diff', '--name-status', '--find-renames', '--diff-filter=R', '--', '.'])),
+    ...(await getRenamedRepoPathsFromGitDiff([
+      'diff',
+      '--cached',
+      '--name-status',
+      '--find-renames',
+      '--diff-filter=R',
+      '--',
+      '.'
+    ]))
+  ]);
 
   return {
     deletedRepoPaths,
+    renamedRepoPaths,
     repoPaths: parseGitStatusPaths(stdout)
   };
 }
@@ -508,9 +556,19 @@ async function getStagedRepoPaths() {
     '--',
     '.'
   ]);
+  const renamedRepoPaths = await getRenamedRepoPathsFromGitDiff([
+    'diff',
+    '--cached',
+    '--name-status',
+    '--find-renames',
+    '--diff-filter=R',
+    '--',
+    '.'
+  ]);
 
   return {
     deletedRepoPaths,
+    renamedRepoPaths,
     repoPaths
   };
 }
@@ -544,6 +602,7 @@ async function getValidationInputPaths(cliOptions) {
   if (cliOptions.paths.length > 0) {
     return {
       deletedRepoPaths: new Set(),
+      renamedRepoPaths: new Set(),
       repoPaths: getRepoPathsFromCli(cliOptions.paths)
     };
   }
@@ -649,7 +708,7 @@ async function resolveValidationTargets(allSkillDirs, cliOptions) {
     };
   }
 
-  const { deletedRepoPaths, repoPaths: changedRepoPaths } = validationInputs;
+  const { deletedRepoPaths, renamedRepoPaths, repoPaths: changedRepoPaths } = validationInputs;
 
   const skillNames = new Set(allSkillDirs.map((skillDir) => path.basename(skillDir)));
   const changedSkillNames = new Set();
@@ -657,8 +716,15 @@ async function resolveValidationTargets(allSkillDirs, cliOptions) {
   const deletedTrackedRepositoryMarkdownPaths = new Set(
     [...deletedRepoPaths].filter((repoPath) => matchesRepositoryMarkdownPath(repoPath))
   );
+  const renamedTrackedRepositoryMarkdownPaths = new Set(
+    [...renamedRepoPaths].filter((repoPath) => matchesRepositoryMarkdownPath(repoPath))
+  );
 
   if (deletedTrackedRepositoryMarkdownPaths.size > 0) {
+    validateAllSkills = true;
+  }
+
+  if (renamedTrackedRepositoryMarkdownPaths.size > 0) {
     validateAllSkills = true;
   }
 
@@ -719,6 +785,10 @@ async function resolveValidationTargets(allSkillDirs, cliOptions) {
     if (deletedTrackedRepositoryMarkdownPaths.size > 0) {
       console.log(
         'Deleted tracked repository markdown docs detected; validating all skill folders and repository markdown links to re-check inbound links.'
+      );
+    } else if (renamedTrackedRepositoryMarkdownPaths.size > 0) {
+      console.log(
+        'Renamed tracked repository markdown docs detected; validating all skill folders and repository markdown links to re-check inbound links.'
       );
     } else {
       console.log('Shared validation inputs changed; validating all skill folders.');
