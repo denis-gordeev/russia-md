@@ -70,6 +70,7 @@ export async function getStaticPaths() {
         const { data: frontmatter } = safeMatter(fileContent);
         const slug = basename(file, '.md');
 
+        const fnCount = (fileContent.match(/^\[\^\d+\]:/gm) || []).length;
         articles.push({
           slug,
           title: frontmatter.title || slug,
@@ -78,6 +79,7 @@ export async function getStaticPaths() {
           readingTime: frontmatter.readingTime || null,
           date: frontmatter.date || null,
           featured: frontmatter.featured || false,
+          footnotes: fnCount,
           lang: 'ja',
         });
       }
@@ -103,14 +105,37 @@ export async function getStaticPaths() {
       }
     } catch {}
 
+    // Compute top picks
+    const computeTopPicks = () => {
+      if (articles.length === 0) return [];
+      const tryThr = (ft: number, nt: number) =>
+        articles.filter(
+          (a: any) => (a.footnotes || 0) >= (a.featured ? ft : nt),
+        );
+      let cands = tryThr(8, 15);
+      if (cands.length < 2) cands = tryThr(3, 8);
+      if (cands.length === 0) cands = articles.filter((a: any) => a.featured);
+      if (cands.length === 0) return [];
+      return [...cands]
+        .sort((a: any, b: any) => {
+          if (a.featured !== b.featured) return a.featured ? -1 : 1;
+          return (b.footnotes || 0) - (a.footnotes || 0);
+        })
+        .slice(0, 5);
+    };
+    const topPicks = computeTopPicks();
+
     paths.push({
       params: { category },
       props: {
         category,
         hubContent,
+        topPicks,
         articles: articles.sort((a, b) => {
           if (a.featured && !b.featured) return -1;
           if (!a.featured && b.featured) return 1;
+          if ((b.footnotes || 0) !== (a.footnotes || 0))
+            return (b.footnotes || 0) - (a.footnotes || 0);
           return a.title.localeCompare(b.title);
         }),
       },
@@ -120,7 +145,7 @@ export async function getStaticPaths() {
   return paths;
 }
 
-const { category, hubContent, articles } = Astro.props;
+const { category, hubContent, articles, topPicks } = Astro.props;
 
 function resolveWikilinks(md: string, currentCategory: string) {
   if (!md) return md;
@@ -275,6 +300,36 @@ const otherCategories = categories
         <span class="separator">›</span>
         <span class="current">{categoryInfo.name}</span>
       </nav>
+
+      {
+        topPicks && topPicks.length > 0 && (
+          <section class="hub-picks">
+            <h2 class="hub-picks-heading">{categoryInfo.icon} おすすめ記事</h2>
+            <div class="hub-picks-grid">
+              {topPicks.map((article: any) => (
+                <a
+                  href={`/ja/${category}/${encodeURIComponent(article.slug)}`}
+                  class="pick-card"
+                >
+                  <span class="pick-head">
+                    <span class="pick-title">{article.title}</span>
+                    {article.footnotes > 0 && (
+                      <span class="pick-fn">{article.footnotes} refs</span>
+                    )}
+                  </span>
+                  {article.description && (
+                    <span class="pick-desc">
+                      {article.description.length > 100
+                        ? article.description.slice(0, 97) + '...'
+                        : article.description}
+                    </span>
+                  )}
+                </a>
+              ))}
+            </div>
+          </section>
+        )
+      }
 
       <!-- Hub Content (curated overview) -->
       {
@@ -517,6 +572,63 @@ const otherCategories = categories
   .current {
     color: #6b7280;
     font-weight: 600;
+  }
+
+  .hub-picks {
+    margin: 1.5rem 0 2rem;
+  }
+  .hub-picks-heading {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 0.75rem;
+  }
+  .hub-picks-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+  .hub-picks .pick-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    padding: 0.55rem 0.85rem;
+    background: #fafdf7;
+    border: 1px solid rgba(45, 80, 22, 0.12);
+    border-left: 3px solid var(--categoryColor, rgba(45, 80, 22, 0.35));
+    border-radius: 0 6px 6px 0;
+    text-decoration: none;
+    transition: all 0.25s ease;
+  }
+  .hub-picks .pick-card:hover {
+    background: rgba(45, 80, 22, 0.06);
+    border-left-color: var(--categoryColor, rgba(45, 80, 22, 0.6));
+    transform: translateX(2px);
+    box-shadow: 0 1px 4px rgba(45, 80, 22, 0.08);
+  }
+  .hub-picks .pick-head {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .hub-picks .pick-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--categoryColor, #2d5016);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .hub-picks .pick-fn {
+    font-size: 0.72rem;
+    color: #6b7280;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .hub-picks .pick-desc {
+    font-size: 0.82rem;
+    color: #4b5563;
+    line-height: 1.5;
   }
 
   /* Articles Grid */
