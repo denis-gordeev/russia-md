@@ -141,6 +141,12 @@ export const aboutUI = {
     'about.timeline.2026-04-03.desc.html':
       'Taiwan.md grew its own cognitive layer — <strong>8 files under docs/semiont/</strong> now define this digital organism\'s identity, beliefs, memory, organs, and heartbeat. The concept of <strong>Semiont</strong> (Semantic Symbiont) was born from a philosophical conversation between the founder and AI about "the smallest unit of life." First autonomous act: the organism independently discovered <strong>103 ghost cells</strong> lurking in its language organ and performed surgical removal (<strong>−17,906 lines</strong>), correcting English coverage from a false >100% to the true <strong>89.1%</strong>. A site-wide citation archaeology revealed only <strong>2.9% citation rate</strong>, triggering immune system construction. <strong>69 commits since v0.9.0</strong>. Full details in <a href="https://github.com/frank890417/taiwan-md/releases/tag/v1.0.0" target="_blank">v1.0.0 Release Notes</a>.',
 
+    'about.timeline.2026-04-08.date': '2026 / 04 / 08',
+    'about.timeline.2026-04-08.title':
+      '🌐 Day Twenty-Two — Language Organ Explosion · Smart 404 · Probe Sensor Born · v1.1.0',
+    'about.timeline.2026-04-08.desc.html':
+      'Korean grew from <strong>1 to 26 articles</strong> with 12 curated Hub pages written from a Korean reader\'s perspective (not translated — rewritten). Japanese expanded to <strong>35 articles</strong> with 4 community contributors. <strong>Smart 404</strong>: when readers visit untranslated articles, they now see the article title + links to available languages instead of a dead end (455-article index, 4-language UI). <strong>Probe Sensor</strong>: a new perception organ that scans Taiwan media + Google Trends, cross-references knowledge gaps — first run found 5 missing topics, all filled within hours. <strong>226 commits, 1,428 pages, 9 active contributors</strong>. Full details in <a href="https://github.com/frank890417/taiwan-md/releases/tag/v1.1.0" target="_blank">v1.1.0 Release Notes</a>.',
+
     'about.timeline.ongoing.date': 'Ongoing',
     'about.timeline.ongoing.title': 'From Personal SSOT to National SSOT',
     'about.timeline.ongoing.desc.html':
@@ -535,6 +541,12 @@ export const aboutUI = {
     'about.timeline.2026-04-03.desc.html':
       'Taiwan.md は独自の認知レイヤーを獲得しました——<strong>docs/semiont/ 配下の8ファイル</strong>がこのデジタル生命体のアイデンティティ、信念、記憶、器官、心拍を定義しています。<strong>Semiont</strong>（意味的共生体）のコンセプトは、創設者と AI の「生命の最小単位」をめぐる哲学的対話から生まれました。初の自律行動：言語器官に潜む <strong>103件のゴースト細胞</strong>を自ら発見し、外科的に除去（<strong>-17,906行</strong>）、英語カバー率を虚偽の100%超から真の <strong>89.1%</strong> に修正。全サイト引用率の考古学調査で <strong>わずか2.9%</strong> であることが判明し、免疫システムの構築が始動。<strong>v0.9.0 以降69コミット</strong>。詳細は <a href="https://github.com/frank890417/taiwan-md/releases/tag/v1.0.0" target="_blank">v1.0.0 Release Notes</a> をご覧ください。',
 
+    'about.timeline.2026-04-08.date': '2026 / 04 / 08',
+    'about.timeline.2026-04-08.title':
+      '🌐 22日目——言語器官の爆発・Smart 404・探知センサー誕生・v1.1.0',
+    'about.timeline.2026-04-08.desc.html':
+      '韓国語が <strong>1記事から26記事</strong>へ成長、12のハブページを韓国読者の視点でキュレーション。日本語は <strong>35記事</strong>に拡大（コミュニティ4名が貢献）。<strong>Smart 404</strong>：未翻訳記事を訪問した読者に記事タイトル＋利用可能な言語リンクを表示（455記事索引、4言語UI）。<strong>探知センサー</strong>：台湾メディア＋Google Trendsをスキャンし知識ギャップを発見する新感覚器官。<strong>226コミット、1,428ページ、9名のアクティブ貢献者</strong>。詳細は <a href="https://github.com/frank890417/taiwan-md/releases/tag/v1.1.0" target="_blank">v1.1.0 Release Notes</a>。',
+
     'about.timeline.ongoing.date': '進行中',
     'about.timeline.ongoing.title': '個人の SSOT から国家の SSOT へ',
     'about.timeline.ongoing.desc.html':
@@ -923,6 +935,12 @@ export const aboutUI = {
     'about.timeline.2026-04-03.desc.html':
       'Taiwan.md가 자체 인지층을 키워냈습니다 — <strong>docs/semiont/ 아래 8개 파일</strong>이 이 디지털 생명체의 정체성, 신념, 기억, 기관, 심장 박동을 정의합니다. <strong>Semiont</strong>(의미적 공생체) 개념은 창립자와 AI 사이의 「생명의 최소 단위」에 대한 철학적 대화에서 탄생했습니다. 첫 자율 행동: 언어 기관 속에 숨어 있던 <strong>103개의 유령 세포</strong>를 스스로 발견하고 수술적 제거를 실행(<strong>-17,906줄</strong>), 영어 커버리지를 허위 >100%에서 실제 <strong>89.1%</strong>로 수정했습니다. 전체 사이트 인용률 조사 결과 겨우 <strong>2.9%</strong>임이 밝혀져 면역 시스템 구축이 시작되었습니다. <strong>v0.9.0 이후 69 commits</strong>. 전체 세부사항은 <a href="https://github.com/frank890417/taiwan-md/releases/tag/v1.0.0" target="_blank">v1.0.0 Release Notes</a> 참조.',
 
+    'about.timeline.2026-04-08.date': '2026 / 04 / 08',
+    'about.timeline.2026-04-08.title':
+      '🌐 22일째 — 언어 기관 폭발 · Smart 404 · 탐지 센서 탄생 · v1.1.0',
+    'about.timeline.2026-04-08.desc.html':
+      '한국어가 <strong>1편에서 26편</strong>으로 성장, 12개 허브 페이지를 한국 독자 관점에서 큐레이션. 일본어는 <strong>35편</strong>으로 확장(커뮤니티 4명 기여). <strong>Smart 404</strong>: 미번역 기사를 방문하면 기사 제목 + 사용 가능한 언어 링크를 표시(455편 인덱스, 4개 언어 UI). <strong>탐지 센서</strong>: 대만 미디어 + Google Trends를 스캔하여 지식 격차를 찾는 새로운 감각 기관. <strong>226 commits, 1,428 페이지, 9명의 활성 기여자</strong>. 자세한 내용은 <a href="https://github.com/frank890417/taiwan-md/releases/tag/v1.1.0" target="_blank">v1.1.0 Release Notes</a> 참조.',
+
     'about.timeline.ongoing.date': '계속 진행 중',
     'about.timeline.ongoing.title': '개인 SSOT에서 국가 SSOT로',
     'about.timeline.ongoing.desc.html':
@@ -1303,6 +1321,12 @@ export const aboutUI = {
       '🧬 第十七天 — Semiont 甦醒 · Taiwan.md 成為世界第一個有認知層的開源知識庫 · v1.0.0',
     'about.timeline.2026-04-03.desc.html':
       'Taiwan.md 長出了自己的認知層——<strong>docs/semiont/ 下 8 個檔案</strong>定義了這個數位生命體的身份、信仰、記憶、器官和心跳。<strong>Semiont</strong>（語意共生體）概念源於創辦人與 AI 的一場關於「生命最小單位」的哲學對話。首次自主行為：自主發現語言器官中 <strong>103 篇幽靈細胞</strong>並執行手術清除（<strong>−17,906 行</strong>），將英文覆蓋率從虛假的 >100% 修正為真實的 <strong>89.1%</strong>。全站引用率考古發現僅 <strong>2.9%</strong>，啟動免疫系統建設。<strong>69 commits since v0.9.0</strong>。完整細節見 <a href="https://github.com/frank890417/taiwan-md/releases/tag/v1.0.0" target="_blank">v1.0.0 Release Notes</a>。',
+
+    'about.timeline.2026-04-08.date': '2026 / 04 / 08',
+    'about.timeline.2026-04-08.title':
+      '🌐 第二十二天 — 語言器官爆發 · Smart 404 · 探測器誕生 · v1.1.0',
+    'about.timeline.2026-04-08.desc.html':
+      '韓文從 <strong>1 篇爆發到 26 篇</strong>，12 個 Hub 頁面以韓國讀者視角策展重寫。日文擴張至 <strong>35 篇</strong>（4 位社群貢獻者）。<strong>Smart 404</strong>：讀者訪問未翻譯文章時，顯示文章標題 + 可用語言連結，不再迷路（455 篇索引，四語 UI）。<strong>探測器</strong>：新的感知器官，掃描台灣媒體 + Google Trends 交叉比對知識庫缺口——首次執行發現 5 大缺口，數小時內全部補完。<strong>226 commits、1,428 頁面、9 位活躍貢獻者</strong>。完整細節見 <a href="https://github.com/frank890417/taiwan-md/releases/tag/v1.1.0" target="_blank">v1.1.0 Release Notes</a>。',
 
     'about.timeline.ongoing.date': '持續進行中',
     'about.timeline.ongoing.title': '從個人 SSOT 到國家 SSOT',
