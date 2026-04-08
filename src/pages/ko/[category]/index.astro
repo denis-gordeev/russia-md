@@ -254,16 +254,39 @@ const rawHubHtml = resolvedContent
   : '';
 const hubHtml = enrichBlockquotes(rawHubHtml as string);
 
+// Split hub HTML into hook (first 3 paragraphs, no headings) and full essay
+let hubHook = '';
+let hubFull = hubHtml;
+if (hubHtml) {
+  let stripped = (hubHtml as string)
+    .replace(/^(\s*<h[12][^>]*>[\s\S]*?<\/h[12]>\s*)+/i, '')
+    .trim();
+  let cutIndex = -1;
+  let pCount = 0;
+  const pCloseRegex = /<\/p>/gi;
+  let match;
+  while ((match = pCloseRegex.exec(stripped)) !== null) {
+    pCount++;
+    if (pCount === 3) {
+      cutIndex = match.index + match[0].length;
+      break;
+    }
+  }
+  if (cutIndex > 0 && cutIndex < stripped.length * 0.7) {
+    hubHook = stripped.slice(0, cutIndex);
+    hubFull = hubHtml;
+  }
+}
+
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
 
 const categoryConfigs = getCategoryConfigs(t);
 const categoryInfo = categoryConfigs[category];
 
-// 其他分類（跨分類導航用）
+// Other categories (sidebar cross-category nav) — show ALL
 const otherCategories = categories
   .filter((cat) => cat !== category)
-  .slice(0, 5) // 只顯示5個
   .map((cat) => ({
     key: cat,
     ...categoryConfigs[cat as CategoryKey],
@@ -277,104 +300,136 @@ const otherCategories = categories
   category={categoryInfo.name}
 >
   <main class="category-page">
-    <!-- Hero Banner -->
-    <section
-      class="hero-banner"
-      style={`background: ${categoryInfo.gradient};`}
+    <!-- Category Header (compact bar + curatorial hook fused) -->
+    <div
+      class="category-header"
+      style={`border-bottom: 2px solid ${categoryInfo.color};`}
     >
-      <div class="hero-content">
-        <div class="hero-icon">{categoryInfo.icon}</div>
-        <h1 class="hero-title">{categoryInfo.name}</h1>
-        <p class="hero-description">{categoryInfo.description}</p>
-        <div class="hero-stats">
-          <span class="stats-badge">📚 {articles.length} articles</span>
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="/ko" class="breadcrumb-link">홈</a>
+          <span class="separator">›</span>
+          <span class="current">{categoryInfo.name}</span>
+        </nav>
+        <div class="bar-row">
+          <span class="bar-icon">{categoryInfo.icon}</span>
+          <h1 class="bar-title" style={`color: ${categoryInfo.color}`}>
+            {categoryInfo.name}
+          </h1>
+          <span class="bar-sep">·</span>
+          <span class="bar-desc">{categoryInfo.description}</span>
+          <span class="bar-count">{articles.length} 기사</span>
         </div>
+        {
+          hubHook && (
+            <div class="header-hook">
+              <div class="header-hook-prose" set:html={hubHook} />
+              <a href="#hub-essay" class="hook-readmore">
+                전체 큐레이션 읽기 →
+              </a>
+            </div>
+          )
+        }
       </div>
-      <div class="hero-decoration"></div>
-    </section>
+    </div>
 
     <div class="container">
-      <!-- Breadcrumb -->
-      <nav class="breadcrumb">
-        <a href="/en">Home</a>
-        <span class="separator">›</span>
-        <span class="current">{categoryInfo.name}</span>
-      </nav>
-
-      {
-        topPicks && topPicks.length > 0 && (
-          <section class="hub-picks">
-            <h2 class="hub-picks-heading">{categoryInfo.icon} 추천 기사</h2>
-            <div class="hub-picks-grid">
-              {topPicks.map((article: any) => (
-                <a
-                  href={`/ko/${category}/${encodeURIComponent(article.slug)}`}
-                  class="pick-card"
-                >
-                  <span class="pick-head">
-                    <span class="pick-title">{article.title}</span>
-                    {article.footnotes > 0 && (
-                      <span class="pick-fn">{article.footnotes} refs</span>
-                    )}
-                  </span>
-                  {article.description && (
-                    <span class="pick-desc">
-                      {article.description.length > 100
-                        ? article.description.slice(0, 97) + '...'
-                        : article.description}
-                    </span>
-                  )}
-                </a>
-              ))}
-            </div>
-          </section>
-        )
-      }
-
-      <!-- Hub Content (curated overview) -->
-      {
-        hubHtml && (
-          <section class="hub-content">
-            <div class="hub-prose" set:html={hubHtml} />
-          </section>
-        )
-      }
-
-      <!-- Articles Section -->
+      <!-- Main two-column layout: sidebar + content -->
       {
         articles.length > 0 ? (
-          <section class="articles-section">
-            <div class="articles-main">
-              {articles.map((article: any) => (
-                <a
-                  href={`/ko/${category}/${encodeURIComponent(article.slug)}`}
-                  class={`article-row ${article.featured ? 'is-featured' : ''}`}
-                >
-                  <div class="row-main">
-                    <div class="row-title-line">
-                      {article.featured && <span class="row-star">★</span>}
-                      <h3 class="row-title">{article.title}</h3>
-                    </div>
-                    {article.description && (
-                      <p class="row-desc">
-                        {article.description.length > 120
-                          ? article.description.slice(0, 117) + '...'
-                          : article.description}
-                      </p>
-                    )}
-                  </div>
-                  <div class="row-meta">
-                    {(article.footnotes || 0) > 0 && (
-                      <span class="row-fn">{article.footnotes} 인용</span>
-                    )}
-                    {article.readingTime && (
-                      <span class="row-time">{article.readingTime} min</span>
-                    )}
-                  </div>
-                </a>
-              ))}
+          <div class="hub-layout">
+            <aside class="hub-sidebar">
+              {/* Cross-category nav (replaces bottom explore cards) */}
+              <nav class="sidebar-nav">
+                <span class="sidebar-label">다른 주제</span>
+                {otherCategories.map((cat) => (
+                  <a href={`/ko/${cat.key}`} class="sidebar-item sidebar-other">
+                    <span>
+                      {cat.icon} {cat.name}
+                    </span>
+                  </a>
+                ))}
+              </nav>
+            </aside>
+
+            <div class="hub-main">
+              {/* Featured Picks (horizontal chips) */}
+              {topPicks && topPicks.length > 0 && (
+                <div class="featured-strip">
+                  <span class="featured-label">추천</span>
+                  {topPicks.slice(0, 3).map((article: any) => (
+                    <a
+                      href={`/ko/${category}/${encodeURIComponent(article.slug)}`}
+                      class="featured-chip"
+                    >
+                      ★ {article.title}
+                    </a>
+                  ))}
+                </div>
+              )}
+
+              {/* Articles list */}
+              <div class="articles-main" id="articlesGrid">
+                <div class="articles-toolbar">
+                  <input
+                    type="text"
+                    class="filter-input"
+                    id="articleFilter"
+                    placeholder="기사 검색..."
+                    autocomplete="off"
+                  />
+                </div>
+
+                <div class="article-rows">
+                  {articles.map((article: any) => (
+                    <a
+                      href={`/ko/${category}/${encodeURIComponent(article.slug)}`}
+                      class={`article-row ${article.featured ? 'is-featured' : ''}`}
+                      data-title={article.title}
+                    >
+                      <div class="row-main">
+                        <div class="row-title-line">
+                          {article.featured && <span class="row-star">★</span>}
+                          <h3 class="row-title">{article.title}</h3>
+                        </div>
+                        {article.description && (
+                          <p class="row-desc">
+                            {article.description.length > 120
+                              ? article.description.slice(0, 117) + '...'
+                              : article.description}
+                          </p>
+                        )}
+                      </div>
+                      <div class="row-meta">
+                        {(article.footnotes || 0) > 0 && (
+                          <span class="row-fn">{article.footnotes} 인용</span>
+                        )}
+                        {article.readingTime && (
+                          <span class="row-time">
+                            {article.readingTime} min
+                          </span>
+                        )}
+                      </div>
+                    </a>
+                  ))}
+                </div>
+
+                <div class="no-results" id="noResults" style="display:none;">
+                  <p>조건에 맞는 기사를 찾을 수 없습니다</p>
+                </div>
+              </div>
+
+              {/* Full Hub Essay (shown below articles) */}
+              {hubHtml && (
+                <section class="hub-content" id="hub-essay">
+                  <h2 class="hub-essay-heading">
+                    {categoryInfo.icon} 큐레이션
+                  </h2>
+                  <div class="hub-prose" set:html={hubHtml} />
+                </section>
+              )}
             </div>
-          </section>
+          </div>
         ) : (
           <section class="coming-soon">
             <div class="coming-soon-content">
@@ -386,7 +441,7 @@ const otherCategories = categories
               </p>
 
               <div class="action-buttons">
-                <a href="/en" class="btn-primary">
+                <a href="/ko" class="btn-primary">
                   Back to Home
                 </a>
                 <a
@@ -401,28 +456,44 @@ const otherCategories = categories
           </section>
         )
       }
-
-      <!-- 探索其他面向 -->
-      <section class="explore-more">
-        <h2 class="explore-title">Explore Other Aspects of Taiwan</h2>
-        <div class="categories-grid">
-          {
-            otherCategories.map((cat) => (
-              <a
-                href={`/ko/${cat.key}`}
-                class="category-card"
-                style={`border-color: ${cat.color}; color: ${cat.color};`}
-              >
-                <div class="category-card-icon">{cat.icon}</div>
-                <div class="category-card-name">{cat.name}</div>
-              </a>
-            ))
-          }
-        </div>
-      </section>
     </div>
   </main>
 </Layout>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const grid = document.getElementById('articlesGrid');
+    const noResults = document.getElementById('noResults');
+    const filterInput = document.getElementById(
+      'articleFilter',
+    ) as HTMLInputElement;
+    if (!grid) return;
+
+    const rows = Array.from(
+      grid.querySelectorAll('.article-row'),
+    ) as HTMLElement[];
+
+    // Filter
+    function applyFilters() {
+      const query = filterInput?.value.toLowerCase() || '';
+      let visible = 0;
+      rows.forEach((row) => {
+        const title = (row.dataset.title || '').toLowerCase();
+        const show = !query || title.includes(query);
+        row.style.display = show ? '' : 'none';
+        if (show) visible++;
+      });
+      if (noResults) {
+        noResults.style.display = visible === 0 ? 'block' : 'none';
+      }
+    }
+
+    // Text filter
+    filterInput?.addEventListener('input', () => {
+      applyFilters();
+    });
+  });
+</script>
 
 <style
   define:vars={{
@@ -434,88 +505,152 @@ const otherCategories = categories
     min-height: 100vh;
   }
 
-  /* Hero Banner */
-  .hero-banner {
-    position: relative;
-    width: 100%;
-    padding: 4rem 2rem;
-    color: white;
-    text-align: center;
-    overflow: hidden;
+  /* Category Header (bar + curatorial hook fused) */
+  .category-header {
+    padding: 0.75rem 0 1.25rem;
+    background: var(--categoryColorLight);
   }
-
-  .hero-content {
-    max-width: 800px;
-    margin: 0 auto;
-    position: relative;
-    z-index: 2;
-  }
-
-  .hero-icon {
-    font-size: 4rem;
-    margin-bottom: 1rem;
-    animation: float 3s ease-in-out infinite;
-  }
-
-  @keyframes float {
-    0%,
-    100% {
-      transform: translateY(0px);
-    }
-    50% {
-      transform: translateY(-10px);
-    }
-  }
-
-  .hero-title {
-    font-size: 3.5rem;
-    font-weight: 800;
-    margin-bottom: 1rem;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-    background: linear-gradient(
-      45deg,
-      rgba(255, 255, 255, 1),
-      rgba(255, 255, 255, 0.8)
-    );
-    background-clip: text;
-    -webkit-background-clip: text;
-  }
-
-  .hero-description {
-    font-size: 1.5rem;
-    margin-bottom: 2rem;
-    opacity: 0.95;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
-    line-height: 1.4;
-  }
-
-  .hero-stats {
+  .bar-row {
     display: flex;
-    justify-content: center;
-    gap: 1rem;
+    align-items: baseline;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+  .bar-icon {
+    font-size: 1.5rem;
+  }
+  .bar-title {
+    font-size: 1.5rem;
+    font-weight: 800;
+    margin: 0;
+  }
+  .bar-sep {
+    color: #94a3b8;
+    font-weight: 300;
+  }
+  .bar-desc {
+    font-size: 0.88rem;
+    color: #64748b;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 50%;
+  }
+  .bar-count {
+    font-size: 0.78rem;
+    color: #94a3b8;
+    background: #f1f5f9;
+    padding: 0.15rem 0.5rem;
+    border-radius: 12px;
+    margin-left: auto;
   }
 
-  .stats-badge {
-    background: rgba(255, 255, 255, 0.2);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    padding: 0.75rem 1.5rem;
-    border-radius: 50px;
-    font-weight: 500;
+  /* Header Hook (curatorial intro inside category header) */
+  .header-hook {
+    margin-top: 0.75rem;
+    font-size: 0.92rem;
+    line-height: 1.75;
+    color: #475569;
+    max-width: 800px;
+  }
+  .header-hook-prose :global(p) {
+    margin: 0.4rem 0;
+  }
+  .header-hook-prose :global(p:first-child) {
+    margin-top: 0;
+  }
+  .header-hook-prose :global(p:last-child) {
+    margin-bottom: 0;
+  }
+  .hook-readmore {
+    display: inline-block;
+    margin-top: 0.5rem;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--categoryColor);
+    text-decoration: none;
+    transition: all 0.15s;
+  }
+  .hook-readmore:hover {
+    text-decoration: underline;
   }
 
-  .hero-decoration {
-    position: absolute;
-    top: 0;
-    right: -10%;
-    width: 50%;
-    height: 100%;
-    background: radial-gradient(
-      circle,
-      rgba(255, 255, 255, 0.1) 0%,
-      transparent 70%
-    );
-    border-radius: 50%;
+  /* Hub Layout (two-column: sidebar + main) */
+  .hub-layout {
+    display: flex;
+    gap: 2rem;
+    align-items: flex-start;
+    margin-top: 1rem;
+  }
+  .hub-sidebar {
+    width: 180px;
+    flex-shrink: 0;
+    position: sticky;
+    top: 72px;
+    align-self: flex-start;
+  }
+  .hub-main {
+    flex: 1;
+    min-width: 0;
+  }
+
+  /* Featured Strip (horizontal chips) */
+  .featured-strip {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid #e2e8f0;
+  }
+  .featured-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--categoryColor);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    flex-shrink: 0;
+  }
+  .featured-chip {
+    font-size: 0.82rem;
+    color: var(--categoryColor);
+    background: var(--categoryColorLight);
+    border: 1px solid transparent;
+    padding: 0.2rem 0.6rem;
+    border-radius: 16px;
+    text-decoration: none;
+    font-weight: 600;
+    white-space: nowrap;
+    transition: all 0.15s;
+  }
+  .featured-chip:hover {
+    border-color: var(--categoryColor);
+    background: white;
+  }
+
+  /* Hub Essay (full curatorial essay below articles) */
+  .hub-essay-heading {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #334155;
+    margin: 3rem 0 0.5rem;
+    padding-top: 2rem;
+    border-top: 2px solid #e2e8f0;
+  }
+
+  /* Sidebar shared styles */
+  .sidebar-divider {
+    height: 1px;
+    background: #e2e8f0;
+    margin: 0.75rem 0;
+  }
+  .sidebar-other {
+    font-size: 0.78rem;
+    opacity: 0.75;
+  }
+  .sidebar-other:hover {
+    opacity: 1;
   }
 
   /* Container */
@@ -530,7 +665,7 @@ const otherCategories = categories
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    margin-bottom: 3rem;
+    margin-bottom: 0.5rem;
     font-size: 0.9rem;
   }
 
@@ -553,61 +688,73 @@ const otherCategories = categories
     font-weight: 600;
   }
 
-  .hub-picks {
-    margin: 1.5rem 0 2rem;
-  }
-  .hub-picks-heading {
-    font-size: 1.15rem;
-    font-weight: 700;
-    color: #1e293b;
-    margin-bottom: 0.75rem;
-  }
-  .hub-picks-grid {
-    display: flex;
-    flex-direction: column;
-    gap: 0.4rem;
-  }
-  .hub-picks .pick-card {
+  /* Sidebar nav */
+  .sidebar-nav {
     display: flex;
     flex-direction: column;
     gap: 0.2rem;
-    padding: 0.55rem 0.85rem;
-    background: #fafdf7;
-    border: 1px solid rgba(45, 80, 22, 0.12);
-    border-left: 3px solid var(--categoryColor, rgba(45, 80, 22, 0.35));
-    border-radius: 0 6px 6px 0;
-    text-decoration: none;
-    transition: all 0.25s ease;
   }
-  .hub-picks .pick-card:hover {
-    background: rgba(45, 80, 22, 0.06);
-    border-left-color: var(--categoryColor, rgba(45, 80, 22, 0.6));
-    transform: translateX(2px);
-    box-shadow: 0 1px 4px rgba(45, 80, 22, 0.08);
+  .sidebar-label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 0 0.5rem 0.4rem;
+    border-bottom: 1px solid #e2e8f0;
+    margin-bottom: 0.3rem;
   }
-  .hub-picks .pick-head {
+  .sidebar-item {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-  }
-  .hub-picks .pick-title {
-    font-size: 0.95rem;
-    font-weight: 700;
-    color: var(--categoryColor, #2d5016);
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-  .hub-picks .pick-fn {
-    font-size: 0.72rem;
-    color: #6b7280;
-    white-space: nowrap;
-    flex-shrink: 0;
-  }
-  .hub-picks .pick-desc {
+    justify-content: space-between;
+    padding: 0.35rem 0.5rem;
     font-size: 0.82rem;
-    color: #4b5563;
-    line-height: 1.5;
+    color: #475569;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: all 0.15s ease;
+  }
+  .sidebar-item:hover {
+    background: rgba(45, 80, 22, 0.06);
+    color: var(--categoryColor, #2d5016);
+  }
+  .sidebar-count {
+    font-size: 0.7rem;
+    color: #94a3b8;
+    background: #f1f5f9;
+    padding: 0.1rem 0.35rem;
+    border-radius: 8px;
+    min-width: 1.2rem;
+    text-align: center;
+  }
+
+  .articles-main {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .articles-toolbar {
+    margin-bottom: 1rem;
+  }
+  .articles-toolbar .filter-input {
+    width: 100%;
+    max-width: 320px;
+    padding: 0.45rem 0.75rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .articles-toolbar .filter-input:focus {
+    border-color: var(--categoryColor, #2d5016);
+    box-shadow: 0 0 0 2px rgba(45, 80, 22, 0.08);
+  }
+
+  .article-rows {
+    display: flex;
+    flex-direction: column;
   }
 
   /* Articles Grid */
@@ -839,9 +986,6 @@ const otherCategories = categories
   }
 
   /* Row list layout */
-  .articles-main {
-    margin-top: 1.5rem;
-  }
   .article-row {
     display: flex;
     align-items: flex-start;
@@ -913,6 +1057,12 @@ const otherCategories = categories
     font-size: 0.72rem;
     color: #94a3b8;
     white-space: nowrap;
+  }
+
+  .no-results {
+    text-align: center;
+    padding: 2rem;
+    color: #94a3b8;
   }
 
   /* Coming Soon */
@@ -994,67 +1144,56 @@ const otherCategories = categories
     transform: translateY(-2px);
   }
 
-  /* Explore More */
-  .explore-more {
-    margin-top: 5rem;
-    padding: 3rem 0;
-    border-top: 1px solid #e5e7eb;
-  }
-
-  .explore-title {
-    text-align: center;
-    font-size: 2rem;
-    font-weight: 700;
-    color: #1f2937;
-    margin-bottom: 2rem;
-  }
-
-  .categories-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1.5rem;
-  }
-
-  .category-card {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 2rem 1rem;
-    background: white;
-    border: 2px solid;
-    border-radius: 16px;
-    text-decoration: none;
-    transition: all 0.3s ease;
-    text-align: center;
-  }
-
-  .category-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-  }
-
-  .category-card-icon {
-    font-size: 2.5rem;
-    margin-bottom: 0.5rem;
-  }
-
-  .category-card-name {
-    font-weight: 600;
-    font-size: 1.1rem;
-  }
-
   /* Responsive */
   @media (max-width: 768px) {
-    .hero-banner {
-      padding: 3rem 1rem;
+    .bar-desc {
+      display: none;
     }
-
-    .hero-title {
-      font-size: 2.5rem;
+    .bar-sep {
+      display: none;
     }
-
-    .hero-description {
-      font-size: 1.2rem;
+    .hub-layout {
+      flex-direction: column;
+      gap: 0;
+    }
+    .hub-sidebar {
+      position: static;
+      width: 100%;
+      max-height: none;
+      overflow: visible;
+    }
+    .sidebar-other {
+      display: none;
+    }
+    .sidebar-divider {
+      display: none;
+    }
+    .featured-strip {
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      padding-bottom: 0.5rem;
+    }
+    .header-hook {
+      font-size: 0.85rem;
+    }
+    .sidebar-nav {
+      flex-direction: row;
+      flex-wrap: wrap;
+      gap: 0.3rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid #e2e8f0;
+      margin-bottom: 1rem;
+    }
+    .sidebar-label {
+      display: none;
+    }
+    .sidebar-item {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 16px;
+      padding: 0.25rem 0.6rem;
+      font-size: 0.78rem;
     }
 
     .container {
@@ -1073,10 +1212,6 @@ const otherCategories = categories
     .action-buttons {
       flex-direction: column;
       align-items: center;
-    }
-
-    .categories-grid {
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
     }
   }
 </style>

@@ -313,6 +313,32 @@ function enrichBlockquotes(html: string): string {
 }
 const hubHtml = enrichBlockquotes(rawHubHtml as string);
 
+// Split hub HTML into hook (first 2-3 paragraphs, no headings) and full essay
+let hubHook = '';
+let hubFull = hubHtml;
+if (hubHtml) {
+  // Strip leading headings (h1, h2) from the beginning
+  let stripped = (hubHtml as string)
+    .replace(/^(\s*<h[12][^>]*>[\s\S]*?<\/h[12]>\s*)+/i, '')
+    .trim();
+  // Find the end of the 3rd </p> tag
+  let cutIndex = -1;
+  let pCount = 0;
+  const pCloseRegex = /<\/p>/gi;
+  let match;
+  while ((match = pCloseRegex.exec(stripped)) !== null) {
+    pCount++;
+    if (pCount === 3) {
+      cutIndex = match.index + match[0].length;
+      break;
+    }
+  }
+  if (cutIndex > 0 && cutIndex < stripped.length * 0.7) {
+    hubHook = stripped.slice(0, cutIndex);
+    hubFull = hubHtml;
+  }
+}
+
 // Split hub HTML into sections at <h2> boundaries for chart injection (economy only)
 const isEconomy = category === 'economy';
 type HubSection = { html: string; chartAfter?: string };
@@ -352,10 +378,9 @@ const t = useTranslations(lang);
 const categoryConfigs = getCategoryConfigs(t);
 const categoryInfo = categoryConfigs[category];
 
-// 其他分類（跨分類導航用）
+// 其他分類（sidebar 跨分類導航用）
 const otherCategories = categories
   .filter((cat) => cat !== category)
-  .slice(0, 5) // 只顯示5個
   .map((cat) => ({
     key: cat,
     ...categoryConfigs[cat as CategoryKey],
@@ -368,176 +393,89 @@ const otherCategories = categories
   category={categoryInfo.name}
 >
   <main class="category-page">
-    <!-- Hero Banner -->
-    <section
-      class="hero-banner"
-      style={`background: ${categoryInfo.gradient};`}
+    <!-- Category Header (compact bar + curatorial hook fused) -->
+    <div
+      class="category-header"
+      style={`border-bottom: 2px solid ${categoryInfo.color};`}
     >
-      <div class="hero-content">
-        <div class="hero-icon">{categoryInfo.icon}</div>
-        <h1 class="hero-title">{categoryInfo.name}</h1>
-        <p class="hero-description">{categoryInfo.description}</p>
-        <div class="hero-stats">
-          <span class="stats-badge">📚 {articles.length} 篇文章</span>
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="/" class="breadcrumb-link">首頁</a>
+          <span class="separator">›</span>
+          <span class="current">{categoryInfo.name}</span>
+        </nav>
+        <div class="bar-row">
+          <span class="bar-icon">{categoryInfo.icon}</span>
+          <h1 class="bar-title" style={`color: ${categoryInfo.color}`}>
+            {categoryInfo.name}
+          </h1>
+          <span class="bar-sep">·</span>
+          <span class="bar-desc">{categoryInfo.description}</span>
+          <span class="bar-count">{articles.length} 篇文章</span>
         </div>
+        {
+          hubHook && (
+            <div class="header-hook">
+              <div class="header-hook-prose" set:html={hubHook} />
+              <a href="#hub-essay" class="hook-readmore">
+                閱讀完整策展導讀 →
+              </a>
+            </div>
+          )
+        }
       </div>
-      <div class="hero-decoration"></div>
-    </section>
+    </div>
 
     <div class="container">
-      <!-- Breadcrumb -->
-      <nav class="breadcrumb">
-        <a href="/" class="breadcrumb-link">首頁</a>
-        <span class="separator">›</span>
-        <span class="current">{categoryInfo.name}</span>
-      </nav>
-
-      <!-- Featured Picks (above essay for immediate navigation) -->
-      {
-        topPicks && topPicks.length > 0 && (
-          <section class="hub-picks">
-            <h2 class="hub-picks-heading">{categoryInfo.icon} 精選文章</h2>
-            <div class="hub-picks-grid">
-              {topPicks.map((article: any) => (
-                <a
-                  href={`/${category}/${encodeURIComponent(article.slug)}`}
-                  class="pick-card"
-                >
-                  <span class="pick-head">
-                    <span class="pick-title">{article.title}</span>
-                    {article.footnotes > 0 && (
-                      <span class="pick-fn">{article.footnotes} 引用</span>
-                    )}
-                  </span>
-                  {article.description && (
-                    <span class="pick-desc">
-                      {article.description.length > 100
-                        ? article.description.slice(0, 97) + '...'
-                        : article.description}
-                    </span>
-                  )}
-                </a>
-              ))}
-            </div>
-          </section>
-        )
-      }
-
-      <!-- Hub Content (curated overview) -->
-      {
-        hubHtml && !isEconomy && (
-          <section class="hub-content">
-            <div class="hub-prose" set:html={hubHtml} />
-          </section>
-        )
-      }
-
-      {
-        isEconomy && hubSections.length > 0 && (
-          <section class="hub-content">
-            <div class="hub-prose">
-              {hubSections.map((section) => (
-                <Fragment>
-                  <div set:html={section.html} />
-                  {section.chartAfter && (
-                    <div
-                      class="econ-chart-wrapper"
-                      data-chart={section.chartAfter}
-                    >
-                      <div class="econ-chart-container">
-                        <div class="econ-chart-header">
-                          <h4 class="econ-chart-title">
-                            {section.chartAfter === 'taiex' &&
-                              '📈 歷年台灣加權股價指數 (TAIEX)'}
-                            {section.chartAfter === 'cpi' &&
-                              '📊 歷年消費者物價指數 (CPI)'}
-                            {section.chartAfter === 'salary' &&
-                              '💰 歷年每月經常性薪資'}
-                            {section.chartAfter === 'housing' &&
-                              '🏠 信義房價指數'}
-                          </h4>
-                          <span class="econ-chart-source">
-                            {section.chartAfter === 'taiex' &&
-                              '資料來源：臺灣證券交易所'}
-                            {section.chartAfter === 'cpi' &&
-                              '資料來源：行政院主計總處'}
-                            {section.chartAfter === 'salary' &&
-                              '資料來源：行政院主計總處'}
-                            {section.chartAfter === 'housing' &&
-                              '資料來源：信義房屋'}
-                          </span>
-                        </div>
-                        <div class="econ-chart-svg-wrap">
-                          <svg
-                            class="econ-chart-svg"
-                            viewBox="0 0 800 300"
-                            preserveAspectRatio="xMidYMid meet"
-                          />
-                          <div class="econ-chart-tooltip" />
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                </Fragment>
-              ))}
-            </div>
-          </section>
-        )
-      }
-
-      <!-- Food Visualization (only for food category) -->
-      {
-        category === 'food' && (
-          <section class="food-viz">
-            <div class="food-viz-inner">
-              <h2>🍜 探索台灣美食宇宙</h2>
-              <p class="food-viz-subtitle">
-                點擊扇區或節點，深入了解每一道台灣味
-              </p>
-
-              <div class="viz-tabs">
-                <button class="viz-tab active" data-viz="sunburst">
-                  🎯 風味輪
-                </button>
-                <button class="viz-tab" data-viz="network">
-                  🕸️ 關係圖
-                </button>
-              </div>
-
-              <div class="viz-container" id="sunburstViz" />
-              <div
-                class="viz-container"
-                id="networkViz"
-                style="display:none;"
-              />
-
-              <div class="viz-legend" id="vizLegend" />
-            </div>
-          </section>
-        )
-      }
-
-      <!-- Articles Section (row list + sidebar) -->
+      <!-- Main two-column layout: sidebar + content -->
       {
         articles.length > 0 ? (
-          <section class="articles-section">
-            <div class="articles-layout">
+          <div class="hub-layout">
+            <aside class="hub-sidebar">
+              {/* Subcategory nav */}
               {subcategoryGroups.length > 1 && (
-                <aside class="subcategory-sidebar">
-                  <nav class="sidebar-nav">
-                    <span class="sidebar-label">主題</span>
-                    {subcategoryGroups.map((group) => (
-                      <a href={`#sub-${group.name}`} class="sidebar-item">
-                        {group.name}
-                        <span class="sidebar-count">
-                          {group.articles.length}
-                        </span>
-                      </a>
-                    ))}
-                  </nav>
-                </aside>
+                <nav class="sidebar-nav">
+                  <span class="sidebar-label">主題</span>
+                  {subcategoryGroups.map((group) => (
+                    <a href={`#sub-${group.name}`} class="sidebar-item">
+                      {group.name}
+                      <span class="sidebar-count">{group.articles.length}</span>
+                    </a>
+                  ))}
+                </nav>
               )}
 
+              {/* Cross-category nav (replaces bottom explore cards) */}
+              <div class="sidebar-divider" />
+              <nav class="sidebar-nav">
+                <span class="sidebar-label">其他主題</span>
+                {otherCategories.map((cat) => (
+                  <a href={`/${cat.key}`} class="sidebar-item sidebar-other">
+                    <span>
+                      {cat.icon} {cat.name}
+                    </span>
+                  </a>
+                ))}
+              </nav>
+            </aside>
+
+            <div class="hub-main">
+              {/* Featured Picks (horizontal chips) */}
+              {topPicks && topPicks.length > 0 && (
+                <div class="featured-strip">
+                  <span class="featured-label">精選</span>
+                  {topPicks.slice(0, 3).map((article: any) => (
+                    <a
+                      href={`/${category}/${encodeURIComponent(article.slug)}`}
+                      class="featured-chip"
+                    >
+                      ★ {article.title}
+                    </a>
+                  ))}
+                </div>
+              )}
+
+              {/* Articles list */}
               <div class="articles-main" id="articlesGrid">
                 <div class="articles-toolbar">
                   <input
@@ -608,8 +546,100 @@ const otherCategories = categories
                   <p>找不到符合條件的文章</p>
                 </div>
               </div>
+
+              {/* Food Visualization */}
+              {category === 'food' && (
+                <section class="food-viz">
+                  <div class="food-viz-inner">
+                    <h2>🍜 探索台灣美食宇宙</h2>
+                    <p class="food-viz-subtitle">
+                      點擊扇區或節點，深入了解每一道台灣味
+                    </p>
+                    <div class="viz-tabs">
+                      <button class="viz-tab active" data-viz="sunburst">
+                        🎯 風味輪
+                      </button>
+                      <button class="viz-tab" data-viz="network">
+                        🕸️ 關係圖
+                      </button>
+                    </div>
+                    <div class="viz-container" id="sunburstViz" />
+                    <div
+                      class="viz-container"
+                      id="networkViz"
+                      style="display:none;"
+                    />
+                    <div class="viz-legend" id="vizLegend" />
+                  </div>
+                </section>
+              )}
+
+              {/* Full Hub Essay (not collapsed — the soul of Taiwan.md) */}
+              {hubHtml && !isEconomy && (
+                <section class="hub-content" id="hub-essay">
+                  <h2 class="hub-essay-heading">
+                    {categoryInfo.icon} 策展導讀
+                  </h2>
+                  <div class="hub-prose" set:html={hubHtml} />
+                </section>
+              )}
+
+              {/* Economy with charts */}
+              {isEconomy && hubSections.length > 0 && (
+                <section class="hub-content" id="hub-essay">
+                  <h2 class="hub-essay-heading">
+                    {categoryInfo.icon} 策展導讀
+                  </h2>
+                  <div class="hub-prose">
+                    {hubSections.map((section) => (
+                      <Fragment>
+                        <div set:html={section.html} />
+                        {section.chartAfter && (
+                          <div
+                            class="econ-chart-wrapper"
+                            data-chart={section.chartAfter}
+                          >
+                            <div class="econ-chart-container">
+                              <div class="econ-chart-header">
+                                <h4 class="econ-chart-title">
+                                  {section.chartAfter === 'taiex' &&
+                                    '📈 歷年台灣加權股價指數 (TAIEX)'}
+                                  {section.chartAfter === 'cpi' &&
+                                    '📊 歷年消費者物價指數 (CPI)'}
+                                  {section.chartAfter === 'salary' &&
+                                    '💰 歷年每月經常性薪資'}
+                                  {section.chartAfter === 'housing' &&
+                                    '🏠 信義房價指數'}
+                                </h4>
+                                <span class="econ-chart-source">
+                                  {section.chartAfter === 'taiex' &&
+                                    '資料來源：臺灣證券交易所'}
+                                  {section.chartAfter === 'cpi' &&
+                                    '資料來源：行政院主計總處'}
+                                  {section.chartAfter === 'salary' &&
+                                    '資料來源：行政院主計總處'}
+                                  {section.chartAfter === 'housing' &&
+                                    '資料來源：信義房屋'}
+                                </span>
+                              </div>
+                              <div class="econ-chart-svg-wrap">
+                                <svg
+                                  class="econ-chart-svg"
+                                  viewBox="0 0 800 300"
+                                  preserveAspectRatio="xMidYMid meet"
+                                />
+                                <div class="econ-chart-tooltip" />
+                              </div>
+                            </div>
+                          </div>
+                        )}
+                      </Fragment>
+                    ))}
+                  </div>
+                </section>
+              )}
             </div>
-          </section>
+          </div>
         ) : (
           <section class="coming-soon">
             <div class="coming-soon-content">
@@ -619,7 +649,6 @@ const otherCategories = categories
               <p class="category-desc">
                 未來這裡將會有：{categoryInfo.description}
               </p>
-
               <div class="action-buttons">
                 <a href="/" class="btn-primary">
                   返回首頁
@@ -636,25 +665,6 @@ const otherCategories = categories
           </section>
         )
       }
-
-      <!-- 探索其他面向 -->
-      <section class="explore-more">
-        <h2 class="explore-title">探索台灣其他面向</h2>
-        <div class="categories-grid">
-          {
-            otherCategories.map((cat) => (
-              <a
-                href={`/${cat.key}`}
-                class="category-card"
-                style={`border-color: ${cat.color}; color: ${cat.color};`}
-              >
-                <div class="category-card-icon">{cat.icon}</div>
-                <div class="category-card-name">{cat.name}</div>
-              </a>
-            ))
-          }
-        </div>
-      </section>
     </div>
   </main>
 </Layout>
@@ -779,23 +789,156 @@ const otherCategories = categories
     min-height: 100vh;
   }
 
-  /* Hero Banner */
-  .hero-banner {
-    position: relative;
-    width: 100%;
-    padding: clamp(3.5rem, 8vw, 5rem) var(--space-page-x);
-    color: white;
-    text-align: center;
+  /* Category Header (bar + curatorial hook fused) */
+  .category-header {
+    padding: 0.75rem 0 1.25rem;
+    background: var(--categoryColorLight);
+  }
+  .bar-row {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+  .bar-icon {
+    font-size: 1.5rem;
+  }
+  .bar-title {
+    font-size: 1.5rem;
+    font-weight: 800;
+    margin: 0;
+    font-family: var(--font-editorial);
+  }
+  .bar-sep {
+    color: #94a3b8;
+    font-weight: 300;
+  }
+  .bar-desc {
+    font-size: 0.88rem;
+    color: #64748b;
+    white-space: nowrap;
     overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 50%;
+  }
+  .bar-count {
+    font-size: 0.78rem;
+    color: #94a3b8;
+    background: #f1f5f9;
+    padding: 0.15rem 0.5rem;
+    border-radius: 12px;
+    margin-left: auto;
   }
 
-  .hero-content {
+  /* Header Hook (curatorial intro inside category header) */
+  .header-hook {
+    margin-top: 0.75rem;
+    font-size: 0.92rem;
+    line-height: 1.75;
+    color: #475569;
     max-width: 800px;
-    margin: 0 auto;
-    position: relative;
-    z-index: 2;
+  }
+  .header-hook-prose :global(p) {
+    margin: 0.4rem 0;
+  }
+  .header-hook-prose :global(p:first-child) {
+    margin-top: 0;
+  }
+  .header-hook-prose :global(p:last-child) {
+    margin-bottom: 0;
+  }
+  .hook-readmore {
+    display: inline-block;
+    margin-top: 0.5rem;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--categoryColor);
+    text-decoration: none;
+    transition: all 0.15s;
+  }
+  .hook-readmore:hover {
+    text-decoration: underline;
   }
 
+  /* Hub Layout (two-column: sidebar + main) */
+  .hub-layout {
+    display: flex;
+    gap: 2rem;
+    align-items: flex-start;
+    margin-top: 1rem;
+  }
+  .hub-sidebar {
+    width: 180px;
+    flex-shrink: 0;
+    position: sticky;
+    top: 72px;
+    align-self: flex-start;
+  }
+  .hub-main {
+    flex: 1;
+    min-width: 0;
+  }
+
+  /* Featured Strip (horizontal chips) */
+  .featured-strip {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid #e2e8f0;
+  }
+  .featured-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--categoryColor);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    flex-shrink: 0;
+  }
+  .featured-chip {
+    font-size: 0.82rem;
+    color: var(--categoryColor);
+    background: var(--categoryColorLight);
+    border: 1px solid transparent;
+    padding: 0.2rem 0.6rem;
+    border-radius: 16px;
+    text-decoration: none;
+    font-weight: 600;
+    white-space: nowrap;
+    transition: all 0.15s;
+  }
+  .featured-chip:hover {
+    border-color: var(--categoryColor);
+    background: white;
+  }
+
+  /* Hub Essay (full curatorial essay below articles) */
+  .hub-essay-heading {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #334155;
+    margin: 3rem 0 0.5rem;
+    padding-top: 2rem;
+    border-top: 2px solid #e2e8f0;
+  }
+
+  /* Sidebar shared styles */
+  .sidebar-divider {
+    height: 1px;
+    background: #e2e8f0;
+    margin: 0.75rem 0;
+  }
+  .sidebar-other {
+    font-size: 0.78rem;
+    opacity: 0.75;
+  }
+  .sidebar-other:hover {
+    opacity: 1;
+  }
+
+  /* ---- LEGACY hero classes removed, keeping icon reference for compat ---- */
   .hero-icon {
     font-size: 4rem;
     margin-bottom: 1rem;
@@ -1426,13 +1569,36 @@ const otherCategories = categories
   }
 
   @media (max-width: 768px) {
-    .articles-layout {
+    .bar-desc {
+      display: none;
+    }
+    .bar-sep {
+      display: none;
+    }
+    .hub-layout {
       flex-direction: column;
       gap: 0;
     }
-    .subcategory-sidebar {
+    .hub-sidebar {
       position: static;
       width: 100%;
+      max-height: none;
+      overflow: visible;
+    }
+    .sidebar-other {
+      display: none;
+    }
+    .sidebar-divider {
+      display: none;
+    }
+    .featured-strip {
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      padding-bottom: 0.5rem;
+    }
+    .header-hook {
+      font-size: 0.85rem;
     }
     .sidebar-nav {
       flex-direction: row;
@@ -1920,30 +2086,7 @@ const otherCategories = categories
     transform: translateY(-2px);
   }
 
-  /* Explore More */
-  .explore-more {
-    margin-top: var(--space-9);
-    padding: var(--space-7) 0;
-    border-top: 1px solid #e5e7eb;
-  }
-
-  .explore-title {
-    text-align: center;
-    font-size: var(--title-section-size);
-    font-weight: 800;
-    color: #1f2937;
-    margin-bottom: 2rem;
-    line-height: var(--title-line-height);
-    letter-spacing: var(--title-letter-spacing);
-    font-family: var(--font-editorial);
-  }
-
-  .categories-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1rem;
-  }
-
+  /* Explore More — moved to sidebar, legacy classes kept for compat */
   .category-card {
     display: flex;
     flex-direction: column;
