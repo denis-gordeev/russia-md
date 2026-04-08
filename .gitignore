@@ -20,6 +20,9 @@ pnpm-debug.log*
 # macOS-specific files
 .DS_Store
 
+# Obsidian workspace metadata
+.obsidian/
+
 # jetbrains setting folder
 .idea/
 public/api/random.json
@@ -27,3 +30,4 @@ public/api/random.json
 public/api/search-minisearch.json
 meetings/
 memory/
+!docs/semiont/memory/

@@ -1,6 +1,6 @@
 ---
-title: "Taiwan's White Terror"
-description: 'Political persecution during the martial law period (1949-1987), literature bans, and post-democratization rehabilitation and transitional justice'
+title: "Taiwan's White Terror (1949-1987): Martial Law, Political Persecution, and Transitional Justice"
+description: 'During 38 years of martial law, an estimated 140,000 Taiwanese were imprisoned for political dissent. The White Terror silenced writers, jailed opposition leaders, and shaped a generation. How Taiwan confronted this history after democratization.'
 date: 2026-03-19
 tags:
   [

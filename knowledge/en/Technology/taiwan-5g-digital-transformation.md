@@ -1,6 +1,6 @@
 ---
-title: "Taiwan's 5G Network Construction and Digital Transformation"
-description: "From 4G leadership to 5G deployment, exploring Taiwan's national strategy for digital transformation and smart application development journey"
+title: '5G in Taiwan: From TSMC Chips to Smart Factories and Digital Healthcare'
+description: "Taiwan's 5G rollout launched in 2020 with NT$136.5 billion in spectrum fees. With TSMC chips powering most 5G base stations worldwide, Taiwan is building smart ports, AI hospitals, and connected factories. A look at the island's digital transformation strategy and where it's heading."
 date: 2026-03-18
 tags:
   [

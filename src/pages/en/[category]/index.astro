@@ -16,10 +16,7 @@ const safeMatter = (fileContent: string) => {
   try {
     return matter(fileContent);
   } catch {
-    const stripped = fileContent.replace(
-      /^---\s*\n[\s\S]*?\n---\s*\n/,
-      '',
-    );
+    const stripped = fileContent.replace(/^---\s*\n[\s\S]*?\n---\s*\n/, '');
     return { data: {}, content: stripped };
   }
 };
@@ -29,10 +26,7 @@ export async function getStaticPaths() {
     try {
       return matter(fileContent);
     } catch {
-      const stripped = fileContent.replace(
-        /^---\s*\n[\s\S]*?\n---\s*\n/,
-        '',
-      );
+      const stripped = fileContent.replace(/^---\s*\n[\s\S]*?\n---\s*\n/, '');
       return { data: {}, content: stripped };
     }
   };
@@ -76,6 +70,7 @@ export async function getStaticPaths() {
         const { data: frontmatter } = safeMatter(fileContent);
         const slug = basename(file, '.md');
 
+        const fnCount = (fileContent.match(/^\[\^\d+\]:/gm) || []).length;
         articles.push({
           slug,
           title: frontmatter.title || slug,
@@ -84,11 +79,15 @@ export async function getStaticPaths() {
           readingTime: frontmatter.readingTime || null,
           date: frontmatter.date || null,
           featured: frontmatter.featured || false,
+          footnotes: fnCount,
           lang: 'en',
         });
       }
     } catch (err) {
-      console.error(`[en/category/index] Error loading "${category}":`, (err as Error).message);
+      console.error(
+        `[en/category/index] Error loading "${category}":`,
+        (err as Error).message,
+      );
     }
 
     let hubContent = '';
@@ -106,14 +105,37 @@ export async function getStaticPaths() {
       }
     } catch {}
 
+    // Compute top picks
+    const computeTopPicks = () => {
+      if (articles.length === 0) return [];
+      const tryThr = (ft: number, nt: number) =>
+        articles.filter(
+          (a: any) => (a.footnotes || 0) >= (a.featured ? ft : nt),
+        );
+      let cands = tryThr(8, 15);
+      if (cands.length < 2) cands = tryThr(3, 8);
+      if (cands.length === 0) cands = articles.filter((a: any) => a.featured);
+      if (cands.length === 0) return [];
+      return [...cands]
+        .sort((a: any, b: any) => {
+          if (a.featured !== b.featured) return a.featured ? -1 : 1;
+          return (b.footnotes || 0) - (a.footnotes || 0);
+        })
+        .slice(0, 5);
+    };
+    const topPicks = computeTopPicks();
+
     paths.push({
       params: { category },
       props: {
         category,
         hubContent,
+        topPicks,
         articles: articles.sort((a, b) => {
           if (a.featured && !b.featured) return -1;
           if (!a.featured && b.featured) return 1;
+          if ((b.footnotes || 0) !== (a.footnotes || 0))
+            return (b.footnotes || 0) - (a.footnotes || 0);
           return a.title.localeCompare(b.title);
         }),
       },
@@ -123,7 +145,7 @@ export async function getStaticPaths() {
   return paths;
 }
 
-const { category, hubContent, articles } = Astro.props;
+const { category, hubContent, articles, topPicks } = Astro.props;
 
 function resolveWikilinks(md: string, currentCategory: string) {
   if (!md) return md;
@@ -135,7 +157,9 @@ function resolveWikilinks(md: string, currentCategory: string) {
         .replace(/^_/, '')
         .replace(/ Hub$/, '')
         .toLowerCase();
-      return bold ? `[**${label}**](/en/${catName})` : `[${label}](/en/${catName})`;
+      return bold
+        ? `[**${label}**](/en/${catName})`
+        : `[${label}](/en/${catName})`;
     }
     const matchArticle = articles.find(
       (a: any) =>
@@ -156,9 +180,8 @@ function resolveWikilinks(md: string, currentCategory: string) {
     (_, target, display) => resolveOne(target, display, true),
   );
   // Second pass: remaining [[X]]
-  md = md.replace(
-    /\[\[([^\]|]+?)(?:\|([^\]]+?))?\]\]/g,
-    (_, target, display) => resolveOne(target, display),
+  md = md.replace(/\[\[([^\]|]+?)(?:\|([^\]]+?))?\]\]/g, (_, target, display) =>
+    resolveOne(target, display),
   );
   return md;
 }
@@ -172,8 +195,18 @@ const articleUrlSet = new Set(
   articles.map((a: any) => `/en/${category}/${a.slug}`),
 );
 const categoryKeys = Object.keys({
-  history: 1, geography: 1, culture: 1, food: 1, art: 1, music: 1,
-  technology: 1, nature: 1, people: 1, society: 1, economy: 1, lifestyle: 1,
+  history: 1,
+  geography: 1,
+  culture: 1,
+  food: 1,
+  art: 1,
+  music: 1,
+  technology: 1,
+  nature: 1,
+  people: 1,
+  society: 1,
+  economy: 1,
+  lifestyle: 1,
 });
 
 // Topic-pill link renderer for hub pages
@@ -182,7 +215,9 @@ hubRenderer.link = ({ href, title, text }) => {
   const titleAttr = title ? ` title="${title}"` : '';
   const h = href || '';
   const isArticleLink = articleUrlSet.has(decodeURIComponent(h));
-  const isCategoryLink = categoryKeys.some((k) => h === `/en/${k}` || h === `/en/${k}/`);
+  const isCategoryLink = categoryKeys.some(
+    (k) => h === `/en/${k}` || h === `/en/${k}/`,
+  );
   if (isArticleLink || isCategoryLink) {
     return `<a class="topic-pill" href="${h}"${titleAttr}>${text}</a>`;
   }
@@ -214,7 +249,9 @@ function enrichBlockquotes(html: string): string {
   );
 }
 
-const rawHubHtml = resolvedContent ? marked.parse(resolvedContent, { renderer: hubRenderer, breaks: true }) : '';
+const rawHubHtml = resolvedContent
+  ? marked.parse(resolvedContent, { renderer: hubRenderer, breaks: true })
+  : '';
 const hubHtml = enrichBlockquotes(rawHubHtml as string);
 
 const lang = getLangFromUrl(Astro.url);
@@ -264,6 +301,38 @@ const otherCategories = categories
         <span class="current">{categoryInfo.name}</span>
       </nav>
 
+      {
+        topPicks && topPicks.length > 0 && (
+          <section class="hub-picks">
+            <h2 class="hub-picks-heading">
+              {categoryInfo.icon} Featured Articles
+            </h2>
+            <div class="hub-picks-grid">
+              {topPicks.map((article: any) => (
+                <a
+                  href={`/en/${category}/${encodeURIComponent(article.slug)}`}
+                  class="pick-card"
+                >
+                  <span class="pick-head">
+                    <span class="pick-title">{article.title}</span>
+                    {article.footnotes > 0 && (
+                      <span class="pick-fn">{article.footnotes} refs</span>
+                    )}
+                  </span>
+                  {article.description && (
+                    <span class="pick-desc">
+                      {article.description.length > 100
+                        ? article.description.slice(0, 97) + '...'
+                        : article.description}
+                    </span>
+                  )}
+                </a>
+              ))}
+            </div>
+          </section>
+        )
+      }
+
       <!-- Hub Content (curated overview) -->
       {
         hubHtml && (
@@ -274,54 +343,37 @@ const otherCategories = categories
       }
 
       <!-- Articles Section -->
-      <h2 class="articles-heading">📖 Further Reading</h2>
       {
         articles.length > 0 ? (
           <section class="articles-section">
-            <div class="articles-grid">
-              {articles.map((article, index) => (
-                <article
-                  class={`article-card ${index === 0 && article.featured ? 'featured-card' : ''}`}
+            <div class="articles-main">
+              {articles.map((article: any) => (
+                <a
+                  href={`/en/${category}/${encodeURIComponent(article.slug)}`}
+                  class={`article-row ${article.featured ? 'is-featured' : ''}`}
                 >
-                  <a href={`/en/${category}/${article.slug}`} class="card-link">
-                    <div
-                      class="card-image-placeholder"
-                      style={`background: ${categoryInfo.gradient};`}
-                    >
-                      <div class="card-image-icon">{categoryInfo.icon}</div>
+                  <div class="row-main">
+                    <div class="row-title-line">
+                      {article.featured && <span class="row-star">★</span>}
+                      <h3 class="row-title">{article.title}</h3>
                     </div>
-
-                    <div class="card-content">
-                      <div class="card-header">
-                        <div class="article-meta">
-                          {article.status && (
-                            <span class="status-tag">{article.status}</span>
-                          )}
-                          {article.lang && (
-                            <span class="lang-tag">
-                              {article.lang === 'zh-TW' ? '中文' : 'EN'}
-                            </span>
-                          )}
-                        </div>
-                        {article.featured && (
-                          <div class="featured-badge">⭐ Featured</div>
-                        )}
-                      </div>
-
-                      <h3 class="article-title">{article.title}</h3>
-
-                      <p class="article-excerpt">{article.description}</p>
-
-                      <div class="article-info">
-                        {article.readingTime && (
-                          <span class="info-item">
-                            📖 {article.readingTime} min read
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                  </a>
-                </article>
+                    {article.description && (
+                      <p class="row-desc">
+                        {article.description.length > 120
+                          ? article.description.slice(0, 117) + '...'
+                          : article.description}
+                      </p>
+                    )}
+                  </div>
+                  <div class="row-meta">
+                    {(article.footnotes || 0) > 0 && (
+                      <span class="row-fn">{article.footnotes} refs</span>
+                    )}
+                    {article.readingTime && (
+                      <span class="row-time">{article.readingTime} min</span>
+                    )}
+                  </div>
+                </a>
               ))}
             </div>
           </section>
@@ -503,6 +555,63 @@ const otherCategories = categories
     font-weight: 600;
   }
 
+  .hub-picks {
+    margin: 1.5rem 0 2rem;
+  }
+  .hub-picks-heading {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 0.75rem;
+  }
+  .hub-picks-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+  .hub-picks .pick-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    padding: 0.55rem 0.85rem;
+    background: #fafdf7;
+    border: 1px solid rgba(45, 80, 22, 0.12);
+    border-left: 3px solid var(--categoryColor, rgba(45, 80, 22, 0.35));
+    border-radius: 0 6px 6px 0;
+    text-decoration: none;
+    transition: all 0.25s ease;
+  }
+  .hub-picks .pick-card:hover {
+    background: rgba(45, 80, 22, 0.06);
+    border-left-color: var(--categoryColor, rgba(45, 80, 22, 0.6));
+    transform: translateX(2px);
+    box-shadow: 0 1px 4px rgba(45, 80, 22, 0.08);
+  }
+  .hub-picks .pick-head {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .hub-picks .pick-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--categoryColor, #2d5016);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .hub-picks .pick-fn {
+    font-size: 0.72rem;
+    color: #6b7280;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .hub-picks .pick-desc {
+    font-size: 0.82rem;
+    color: #4b5563;
+    line-height: 1.5;
+  }
+
   /* Articles Grid */
   .hub-content {
     margin: 2rem 0 3rem;
@@ -551,22 +660,38 @@ const otherCategories = categories
   /* Callout blockquotes */
   .hub-prose :global(blockquote.callout-note) {
     border-left-color: #3b82f6;
-    background: linear-gradient(to right, rgba(59, 130, 246, 0.06), transparent);
+    background: linear-gradient(
+      to right,
+      rgba(59, 130, 246, 0.06),
+      transparent
+    );
     font-style: normal;
   }
   .hub-prose :global(blockquote.callout-warning) {
     border-left-color: #f59e0b;
-    background: linear-gradient(to right, rgba(245, 158, 11, 0.06), transparent);
+    background: linear-gradient(
+      to right,
+      rgba(245, 158, 11, 0.06),
+      transparent
+    );
     font-style: normal;
   }
   .hub-prose :global(blockquote.callout-tip) {
     border-left-color: #10b981;
-    background: linear-gradient(to right, rgba(16, 185, 129, 0.06), transparent);
+    background: linear-gradient(
+      to right,
+      rgba(16, 185, 129, 0.06),
+      transparent
+    );
     font-style: normal;
   }
   .hub-prose :global(blockquote.callout-data) {
     border-left-color: #8b5cf6;
-    background: linear-gradient(to right, rgba(139, 92, 246, 0.06), transparent);
+    background: linear-gradient(
+      to right,
+      rgba(139, 92, 246, 0.06),
+      transparent
+    );
     font-style: normal;
   }
 
@@ -711,145 +836,85 @@ const otherCategories = categories
     margin: 2.5rem 0;
   }
 
-  .articles-heading {
-    font-size: 1.4rem;
-    margin: 0 0 1.5rem 0;
-    color: #1e293b;
-  }
-
   .articles-section {
     margin-bottom: 4rem;
   }
 
-  .articles-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-    gap: 2rem;
+  /* Row list layout */
+  .articles-main {
+    margin-top: 1.5rem;
   }
-
-  .article-card {
-    background: white;
-    border-radius: 16px;
-    overflow: hidden;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06);
-    transition: all 0.2s ease;
-    border: 1px solid rgba(0, 0, 0, 0.08);
-  }
-
-  .article-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
-    border-color: rgba(0, 0, 0, 0.12);
-  }
-
-  .featured-card {
-    grid-column: 1 / -1;
-    max-width: 600px;
-    margin: 0 auto;
-  }
-
-  .card-link {
-    display: block;
+  .article-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.65rem 0.5rem;
     text-decoration: none;
-    color: inherit;
+    border-bottom: 1px solid #f1f5f9;
+    transition: all 0.15s ease;
   }
-
-  .card-image-placeholder {
-    height: 160px;
+  .article-row:last-child {
+    border-bottom: none;
+  }
+  .article-row:hover {
+    background: rgba(45, 80, 22, 0.03);
+    padding-left: 0.75rem;
+  }
+  .article-row.is-featured {
+    background: rgba(45, 80, 22, 0.02);
+  }
+  .row-main {
+    flex: 1;
+    min-width: 0;
+  }
+  .row-title-line {
     display: flex;
     align-items: center;
-    justify-content: center;
-    position: relative;
+    gap: 0.35rem;
   }
-
-  .featured-card .card-image-placeholder {
-    height: 200px;
+  .row-star {
+    color: var(--categoryColor, #d97706);
+    font-size: 0.8rem;
+    flex-shrink: 0;
   }
-
-  .card-image-icon {
-    font-size: 3rem;
-    opacity: 0.8;
-    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
-  }
-
-  .card-content {
-    padding: 1.5rem;
-  }
-
-  .card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 1rem;
-  }
-
-  .article-meta {
-    display: flex;
-    gap: 0.5rem;
-    flex-wrap: wrap;
-  }
-
-  .status-tag {
-    background: var(--categoryColorLight);
-    color: var(--categoryColor);
-    padding: 0.25rem 0.5rem;
-    border-radius: 6px;
-    font-size: 0.75rem;
-    font-weight: 500;
-  }
-
-  .lang-tag {
-    background: #f3f4f6;
-    color: #6b7280;
-    padding: 0.25rem 0.5rem;
-    border-radius: 6px;
-    font-size: 0.75rem;
-    font-weight: 500;
-  }
-
-  .featured-badge {
-    background: linear-gradient(45deg, #fbbf24, #f59e0b);
-    color: white;
-    padding: 0.25rem 0.75rem;
-    border-radius: 20px;
-    font-size: 0.75rem;
+  .row-title {
+    font-size: 0.95rem;
     font-weight: 600;
+    color: #1e293b;
+    margin: 0;
+    line-height: 1.35;
   }
-
-  .article-title {
-    font-size: 1.5rem;
-    font-weight: 700;
-    line-height: 1.3;
-    margin-bottom: 1rem;
-    color: #1f2937;
+  .article-row:hover .row-title {
+    color: var(--categoryColor, #2d5016);
   }
-
-  .featured-card .article-title {
-    font-size: 1.8rem;
-  }
-
-  .article-excerpt {
-    color: #6b7280;
-    line-height: 1.6;
-    margin-bottom: 1rem;
+  .row-desc {
+    font-size: 0.8rem;
+    color: #64748b;
+    margin: 0.15rem 0 0;
+    line-height: 1.4;
     display: -webkit-box;
-    -webkit-line-clamp: 3;
+    -webkit-line-clamp: 1;
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
-
-  .article-info {
+  .row-meta {
     display: flex;
     align-items: center;
-    gap: 1rem;
-    font-size: 0.9rem;
-    color: #9ca3af;
+    gap: 0.5rem;
+    flex-shrink: 0;
+    padding-top: 0.15rem;
   }
-
-  .info-item {
-    display: flex;
-    align-items: center;
-    gap: 0.25rem;
+  .row-fn {
+    font-size: 0.72rem;
+    color: #16a34a;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .row-time {
+    font-size: 0.72rem;
+    color: #94a3b8;
+    white-space: nowrap;
   }
 
   /* Coming Soon */
@@ -998,12 +1063,13 @@ const otherCategories = categories
       padding: 1rem;
     }
 
-    .articles-grid {
-      grid-template-columns: 1fr;
+    .row-desc {
+      display: none;
     }
-
-    .featured-card {
-      grid-column: 1;
+    .row-meta {
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 0.1rem;
     }
 
     .action-buttons {

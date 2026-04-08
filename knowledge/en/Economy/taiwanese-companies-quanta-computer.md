@@ -1,6 +1,6 @@
 ---
-title: "Taiwanese Companies: Quanta Computer"
-description: "From a factory fire to global laptop dominance — how Barry Lam built an AI-era empire from the ashes"
+title: "Quanta Computer: The Taiwanese Company That Makes One-Third of the World's Laptops"
+description: "Founded by Barry Lam in 1988, Quanta Computer manufactures laptops for Apple, Dell, and HP — and now builds AI servers for the world's largest cloud providers. From a Taipei factory fire to a $40B revenue giant. Company history, products, and strategy."
 date: 2026-03-21
 tags: [Economy, Enterprises, Electronics Manufacturing, ODM, AI Cloud, Laptops]
 author: Taiwan.md
@@ -42,6 +42,7 @@ He was right. The iBook became a massive success, and Quanta became Apple's long
 ## Global Number One: The Numbers Tell the Story
 
 **2024 Global Laptop ODM Market Share:**
+
 1. Quanta: ~30% market share
 2. Compal: ~25%
 3. Pegatron: ~20%
@@ -49,12 +50,14 @@ He was right. The iBook became a massive success, and Quanta became Apple's long
 5. Others: 10%
 
 **Quanta Key Metrics:**
+
 - 2023 Revenue: NT$1.08 trillion (down 15.3% YoY)
 - Global employees: ~90,000
 - Annual shipments: 45-47 million laptops
 - Major clients: Apple, HP, Dell, Lenovo, Google, NVIDIA
 
 **Compared to other Taiwan tech giants:**
+
 - TSMC: NT$2.17 trillion revenue in 2023 (semiconductor foundry)
 - Foxconn: NT$6.26 trillion revenue in 2023 (electronics manufacturing)
 - Quanta: NT$1.08 trillion revenue in 2023 (laptop ODM)
@@ -126,6 +129,7 @@ Rising raw material costs, increasing labor expenses, and stricter environmental
 The AI server market is just beginning. Estimates suggest 2024-2026 will see the four major cloud companies (Amazon, Microsoft, Google, Meta) invest $370 billion in AI infrastructure — equivalent to NT$11.6 trillion.
 
 Quanta is well-positioned for this wave:
+
 - Close partnership with NVIDIA
 - Precision manufacturing and thermal technology advantages
 - Global manufacturing and service capabilities

@@ -1,6 +1,6 @@
 ---
-title: 'Jolin Tsai (蔡依林)'
-description: 'The worst dancer in her class spent twenty-five years turning her body into the most expensive stage act in Asia'
+title: 'Jolin Tsai (蔡依林): Taiwanese Pop Queen — Career, Age, and Rise to Stardom'
+description: "Born 1980 in Taipei, Jolin Tsai debuted at 19 and became Asia's most spectacular live performer. From a dance instructor saying she had no talent to aerial rings 10 meters above the stage — her 25-year career proves discipline defeats genius. Full biography and discography."
 date: 2026-03-24
 tags:
   [People, Singer, Entertainment, LGBTQ+ Rights, Mandopop, Golden Melody Awards]

@@ -1,6 +1,6 @@
 ---
-title: 'Mayday'
-description: 'How five high school students revolutionized the economics of live concerts in Asia'
+title: 'Mayday (五月天): Members, Origins, and How Five Taiwanese Students Built a Concert Empire'
+description: "Ashin, Monster, Stone, Masa, and Ming from Taipei — Mayday's five members have sold 21 million concert tickets and played 30 shows at Beijing's Bird's Nest. From a 1997 high school BBS nickname to Asia's biggest rock band. Members, history, and impact."
 date: 2026-03-23
 tags:
   [

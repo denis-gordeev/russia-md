@@ -1,12 +1,20 @@
 ---
-title: "Taiwan Railway History"
-description: "From Liu Mingchuan's Qing dynasty railway to the Japanese longitudinal line to high-speed rail: How railways shaped Taiwan's urban development and cultural memory"
+title: 'Taiwan Railway History: From Qing Dynasty Tracks to High-Speed Rail'
+description: "Liu Mingchuan built East Asia's first government railway in 1887. Japan laid the north-south trunk line. Today Taiwan's HSR covers 345 km in 90 minutes. How 130 years of railways shaped the island's cities, economy, and cultural memory."
 date: 2026-03-20
-tags: ["railway", "transportation infrastructure", "urban development", "Liu Mingchuan", "longitudinal line", "high-speed rail"]
-author: "Taiwan.md Contributors"
-difficulty: "beginner"
+tags:
+  [
+    'railway',
+    'transportation infrastructure',
+    'urban development',
+    'Liu Mingchuan',
+    'longitudinal line',
+    'high-speed rail',
+  ]
+author: 'Taiwan.md Contributors'
+difficulty: 'beginner'
 readingTime: 11
-category: "History"
+category: 'History'
 featured: false
 lastVerified: 2026-03-20
 lastHumanReview: false
@@ -147,6 +155,3 @@ In the future smart era, Taiwan railways will continue evolving. But unchanging 
 ---
 
 Further Reading:
-- [Qing Dynasty Rule](/en/History/qing-dynasty-rule)
-- [Japanese Colonial Era](/en/History/japanese-colonial-era)
-- [Taiwan Transportation Network](/en/Geography/taiwan-transportation-network)

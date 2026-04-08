@@ -1,6 +1,6 @@
 ---
-title: 'Contemporary Pop Music and the Golden Melody Awards'
-description: "From the 'Mandopop Grammy' to musical pluralism—exploring the innovation and heritage of Taiwan's pop music scene."
+title: "Golden Melody Awards: Taiwan's Grammys and the History of Mandopop"
+description: "The Golden Melody Awards have crowned Asia's best music since 1990 — from Teresa Teng and Jay Chou to indie breakthroughs. How Taiwan became the capital of Mandarin pop music, the award categories, winners, and why GMA matters beyond the Chinese-speaking world."
 date: 2026-03-20
 tags:
   [

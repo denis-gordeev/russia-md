@@ -1,6 +1,6 @@
 ---
-title: "Taiwan's Economic Miracle: From Agricultural Society to Asian Tiger"
-description: "From 1960-1990, Taiwan created a remarkable economic miracle, transforming from an agricultural society to an industrialized nation, joining South Korea, Hong Kong, and Singapore as the 'Four Asian Tigers'"
+title: "Taiwan's Economic Miracle Explained: How a Farm Island Became an Asian Tiger"
+description: "In 1960 Taiwan's per-capita GDP was $163. By 1990 it was $8,000. The story of export zones, TSMC's founding, and the policies that turned a war-torn agricultural island into one of the Four Asian Tigers alongside South Korea, Hong Kong, and Singapore."
 date: 2026-03-19
 tags:
   [
@@ -557,11 +557,6 @@ Gradual transition from authoritarianism to democracy, different from Singapore 
 ## Further Reading
 
 ### Related Articles
-
-- [[Taiwan's Land Reform and Rural Development]]
-- [[Taiwan's High-Tech Industry Development]]
-- [[Hsinchu Science Park Success Model]]
-- [[Resilience and Innovation of Taiwan's SMEs]]
 
 ### References
 

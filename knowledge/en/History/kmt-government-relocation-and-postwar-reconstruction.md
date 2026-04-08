@@ -1,6 +1,6 @@
 ---
-title: 'KMT Government Relocation and Post-War Reconstruction'
-description: "The historical background, process, and impact of the Kuomintang government's 1949 relocation to Taiwan, and post-war political, economic, and social reconstruction"
+title: 'How the KMT Moved to Taiwan in 1949: Government Relocation and Post-War Reconstruction'
+description: "When Chiang Kai-shek's Nationalist government retreated to Taiwan in 1949, over 1.2 million soldiers and civilians followed. How this mass relocation reshaped Taiwan's politics, economy, language, and identity for decades."
 date: 2026-03-18
 tags:
   [
