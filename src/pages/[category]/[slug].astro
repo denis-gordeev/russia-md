@@ -78,6 +78,15 @@ function getGitInfo(filePath: string) {
 
 export async function getStaticPaths() {
   const paths: any[] = [];
+  const safeMatter = (fileContent: string) => {
+    try {
+      return matter(fileContent);
+    } catch {
+      const stripped = fileContent.replace(/^---\s*\n[\s\S]*?\n---\s*\n/, '');
+      return { data: {}, content: stripped };
+    }
+  };
+
   const categoryMapping: Record<string, string> = {
     history: 'History',
     geography: 'Geography',
@@ -109,7 +118,7 @@ export async function getStaticPaths() {
         try {
           const filePath = join(zhFolderPath, file);
           const fileContent = await readFile(filePath, 'utf-8');
-          const { data: frontmatter, content } = matter(fileContent);
+          const { data: frontmatter, content } = safeMatter(fileContent);
           const slug = basename(file, '.md');
 
           let gitInfo = { contributors: [] as string[], lastModified: '' };
@@ -128,9 +137,25 @@ export async function getStaticPaths() {
               lastModified: gitInfo.lastModified,
             },
           });
-        } catch {}
+        } catch (err) {
+          console.error(
+            `[getStaticPaths] Error processing "${categorySlug}/${file}":`,
+            (err as Error).message,
+          );
+        }
       }
-    } catch {}
+    } catch (err) {
+      console.error(
+        `[getStaticPaths] Error processing category "${categorySlug}":`,
+        (err as Error).message,
+      );
+    }
+  }
+
+  if (paths.length === 0) {
+    throw new Error(
+      '[getStaticPaths] Generated 0 paths. Check russia-knowledge/ structure and frontmatter parsing.',
+    );
   }
 
   return paths;

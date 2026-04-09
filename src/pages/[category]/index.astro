@@ -12,6 +12,15 @@ import {
 
 export async function getStaticPaths() {
   const categories = Object.keys(categoryConfig);
+  const safeMatter = (fileContent: string) => {
+    try {
+      return matter(fileContent);
+    } catch {
+      const stripped = fileContent.replace(/^---\s*\n[\s\S]*?\n---\s*\n/, '');
+      return { data: {}, content: stripped };
+    }
+  };
+
   const categoryMapping: Record<string, string> = {
     history: 'History',
     geography: 'Geography',
@@ -48,7 +57,7 @@ export async function getStaticPaths() {
         try {
           const filePath = join(zhFolderPath, file);
           const fileContent = await readFile(filePath, 'utf-8');
-          const { data: frontmatter } = matter(fileContent);
+          const { data: frontmatter } = safeMatter(fileContent);
           const slug = basename(file, '.md');
 
           articles.push({
@@ -61,9 +70,19 @@ export async function getStaticPaths() {
             featured: frontmatter.featured || false,
             lang: 'en',
           });
-        } catch {}
+        } catch (err) {
+          console.error(
+            `[category/index] Error loading "${category}/${file}":`,
+            (err as Error).message,
+          );
+        }
       }
-    } catch {}
+    } catch (err) {
+      console.error(
+        `[category/index] Error loading category "${category}":`,
+        (err as Error).message,
+      );
+    }
 
     let hubContent = '';
     try {
@@ -75,7 +94,7 @@ export async function getStaticPaths() {
       if (hubFile) {
         const hubPath = join(hubFolder, hubFile);
         const hubRaw = await readFile(hubPath, 'utf-8');
-        const { content } = matter(hubRaw);
+        const { content } = safeMatter(hubRaw);
         hubContent = content.replace(/^#\s+.+\n/, '').trim();
       }
     } catch {}
@@ -133,6 +152,15 @@ const resolvedContent = hubContent
 
 // Broken image fallback for hub pages
 const hubRenderer = new marked.Renderer();
+hubRenderer.link = ({ href, title, text }) => {
+  const isExternal =
+    href && (href.startsWith('http://') || href.startsWith('https://'));
+  const titleAttr = title ? ` title="${title}"` : '';
+  const targetAttr = isExternal
+    ? ' target="_blank" rel="noopener noreferrer"'
+    : '';
+  return `<a href="${href}"${titleAttr}${targetAttr}>${text}</a>`;
+};
 hubRenderer.image = ({ href, title, text }) => {
   const titleAttr = title ? ` title="${title}"` : '';
   const altText = text || '';
