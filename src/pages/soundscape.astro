@@ -401,56 +401,89 @@ const totalWishlist = categories.reduce(
   title="台灣聲景 Taiwan Soundscape — Taiwan.md"
   description="用耳朵認識台灣——田野錄音收集計畫，收錄蟋蟀、垃圾車、廟會、浪聲等台灣獨有的聲音風景"
 >
-  <div class="soundscape-page">
-    <section class="hero">
-      <div class="hero-inner">
-        <p class="hero-kicker">🎧 Soundscape</p>
-        <h1>台灣聲景</h1>
-        <p class="hero-subtitle">
+  <!--
+    Phase 6 page migration #2: soundscape.astro (zh-TW)
+    ───────────────────────────────────────────────────
+    - Scoped <style> removed entirely (~300 lines CSS deleted)
+    - Different palette/design from en/soundscape.astro (dark green
+      #1a3c34 title on light cards vs olive on dark cards)
+    - Uses .cta-btn class as a hook for the `:not(.cta-btn)` link
+      exception — kept as-is because Tailwind can't express
+      "child-of-not-self" elegantly for this one edge case
+  -->
+  <div class="mx-auto max-w-[900px] px-6 pb-16 pt-0">
+    <section class="mb-12 py-16 pb-12 text-center">
+      <div>
+        <p
+          class="mb-3 text-[0.9rem] uppercase tracking-[0.15em] text-[#065f46]"
+        >
+          🎧 Soundscape
+        </p>
+        <h1
+          class="my-[0.3rem] font-[var(--font-title,'Noto_Serif_TC',serif)] text-[3.5rem] font-black -tracking-[0.02em] text-[#1a3c34] max-[600px]:text-[2rem]"
+        >
+          台灣聲景
+        </h1>
+        <p
+          class="mx-auto mt-4 max-w-[600px] text-[1.3rem] leading-[1.7] text-[#64748b]"
+        >
           有些故事，用耳朵聽比用眼睛看更真實。<br />
-          <span class="hero-subtitle-en"
+          <span class="text-[0.95rem] italic text-[#64748b]"
             >Some stories are best told through ears.</span
           >
         </p>
-        <p class="hero-count">
+        <p class="mt-4 text-[0.85rem] tracking-[0.1em] text-[#64748b]">
           {totalSounds} recordings · {totalWishlist} wanted · 5 categories
         </p>
-        <p class="hero-article">
-          📖 深度文章：<a href="/music/台灣聲音地景">台灣聲音地景</a>
+        <p class="mt-2 text-[0.9rem]">
+          📖 深度文章：<a
+            href="/music/台灣聲音地景"
+            class="border-b border-dashed border-[rgba(59,130,246,0.4)] text-[#3b82f6] no-underline hover:border-solid"
+            >台灣聲音地景</a
+          >
         </p>
       </div>
     </section>
 
     {
-      categories.map((cat) => (
-        <section class="category-section" id={cat.id}>
-          <div class="section-inner">
-            <h2>
-              <span class="cat-icon">{cat.icon}</span>
+      categories.map((cat, catIdx) => (
+        <section
+          class={`mb-6 pb-8 ${catIdx === categories.length - 1 ? '' : 'border-b-2 border-[#e2e8f0]'}`}
+          id={cat.id}
+        >
+          <div class="mb-4">
+            <h2 class="mb-4 flex flex-wrap items-center gap-2 text-[1.5rem]">
+              <span class="text-[1.3rem]">{cat.icon}</span>
               {cat.title}
-              <span class="section-label">{cat.titleEn}</span>
+              <span class="text-[0.85rem] font-normal text-[#64748b]">
+                {cat.titleEn}
+              </span>
             </h2>
 
             {cat.sounds.length > 0 && (
-              <div class="sound-grid">
+              <div class="mb-6 grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-3">
                 {cat.sounds.map((sound) => (
-                  <div class="sound-card">
-                    <div class="sound-header">
-                      <span class="sound-icon">{sound.icon}</span>
+                  <div class="flex flex-col gap-[0.4rem] rounded-[10px] border-2 border-[#cbd5e1] bg-[#f8fafc] px-4 py-[0.9rem] transition-[border-color,box-shadow] duration-200 hover:border-[#3b82f6] hover:shadow-[0_2px_8px_rgba(59,130,246,0.12)]">
+                    <div class="flex items-center gap-2">
+                      <span class="flex-shrink-0 text-[1.4rem]">
+                        {sound.icon}
+                      </span>
                       <div>
-                        <h3>
+                        <h3 class="m-0 text-[0.95rem] leading-[1.3]">
                           {sound.location}{' '}
-                          <span class="sound-location-en">
+                          <span class="m-0 text-[0.75rem] text-[#64748b]">
                             {sound.locationEn}
                           </span>
                         </h3>
                       </div>
                     </div>
-                    <p class="sound-desc">
+                    <p class="m-0 text-[0.85rem] text-[#334155]">
                       {sound.description}{' '}
-                      <span class="sound-desc-en">{sound.descriptionEn}</span>
+                      <span class="m-0 text-[0.75rem] text-[#64748b]">
+                        {sound.descriptionEn}
+                      </span>
                     </p>
-                    <div class="sound-meta">
+                    <div class="flex items-center gap-[0.6rem] text-[0.75rem]">
                       <a
                         href={
                           sound.contributorUrl ||
@@ -458,15 +491,19 @@ const totalWishlist = categories.reduce(
                         }
                         target="_blank"
                         rel="noopener"
-                        class="contributor"
+                        class="text-[#3b82f6] no-underline hover:underline"
                       >
                         {sound.contributorUrl
                           ? sound.contributor
                           : `@${sound.contributor}`}
                       </a>
-                      <span class="sound-date">{sound.date}</span>
+                      <span class="text-[#64748b]">{sound.date}</span>
                     </div>
-                    <audio controls preload="none" class="sound-player">
+                    <audio
+                      controls
+                      preload="none"
+                      class="h-9 w-full rounded-md"
+                    >
                       <source
                         src={`/assets/sounds/${sound.file}`}
                         type="audio/mpeg"
@@ -478,30 +515,41 @@ const totalWishlist = categories.reduce(
             )}
 
             {cat.sounds.length === 0 && (
-              <div class="empty-state">
-                <p>這個分類還沒有錄音，等你來貢獻！</p>
-                <p class="empty-en">
+              <div class="mb-6 rounded-[10px] border-2 border-dashed border-[#94a3b8] bg-[#f8fafc] p-6 text-center">
+                <p class="m-0 text-[#64748b]">
+                  這個分類還沒有錄音，等你來貢獻！
+                </p>
+                <p class="m-0 !mt-[0.3rem] text-[0.85rem] italic text-[#64748b]">
                   No recordings yet — be the first contributor!
                 </p>
               </div>
             )}
 
-            <div class="wishlist-inline">
-              <h4>📋 想收集 Wanted</h4>
-              <div class="wishlist-grid">
+            <div class="mb-4">
+              <h4 class="mb-[0.8rem] text-base font-semibold text-[#334155]">
+                📋 想收集 Wanted
+              </h4>
+              <div class="grid grid-cols-[repeat(auto-fill,minmax(240px,1fr))] gap-[0.6rem] max-[600px]:grid-cols-1">
                 {cat.wishlist.map((item) => (
-                  <div class="wishlist-card">
-                    <span class="wishlist-icon">{item.icon}</span>
+                  <div class="flex items-start gap-[0.6rem] rounded-lg border-2 border-[#cbd5e1] bg-[#f8fafc] px-[0.8rem] py-[0.6rem]">
+                    <span class="flex-shrink-0 text-[1.3rem]">{item.icon}</span>
                     <div>
-                      <p class="wishlist-text">{item.text}</p>
-                      <p class="wishlist-text-en">{item.textEn}</p>
+                      <p class="m-0 text-[0.9rem] font-medium text-[#1a1a2e]">
+                        {item.text}
+                      </p>
+                      <p class="mx-0 mb-0 mt-[0.15rem] text-[0.78rem] text-[#475569]">
+                        {item.textEn}
+                      </p>
                     </div>
                   </div>
                 ))}
               </div>
             </div>
 
-            <a href={cat.article} class="read-more">
+            <a
+              href={cat.article}
+              class="mt-2 inline-block text-[0.9rem] text-[#3b82f6] no-underline transition-colors duration-200 hover:text-[#2563eb]"
+            >
               📖 閱讀完整聲音故事 Read more →
             </a>
           </div>
@@ -509,328 +557,45 @@ const totalWishlist = categories.reduce(
       ))
     }
 
-    <section class="contribute-cta">
-      <div class="section-inner">
-        <h2>🎤 貢獻你的錄音</h2>
-        <p>
+    <section>
+      <div class="mb-4 py-8 text-center">
+        <h2 class="mb-4 text-[1.5rem]">🎤 貢獻你的錄音</h2>
+        <p
+          class="mb-6 leading-[1.8] text-[#475569] [&>a:not(.cta-btn)]:text-[#3b82f6]"
+        >
           用手機錄下 30 秒到 2 分鐘的台灣聲景，轉成 MP3，開一個 PR 就好。<br />
           不會用 GitHub？直接<a href="mailto:cheyu.wu@monoame.com">寄信給我們</a
           >，附上錄音檔和地點描述。
         </p>
-        <div class="cta-steps">
-          <div class="step">
-            <span class="step-num">1</span> 錄下聲音（30s – 2min）
+        <div
+          class="mb-8 flex flex-wrap justify-center gap-6 max-[600px]:flex-col max-[600px]:items-center"
+        >
+          <div class="flex items-center gap-2 text-[0.95rem] text-[#334155]">
+            <span
+              class="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-[rgba(59,130,246,0.1)] text-[0.85rem] font-semibold text-[#3b82f6]"
+              >1</span
+            > 錄下聲音（30s – 2min）
           </div>
-          <div class="step">
-            <span class="step-num">2</span> 轉成 MP3（128kbps+）
+          <div class="flex items-center gap-2 text-[0.95rem] text-[#334155]">
+            <span
+              class="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-[rgba(59,130,246,0.1)] text-[0.85rem] font-semibold text-[#3b82f6]"
+              >2</span
+            > 轉成 MP3（128kbps+）
           </div>
-          <div class="step">
-            <span class="step-num">3</span> 開 PR 或寄信給我們
+          <div class="flex items-center gap-2 text-[0.95rem] text-[#334155]">
+            <span
+              class="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-[rgba(59,130,246,0.1)] text-[0.85rem] font-semibold text-[#3b82f6]"
+              >3</span
+            > 開 PR 或寄信給我們
           </div>
         </div>
-        <a href="/contribute" class="cta-btn">前往貢獻頁面 →</a>
+        <a
+          href="/contribute"
+          class="cta-btn inline-block rounded-lg border border-[rgba(59,130,246,0.3)] bg-[rgba(59,130,246,0.08)] px-8 py-3 text-[0.95rem] font-medium text-[#3b82f6] no-underline transition-all duration-200 hover:border-[rgba(59,130,246,0.5)] hover:bg-[rgba(59,130,246,0.15)]"
+        >
+          前往貢獻頁面 →
+        </a>
       </div>
     </section>
   </div>
 </Layout>
-
-<style>
-  .soundscape-page {
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 0 1.5rem 4rem;
-  }
-
-  .hero {
-    text-align: center;
-    padding: 4rem 0 3rem;
-    margin-bottom: 3rem;
-  }
-  .hero-kicker {
-    font-size: 0.9rem;
-    color: #065f46;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    margin-bottom: 0.75rem;
-  }
-  .hero h1 {
-    font-family: var(--font-title, 'Noto Serif TC', serif);
-    font-size: 3.5rem;
-    font-weight: 900;
-    margin: 0.3rem 0;
-    color: #1a3c34;
-    letter-spacing: -0.02em;
-  }
-  .hero-subtitle {
-    font-size: 1.3rem;
-    color: #64748b;
-    line-height: 1.7;
-    margin-top: 1rem;
-    max-width: 600px;
-    margin-left: auto;
-    margin-right: auto;
-  }
-  .hero-subtitle-en {
-    font-size: 0.95rem;
-    color: #64748b;
-    font-style: italic;
-  }
-  .hero-count {
-    margin-top: 1rem;
-    font-size: 0.85rem;
-    color: #64748b;
-    letter-spacing: 0.1em;
-  }
-  .hero-article {
-    margin-top: 0.5rem;
-    font-size: 0.9rem;
-  }
-  .hero-article a {
-    color: #3b82f6;
-    text-decoration: none;
-    border-bottom: 1px dashed rgba(59, 130, 246, 0.4);
-  }
-  .hero-article a:hover {
-    border-bottom-style: solid;
-  }
-
-  .category-section {
-    margin-bottom: 1.5rem;
-    padding-bottom: 2rem;
-    border-bottom: 2px solid #e2e8f0;
-  }
-  .category-section:last-of-type {
-    border-bottom: none;
-  }
-
-  .section-inner {
-    margin-bottom: 1rem;
-  }
-  .section-inner h2 {
-    font-size: 1.5rem;
-    margin-bottom: 1rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    flex-wrap: wrap;
-  }
-  .cat-icon {
-    font-size: 1.3rem;
-  }
-  .section-label {
-    font-size: 0.85rem;
-    color: #64748b;
-    font-weight: 400;
-  }
-
-  .sound-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 0.75rem;
-    margin-bottom: 1.5rem;
-  }
-  .sound-card {
-    background: #f8fafc;
-    border: 2px solid #cbd5e1;
-    border-radius: 10px;
-    padding: 0.9rem 1rem;
-    transition:
-      border-color 0.2s,
-      box-shadow 0.2s;
-    display: flex;
-    flex-direction: column;
-    gap: 0.4rem;
-  }
-  .sound-card:hover {
-    border-color: #3b82f6;
-    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.12);
-  }
-  .sound-header {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
-  .sound-icon {
-    font-size: 1.4rem;
-    flex-shrink: 0;
-  }
-  .sound-info h3 {
-    font-size: 0.95rem;
-    margin: 0;
-    line-height: 1.3;
-  }
-  .sound-location-en {
-    font-size: 0.75rem;
-    color: #64748b;
-    margin: 0;
-  }
-  .sound-desc {
-    color: #334155;
-    font-size: 0.85rem;
-    margin: 0;
-  }
-  .sound-desc-en {
-    font-size: 0.75rem;
-    color: #64748b;
-    margin: 0;
-  }
-  .sound-meta {
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
-    font-size: 0.75rem;
-  }
-  .contributor {
-    color: #3b82f6;
-    text-decoration: none;
-  }
-  .contributor:hover {
-    text-decoration: underline;
-  }
-  .sound-date {
-    color: #64748b;
-  }
-  .sound-player {
-    width: 100%;
-    height: 36px;
-    border-radius: 6px;
-  }
-
-  .empty-state {
-    background: #f8fafc;
-    border: 2px dashed #94a3b8;
-    border-radius: 10px;
-    padding: 1.5rem;
-    text-align: center;
-    margin-bottom: 1.5rem;
-  }
-  .empty-state p {
-    color: #64748b;
-    margin: 0;
-  }
-  .empty-en {
-    font-size: 0.85rem;
-    margin-top: 0.3rem !important;
-    font-style: italic;
-  }
-
-  .wishlist-inline {
-    margin-bottom: 1rem;
-  }
-  .wishlist-inline h4 {
-    font-size: 1rem;
-    color: #334155;
-    font-weight: 600;
-    margin-bottom: 0.8rem;
-  }
-  .wishlist-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-    gap: 0.6rem;
-  }
-  .wishlist-card {
-    display: flex;
-    align-items: flex-start;
-    gap: 0.6rem;
-    background: #f8fafc;
-    border: 2px solid #cbd5e1;
-    border-radius: 8px;
-    padding: 0.6rem 0.8rem;
-  }
-  .wishlist-icon {
-    font-size: 1.3rem;
-    flex-shrink: 0;
-  }
-  .wishlist-text {
-    margin: 0;
-    color: #1a1a2e;
-    font-size: 0.9rem;
-    font-weight: 500;
-  }
-  .wishlist-text-en {
-    margin: 0.15rem 0 0;
-    font-size: 0.78rem;
-    color: #475569;
-  }
-
-  .read-more {
-    display: inline-block;
-    margin-top: 0.5rem;
-    color: #3b82f6;
-    text-decoration: none;
-    font-size: 0.9rem;
-    transition: color 0.2s;
-  }
-  .read-more:hover {
-    color: #2563eb;
-  }
-
-  .contribute-cta {
-    text-align: center;
-    padding: 2rem 0;
-  }
-  .contribute-cta p {
-    color: #475569;
-    line-height: 1.8;
-    margin-bottom: 1.5rem;
-  }
-  .contribute-cta a:not(.cta-btn) {
-    color: #3b82f6;
-  }
-  .cta-steps {
-    display: flex;
-    justify-content: center;
-    gap: 1.5rem;
-    margin-bottom: 2rem;
-    flex-wrap: wrap;
-  }
-  .step {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    color: #334155;
-    font-size: 0.95rem;
-  }
-  .step-num {
-    width: 28px;
-    height: 28px;
-    border-radius: 50%;
-    background: rgba(59, 130, 246, 0.1);
-    color: #3b82f6;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.85rem;
-    font-weight: 600;
-    flex-shrink: 0;
-  }
-  .cta-btn {
-    display: inline-block;
-    padding: 0.75rem 2rem;
-    background: rgba(59, 130, 246, 0.08);
-    border: 1px solid rgba(59, 130, 246, 0.3);
-    border-radius: 8px;
-    color: #3b82f6;
-    text-decoration: none;
-    font-size: 0.95rem;
-    font-weight: 500;
-    transition: all 0.2s;
-  }
-  .cta-btn:hover {
-    background: rgba(59, 130, 246, 0.15);
-    border-color: rgba(59, 130, 246, 0.5);
-  }
-
-  @media (max-width: 600px) {
-    .hero h1 {
-      font-size: 2rem;
-    }
-    .cta-steps {
-      flex-direction: column;
-      align-items: center;
-    }
-    .wishlist-grid {
-      grid-template-columns: 1fr;
-    }
-  }
-</style>
