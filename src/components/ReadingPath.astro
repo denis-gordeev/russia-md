@@ -34,34 +34,86 @@ const {
 const isEn = lang === 'en';
 ---
 
-<section class:list={['reading-path', { 'reading-path--en': isEn }]}>
-  <div class="reading-path-header">
-    <h2>{title}</h2>
-    <p>{subtitle}</p>
+<!--
+  Phase 4 leaf migration #6: ReadingPath.astro
+  ────────────────────────────────────────────
+  - Scoped <style> block removed entirely
+  - All classes → Tailwind atomic utilities
+
+  Tricky bits:
+  1. The section's SVG pattern overlay (::before) is preserved via
+     the arbitrary [&::before]: variant with the exact data-URL
+  2. The vertical connector line through numbered markers (also a
+     ::before) uses a second arbitrary [&::before]: on reading-path-list
+     with the same calc()-based left position and 180deg gradient
+  3. The gradient backgrounds on container, number marker, and continue
+     button all use arbitrary bg-[linear-gradient(...)]
+  4. EN vs ZH heading weight/spacing branches on the `isEn` boolean
+
+  The 3-column grid layout (marker / content / time) with centered
+  alignment uses [grid-template-columns:...] arbitrary property because
+  Tailwind's grid-cols-N scale doesn't map to rem columns.
+-->
+<section
+  class:list={[
+    'relative mx-auto my-24 max-w-[900px] overflow-hidden rounded-[20px] border border-[rgba(34,197,94,0.1)] bg-[linear-gradient(135deg,#f0fdf4_0%,#ecfdf5_100%)] px-8 py-12',
+    "before:absolute before:inset-0 before:content-[''] before:opacity-40 before:[background:url(\"data:image/svg+xml,%3Csvg_width='40'_height='40'_viewBox='0_0_40_40'_xmlns='http://www.w3.org/2000/svg'%3E%3Cg_fill='%2322c55e'_fill-opacity='0.03'_fill-rule='evenodd'%3E%3Cpath_d='m0_40_40-40h-40z'/%3E%3Cpath_d='m0_40_40-40h-40z'_transform='scale(.5)_translate(40_0)'/%3E%3C/g%3E%3C/svg%3E\")]",
+    'max-[768px]:mx-4 max-[768px]:my-16 max-[768px]:px-4 max-[768px]:py-8',
+  ]}
+>
+  <div class="relative z-[2] mb-12 text-center">
+    <h2
+      class:list={[
+        "mb-4 font-['jf-lanyangming','Noto_Serif_TC','Source_Han_Serif_TC',serif] text-[2.2rem] font-light text-[#166534] max-[768px]:text-[1.8rem]",
+        { 'font-extrabold tracking-[0.05em]': isEn },
+      ]}
+    >
+      {title}
+    </h2>
+    <p
+      class="text-[1.2rem] font-semibold leading-relaxed text-[#16a34a] max-[768px]:text-base"
+    >
+      {subtitle}
+    </p>
   </div>
 
-  <div class="reading-path-list">
+  <div
+    class="relative z-[2] [--step-marker-column:4.5rem] [--step-content-column:28rem] [--step-time-column:6rem] [--step-column-gap:1.5rem] [--step-layout-width:calc(var(--step-marker-column)+var(--step-content-column)+var(--step-time-column)+(var(--step-column-gap)*2))] before:absolute before:left-[calc(50%-(var(--step-layout-width)/2)+(var(--step-marker-column)/2))] before:top-16 before:bottom-16 before:z-[1] before:w-[3px] before:rounded-[2px] before:bg-[linear-gradient(180deg,rgba(34,197,94,0.3)_0%,#22c55e_25%,#16a34a_50%,#15803d_75%,rgba(34,197,94,0.3)_100%)] before:content-[''] max-[768px]:before:hidden"
+  >
     {
       steps.map((step, index) => (
-        <a href={step.href} class="reading-step">
-          <span class="step-number">{index + 1}</span>
-          <div class="step-content">
-            <h3>{step.title}</h3>
-            <p>{step.description}</p>
+        <a
+          href={step.href}
+          class="group relative z-[2] mb-4 grid items-center justify-center rounded-2xl border-2 border-[rgba(34,197,94,0.1)] bg-white p-6 text-inherit no-underline shadow-[0_2px_8px_rgba(22,163,74,0.08)] transition-all duration-300 [grid-template-columns:var(--step-marker-column)_var(--step-content-column)_var(--step-time-column)] [gap:var(--step-column-gap)] hover:-translate-y-1 hover:border-[rgba(34,197,94,0.25)] hover:bg-[rgba(240,253,244,0.6)] hover:shadow-[0_8px_25px_rgba(22,163,74,0.15)] max-[768px]:flex max-[768px]:flex-col max-[768px]:gap-4 max-[768px]:text-center"
+        >
+          <span class="flex h-12 w-12 flex-shrink-0 items-center justify-center justify-self-center rounded-full bg-[linear-gradient(135deg,#22c55e,#16a34a)] text-[1.3rem] font-extrabold text-white shadow-[0_4px_12px_rgba(34,197,94,0.3)]">
+            {index + 1}
+          </span>
+          <div class="grid w-full content-center items-center gap-1 text-center">
+            <h3 class="m-0 font-['jf-jinxuanlatte','Noto_Sans_TC','Source_Han_Sans_TC',sans-serif] text-[1.3rem] font-bold leading-tight text-[#166534] max-[768px]:text-[1.1rem]">
+              {step.title}
+            </h3>
+            <p class="m-0 text-base font-medium leading-[1.35] text-[#16a34a] max-[768px]:text-[0.9rem]">
+              {step.description}
+            </p>
           </div>
-          <span class="step-time">{step.time}</span>
+          <span class="min-w-[4.5rem] flex-shrink-0 whitespace-nowrap justify-self-center rounded-[20px] border border-[rgba(34,197,94,0.2)] bg-[rgba(22,163,74,0.1)] px-4 py-2 text-center text-[0.9rem] font-semibold text-[#166534]">
+            {step.time}
+          </span>
         </a>
       ))
     }
   </div>
 
-  <div class="reading-path-footer">
-    <p>
+  <div
+    class="relative z-[2] mt-12 border-t border-[rgba(34,197,94,0.2)] pt-8 text-center"
+  >
+    <p class="mb-6 text-[1.1rem] font-medium leading-relaxed text-[#166534]">
       {
         footerItems.map((item, index) => (
-          <span class="footer-item">
+          <span>
             {index > 0 && (
-              <span class="footer-separator" aria-hidden="true">
+              <span class="text-[#16a34a]" aria-hidden="true">
                 {' '}
                 |{' '}
               </span>
@@ -71,252 +123,11 @@ const isEn = lang === 'en';
         ))
       }
     </p>
-    <a href={continueHref} class="path-continue-btn">
+    <a
+      href={continueHref}
+      class="inline-block rounded-full bg-[linear-gradient(135deg,#22c55e,#16a34a)] px-8 py-4 text-[1.1rem] font-bold !text-white no-underline shadow-[0_4px_12px_rgba(34,197,94,0.25)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_8px_20px_rgba(34,197,94,0.35)]"
+    >
       {continueLabel}
     </a>
   </div>
 </section>
-
-<style>
-  .reading-path {
-    max-width: 900px;
-    margin: 6rem auto;
-    padding: 3rem 2rem;
-    background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%);
-    border-radius: 20px;
-    border: 1px solid rgba(34, 197, 94, 0.1);
-    position: relative;
-    overflow: hidden;
-  }
-
-  .reading-path::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%2322c55e' fill-opacity='0.03' fill-rule='evenodd'%3E%3Cpath d='m0 40 40-40h-40z'/%3E%3Cpath d='m0 40 40-40h-40z' transform='scale(.5) translate(40 0)'/%3E%3C/g%3E%3C/svg%3E");
-    opacity: 0.4;
-  }
-
-  .reading-path-header {
-    text-align: center;
-    margin-bottom: 3rem;
-    position: relative;
-    z-index: 2;
-  }
-
-  .reading-path-header h2 {
-    font-size: 2.2rem;
-    font-weight: 300;
-    color: #166534;
-    margin-bottom: 1rem;
-    font-family:
-      'jf-lanyangming', 'Noto Serif TC', 'Source Han Serif TC', serif;
-    letter-spacing: 0;
-  }
-
-  .reading-path--en .reading-path-header h2 {
-    font-weight: 800;
-    letter-spacing: 0.05em;
-  }
-
-  .reading-path-header p {
-    font-size: 1.2rem;
-    color: #16a34a;
-    font-weight: 600;
-    line-height: 1.6;
-  }
-
-  .reading-path-list {
-    position: relative;
-    z-index: 2;
-    --step-marker-column: 4.5rem;
-    --step-content-column: 28rem;
-    --step-time-column: 6rem;
-    --step-column-gap: 1.5rem;
-    --step-layout-width: calc(
-      var(--step-marker-column) + var(--step-content-column) +
-        var(--step-time-column) + (var(--step-column-gap) * 2)
-    );
-  }
-
-  .reading-path-list::before {
-    content: '';
-    position: absolute;
-    left: calc(
-      50% - (var(--step-layout-width) / 2) + (var(--step-marker-column) / 2)
-    );
-    top: 4rem;
-    bottom: 4rem;
-    width: 3px;
-    background: linear-gradient(
-      180deg,
-      rgba(34, 197, 94, 0.3) 0%,
-      #22c55e 25%,
-      #16a34a 50%,
-      #15803d 75%,
-      rgba(34, 197, 94, 0.3) 100%
-    );
-    border-radius: 2px;
-    z-index: 1;
-  }
-
-  .reading-step {
-    display: grid;
-    grid-template-columns:
-      var(--step-marker-column)
-      var(--step-content-column)
-      var(--step-time-column);
-    justify-content: center;
-    align-items: center;
-    padding: 1.5rem 1.5rem;
-    margin-bottom: 1rem;
-    background: white;
-    border-radius: 16px;
-    text-decoration: none;
-    transition: all 0.3s ease;
-    border: 2px solid rgba(34, 197, 94, 0.1);
-    position: relative;
-    z-index: 2;
-    gap: var(--step-column-gap);
-    box-shadow: 0 2px 8px rgba(22, 163, 74, 0.08);
-  }
-
-  .reading-step:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 25px rgba(22, 163, 74, 0.15);
-    border-color: rgba(34, 197, 94, 0.25);
-    background: rgba(240, 253, 244, 0.6);
-  }
-
-  .step-number {
-    flex-shrink: 0;
-    justify-self: center;
-    width: 3rem;
-    height: 3rem;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #22c55e, #16a34a);
-    color: white;
-    font-size: 1.3rem;
-    font-weight: 800;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
-  }
-
-  .step-content {
-    display: grid;
-    width: 100%;
-    align-content: center;
-    align-items: center;
-    text-align: center;
-    gap: 0.25rem;
-  }
-
-  .step-content h3 {
-    font-size: 1.3rem;
-    font-weight: 700;
-    color: #166534;
-    margin: 0;
-    line-height: 1.2;
-    font-family:
-      'jf-jinxuanlatte', 'Noto Sans TC', 'Source Han Sans TC', sans-serif;
-  }
-
-  .step-content p {
-    color: #16a34a;
-    font-size: 1rem;
-    line-height: 1.35;
-    margin: 0;
-    font-weight: 500;
-  }
-
-  .step-time {
-    flex-shrink: 0;
-    justify-self: center;
-    background: rgba(22, 163, 74, 0.1);
-    color: #166534;
-    padding: 0.5rem 1rem;
-    border-radius: 20px;
-    font-size: 0.9rem;
-    font-weight: 600;
-    border: 1px solid rgba(34, 197, 94, 0.2);
-    min-width: 4.5rem;
-    text-align: center;
-    white-space: nowrap;
-  }
-
-  .reading-path-footer {
-    text-align: center;
-    margin-top: 3rem;
-    padding-top: 2rem;
-    border-top: 1px solid rgba(34, 197, 94, 0.2);
-    position: relative;
-    z-index: 2;
-  }
-
-  .reading-path-footer p {
-    font-size: 1.1rem;
-    color: #166534;
-    font-weight: 500;
-    margin-bottom: 1.5rem;
-    line-height: 1.6;
-  }
-
-  .footer-separator {
-    color: #16a34a;
-  }
-
-  .path-continue-btn {
-    display: inline-block;
-    background: linear-gradient(135deg, #22c55e, #16a34a);
-    color: white !important;
-    padding: 1rem 2rem;
-    border-radius: 999px;
-    text-decoration: none;
-    font-weight: 700;
-    font-size: 1.1rem;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 12px rgba(34, 197, 94, 0.25);
-  }
-
-  .path-continue-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(34, 197, 94, 0.35);
-  }
-
-  @media (max-width: 768px) {
-    .reading-path {
-      margin: 4rem 1rem;
-      padding: 2rem 1rem;
-    }
-
-    .reading-path-list::before {
-      display: none;
-    }
-
-    .reading-step {
-      display: flex;
-      flex-direction: column;
-      text-align: center;
-      padding: 1.5rem;
-      gap: 1rem;
-    }
-
-    .step-content h3 {
-      font-size: 1.1rem;
-    }
-
-    .step-content p {
-      font-size: 0.9rem;
-    }
-
-    .reading-path-header h2 {
-      font-size: 1.8rem;
-    }
-
-    .reading-path-header p {
-      font-size: 1rem;
-    }
-  }
-</style>
