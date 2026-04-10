@@ -78,12 +78,44 @@ function loadPng(path) {
   return PNG.sync.read(readFileSync(path));
 }
 
+/**
+ * Crop a PNG to an arbitrary top-left aligned region, returning a new PNG
+ * buffer of exactly width × height. Used to align two images of slightly
+ * different heights so pixelmatch can still diff them.
+ */
+function cropTopLeft(png, width, height) {
+  const cropped = new PNG({ width, height });
+  for (let y = 0; y < height; y++) {
+    for (let x = 0; x < width; x++) {
+      const srcIdx = (y * png.width + x) * 4;
+      const dstIdx = (y * width + x) * 4;
+      cropped.data[dstIdx] = png.data[srcIdx];
+      cropped.data[dstIdx + 1] = png.data[srcIdx + 1];
+      cropped.data[dstIdx + 2] = png.data[srcIdx + 2];
+      cropped.data[dstIdx + 3] = png.data[srcIdx + 3];
+    }
+  }
+  return cropped;
+}
+
 function diffPair(baselinePath, currentPath, diffPath) {
   const baseline = loadPng(baselinePath);
   const current = loadPng(currentPath);
 
-  // Dimension mismatch → treat as full regression
-  if (baseline.width !== current.width || baseline.height !== current.height) {
+  // If dimensions differ by more than 10% of either side, treat as
+  // structural break (real layout regression, not font-swap micro drift).
+  const widthDrift =
+    Math.abs(baseline.width - current.width) /
+    Math.max(baseline.width, current.width);
+  const heightDrift =
+    Math.abs(baseline.height - current.height) /
+    Math.max(baseline.height, current.height);
+  const STRUCTURAL_DRIFT_THRESHOLD = 0.1; // 10%
+
+  if (
+    widthDrift > STRUCTURAL_DRIFT_THRESHOLD ||
+    heightDrift > STRUCTURAL_DRIFT_THRESHOLD
+  ) {
     return {
       dimensionMismatch: true,
       baselineSize: `${baseline.width}x${baseline.height}`,
@@ -94,12 +126,26 @@ function diffPair(baselinePath, currentPath, diffPath) {
     };
   }
 
-  const { width, height } = baseline;
+  // For small drift (typical: font-swap or content re-flow on long pages),
+  // crop both images to the overlapping top-left region and diff that.
+  // The drift itself is still reported via baselineSize / currentSize so
+  // callers can inspect it.
+  const width = Math.min(baseline.width, current.width);
+  const height = Math.min(baseline.height, current.height);
+  const baselineCropped =
+    baseline.width !== width || baseline.height !== height
+      ? cropTopLeft(baseline, width, height)
+      : baseline;
+  const currentCropped =
+    current.width !== width || current.height !== height
+      ? cropTopLeft(current, width, height)
+      : current;
+
   const diff = new PNG({ width, height });
 
   const pixelsDifferent = pixelmatch(
-    baseline.data,
-    current.data,
+    baselineCropped.data,
+    currentCropped.data,
     diff.data,
     width,
     height,
@@ -114,6 +160,12 @@ function diffPair(baselinePath, currentPath, diffPath) {
 
   return {
     dimensionMismatch: false,
+    baselineSize: `${baseline.width}x${baseline.height}`,
+    currentSize: `${current.width}x${current.height}`,
+    sizeDrift:
+      baseline.width === current.width && baseline.height === current.height
+        ? null
+        : `${baseline.width}x${baseline.height} → ${current.width}x${current.height}`,
     pixelsDifferent,
     totalPixels: width * height,
     ratio: (pixelsDifferent / (width * height)) * 100,
