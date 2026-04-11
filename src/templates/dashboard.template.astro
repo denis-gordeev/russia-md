@@ -39,7 +39,7 @@ const isEn = lang === 'en';
           stroke="rgba(139,92,246,0.25)"
           stroke-width="2"></path>
       </svg>
-      <h1 class="relative mb-2 text-[2rem]">
+      <h1 class="hero-title relative mb-2 text-[2rem] max-md:text-[1.5rem]">
         <span class="text-[1.8rem]">🔬</span>
         {t('dashboard.hero.title')}
       </h1>
@@ -2953,15 +2953,9 @@ const isEn = lang === 'en';
     .dashboard {
       padding: 1rem;
     }
-    .hero-title {
-      font-size: 1.5rem;
-    }
-    .hero-stats {
-      gap: 1.5rem;
-    }
-    .hero-stat-value {
-      font-size: 2rem;
-    }
+    /* .hero-title / .hero-stats / .hero-stat-value orphan responsive
+       overrides removed in Phase 7.6 font hotfix — hero is inline
+       Tailwind now (max-md:text-[1.5rem] etc. on the h1 directly). */
     .vitals-grid {
       grid-template-columns: repeat(2, 1fr);
     }
@@ -2992,13 +2986,6 @@ const isEn = lang === 'en';
       gap: 0.6rem;
     }
     .vital-value {
-      font-size: 1.8rem;
-    }
-    .hero-stats {
-      flex-direction: column;
-      gap: 0.8rem;
-    }
-    .hero-stat-value {
       font-size: 1.8rem;
     }
     .organ-grid {
