@@ -1,0 +1,232 @@
+---
+/**
+ * soundscape.template.astro — shared template for /soundscape across
+ * all four language variants (zh-TW / en / ja / ko).
+ *
+ * Data comes from `src/data/soundscape-data.ts` (single source of
+ * truth). This template reads `Astro.props.lang`, localizes each
+ * Localized field via `localize()`, and renders the whole page.
+ *
+ * Previously, `src/pages/soundscape.astro` and `src/pages/en/soundscape.astro`
+ * were hand-maintained separately with different content and layouts.
+ * They drifted apart (the zh version had 6 categories + 20 recordings,
+ * the en version had 2 flat recordings), which meant every new sound
+ * required editing both files — and ja/ko didn't exist at all. This
+ * template fixes that by reading from one data file.
+ */
+
+import Layout from '../layouts/Layout.astro';
+import PageHero from '../components/PageHero.astro';
+import {
+  categories,
+  soundscapeUI,
+  localize,
+  totalSounds,
+  totalWishlist,
+  totalCategories,
+} from '../data/soundscape-data';
+import type { Lang } from '../types';
+
+export interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const L = (field: Parameters<typeof localize>[0]) => localize(field, lang);
+
+const ui = soundscapeUI;
+
+const statsText = L(ui.sections.statsFormat)
+  .replace('{sounds}', String(totalSounds))
+  .replace('{wanted}', String(totalWishlist))
+  .replace('{cats}', String(totalCategories));
+---
+
+<Layout
+  title={L(ui.meta.title)}
+  description={L(ui.meta.description)}
+  lang={lang}
+>
+  <div class="mx-auto max-w-[900px] px-6 pb-16 pt-0">
+    <PageHero
+      containerWidth="full"
+      padding="default"
+      titleColor="#1a3c34"
+      accentColor="#065f46"
+    >
+      <Fragment slot="eyebrow">{ui.hero.eyebrow}</Fragment>
+      <Fragment slot="title">{L(ui.hero.title)}</Fragment>
+      <Fragment slot="subtitle">
+        {L(ui.hero.subtitle)}
+        {
+          L(ui.hero.subtitleSecondary) && (
+            <>
+              <br />
+              <span class="text-[0.95rem] italic text-[#64748b]">
+                {L(ui.hero.subtitleSecondary)}
+              </span>
+            </>
+          )
+        }
+      </Fragment>
+      <Fragment slot="meta">{statsText}</Fragment>
+      <Fragment slot="footer">
+        {L(ui.hero.readMoreLabel)}<a
+          href={categories[0].article}
+          class="border-b border-dashed border-[rgba(59,130,246,0.4)] text-[#3b82f6] no-underline hover:border-solid"
+          >{L(ui.hero.readMoreLink)}</a
+        >
+      </Fragment>
+    </PageHero>
+
+    {
+      categories.map((cat, catIdx) => (
+        <section
+          class:list={[
+            'mb-6 pb-8',
+            catIdx === categories.length - 1
+              ? ''
+              : 'border-b-2 border-[#e2e8f0]',
+          ]}
+          id={cat.id}
+        >
+          <div class="mb-4">
+            <h2 class="mb-4 flex flex-wrap items-center gap-2 text-[1.5rem]">
+              <span class="text-[1.3rem]">{cat.icon}</span>
+              {L(cat.title)}
+            </h2>
+
+            {cat.sounds.length > 0 && (
+              <div class="mb-6 grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-3">
+                {cat.sounds.map((sound) => (
+                  <div class="flex flex-col gap-[0.4rem] rounded-[10px] border-2 border-[#cbd5e1] bg-[#f8fafc] px-4 py-[0.9rem] transition-[border-color,box-shadow] duration-200 hover:border-[#3b82f6] hover:shadow-[0_2px_8px_rgba(59,130,246,0.12)]">
+                    <div class="flex items-center gap-2">
+                      <span class="flex-shrink-0 text-[1.4rem]">
+                        {sound.icon}
+                      </span>
+                      <div>
+                        <h3 class="m-0 text-[0.95rem] leading-[1.3]">
+                          {L(sound.location)}
+                        </h3>
+                      </div>
+                    </div>
+                    <p class="m-0 text-[0.85rem] text-[#334155]">
+                      {L(sound.description)}
+                    </p>
+                    <div class="flex items-center gap-[0.6rem] text-[0.75rem]">
+                      <a
+                        href={
+                          sound.contributorUrl ||
+                          `https://github.com/${sound.contributor}`
+                        }
+                        target="_blank"
+                        rel="noopener"
+                        class="text-[#3b82f6] no-underline hover:underline"
+                      >
+                        {sound.contributorUrl
+                          ? sound.contributor
+                          : `@${sound.contributor}`}
+                      </a>
+                      <span class="text-[#64748b]">{sound.date}</span>
+                    </div>
+                    <audio
+                      controls
+                      preload="none"
+                      class="h-9 w-full rounded-md"
+                    >
+                      <source
+                        src={`/assets/sounds/${sound.file}`}
+                        type="audio/mpeg"
+                      />
+                    </audio>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {cat.sounds.length === 0 && (
+              <div class="mb-6 rounded-[10px] border-2 border-dashed border-[#94a3b8] bg-[#f8fafc] p-6 text-center">
+                <p class="m-0 text-[#64748b]">{L(ui.sections.emptyState)}</p>
+                {L(ui.sections.emptyStateSecondary) && (
+                  <p class="m-0 !mt-[0.3rem] text-[0.85rem] italic text-[#64748b]">
+                    {L(ui.sections.emptyStateSecondary)}
+                  </p>
+                )}
+              </div>
+            )}
+
+            {cat.wishlist.length > 0 && (
+              <div class="mb-4">
+                <h4 class="mb-[0.8rem] text-base font-semibold text-[#334155]">
+                  {L(ui.sections.wishlistHeading)}
+                </h4>
+                <div class="grid grid-cols-[repeat(auto-fill,minmax(240px,1fr))] gap-[0.6rem] max-[600px]:grid-cols-1">
+                  {cat.wishlist.map((item) => (
+                    <div class="flex items-start gap-[0.6rem] rounded-lg border border-dashed border-[#94a3b8] bg-transparent px-[0.8rem] py-[0.6rem]">
+                      <span class="flex-shrink-0 text-[1.1rem] opacity-60">
+                        {item.icon}
+                      </span>
+                      <div>
+                        <p class="m-0 text-[0.85rem] font-normal text-[#64748b]">
+                          {L(item.text)}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            <a
+              href={cat.article}
+              class="mt-2 inline-block text-[0.9rem] text-[#3b82f6] no-underline transition-colors duration-200 hover:text-[#2563eb]"
+            >
+              {L(ui.sections.readArticle)}
+            </a>
+          </div>
+        </section>
+      ))
+    }
+
+    <section>
+      <div class="mb-4 py-8 text-center">
+        <h2 class="mb-4 text-[1.5rem]">{L(ui.sections.contributeTitle)}</h2>
+        <p
+          class="mb-6 leading-[1.8] text-[#475569] [&>a:not(.cta-btn)]:text-[#3b82f6]"
+          set:html={L(ui.sections.contributeBodyHtml)}
+        />
+        <div
+          class="mb-8 flex flex-wrap justify-center gap-6 max-[600px]:flex-col max-[600px]:items-center"
+        >
+          <div class="flex items-center gap-2 text-[0.95rem] text-[#334155]">
+            <span
+              class="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-[rgba(59,130,246,0.1)] text-[0.85rem] font-semibold text-[#3b82f6]"
+              >1</span
+            >
+            {L(ui.sections.contributeStep1)}
+          </div>
+          <div class="flex items-center gap-2 text-[0.95rem] text-[#334155]">
+            <span
+              class="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-[rgba(59,130,246,0.1)] text-[0.85rem] font-semibold text-[#3b82f6]"
+              >2</span
+            >
+            {L(ui.sections.contributeStep2)}
+          </div>
+          <div class="flex items-center gap-2 text-[0.95rem] text-[#334155]">
+            <span
+              class="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-[rgba(59,130,246,0.1)] text-[0.85rem] font-semibold text-[#3b82f6]"
+              >3</span
+            >
+            {L(ui.sections.contributeStep3)}
+          </div>
+        </div>
+        <a
+          href="/contribute"
+          class="cta-btn inline-block rounded-lg border border-[rgba(59,130,246,0.3)] bg-[rgba(59,130,246,0.08)] px-8 py-3 text-[0.95rem] font-medium text-[#3b82f6] no-underline transition-all duration-200 hover:border-[rgba(59,130,246,0.5)] hover:bg-[rgba(59,130,246,0.15)]"
+        >
+          {L(ui.sections.contributeCtaLabel)}
+        </a>
+      </div>
+    </section>
+  </div>
+</Layout>

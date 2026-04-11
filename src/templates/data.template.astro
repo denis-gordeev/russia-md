@@ -1,5 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import PageHero from '../components/PageHero.astro';
 import {
   getLangFromUrl,
   useTranslations,
@@ -42,25 +43,21 @@ const dataCategories = getCategories(t);
     class="min-h-screen bg-[linear-gradient(135deg,#0f172a_0%,#1e293b_100%)] text-[#e2e8f0]"
   >
     <!-- Hero -->
-    <section class="mx-auto max-w-[1400px] px-8 pb-12 pt-16 text-center">
-      <h1
-        class="hero-title mb-4 bg-[linear-gradient(135deg,#38bdf8,#818cf8,#c084fc)] bg-clip-text text-[clamp(2.5rem,6vw,3.5rem)] font-black -tracking-[0.02em] text-transparent"
-      >
-        <span
-          class="bg-none [-webkit-text-fill-color:initial] [background-clip:initial] [-webkit-background-clip:initial]"
-          >📊</span
-        >
-        {t('data.hero.title')}
-      </h1>
+    <PageHero
+      tone="dark"
+      titleVariant="gradient"
+      titleGradient="linear-gradient(135deg,#38bdf8,#818cf8,#c084fc)"
+      titleSize="clamp"
+      containerWidth="wide"
+      title={t('data.hero.title')}
+      subtitle={t('data.hero.subtitle')}
+    >
       <p
-        class="mx-auto mb-6 max-w-[600px] text-[1.3rem] font-medium leading-[1.7] text-[#94a3b8]"
+        class="mx-auto mt-4 max-w-[600px] text-base leading-[1.7] text-[#cbd5e1]"
       >
-        {t('data.hero.subtitle')}
-      </p>
-      <p class="mx-auto max-w-[600px] text-base leading-[1.7] text-[#cbd5e1]">
         {t('data.hero.description')}
       </p>
-    </section>
+    </PageHero>
 
     <!-- Taiwan vs World Infographic Section -->
     <section class="taiwan-vs-world-section" id="global">

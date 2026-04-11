@@ -1,6 +1,7 @@
 ---
 import CommitLog from '../components/commits/CommitLog.astro';
 import Layout from '../layouts/Layout.astro';
+import PageHero from '../components/PageHero.astro';
 import { fetchCommitFeed } from '../lib/commits';
 import { getLangFromUrl, useTranslations } from '../i18n/utils';
 
@@ -34,29 +35,32 @@ const sourceLabel =
   <div
     class="mx-auto max-w-[800px] px-8 pb-24 pt-16 max-[768px]:px-4 max-[768px]:pb-16 max-[768px]:pt-12"
   >
-    <header class="mb-16 text-center">
-      <h1
-        class="mb-3 font-['jf-jinxuanlatte','Noto_Sans_TC','Source_Han_Sans_TC',sans-serif] text-[2.5rem] font-black tracking-[0.05em] text-[#1a1a2e] max-[768px]:text-[2rem]"
+    <div class="mb-16">
+      <PageHero
+        containerWidth="full"
+        padding="compact"
+        titleFont="sans"
+        titleTracking="wide"
+        titleSize="sm"
+        title={t('changelog.header.title')}
+        subtitle={t('changelog.header.subtitle')}
       >
-        {t('changelog.header.title')}
-      </h1>
-      <p class="mb-4 text-[1.15rem] font-medium text-[#64748b]">
-        {t('changelog.header.subtitle')}
-      </p>
-      <p
-        class="text-[0.9rem] text-[#94a3b8] [&>a:hover]:underline [&>a]:text-[#3b82f6] [&>a]:no-underline"
-      >
-        {lang === 'zh-TW' ? '共 ' : ''}{commits.length}{' '}
-        {t('changelog.header.meta.updates')} · {sourceLabel} ·
-        <a
-          href="https://github.com/frank890417/taiwan-md/commits/main"
-          target="_blank"
-          rel="noopener noreferrer"
+        <p
+          slot="meta"
+          class="[&>a:hover]:underline [&>a]:text-[#3b82f6] [&>a]:no-underline"
         >
-          GitHub
-        </a>
-      </p>
-    </header>
+          {lang === 'zh-TW' ? '共 ' : ''}{commits.length}{' '}
+          {t('changelog.header.meta.updates')} · {sourceLabel} ·
+          <a
+            href="https://github.com/frank890417/taiwan-md/commits/main"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            GitHub
+          </a>
+        </p>
+      </PageHero>
+    </div>
 
     <CommitLog
       commits={commits}

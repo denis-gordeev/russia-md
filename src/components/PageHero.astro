@@ -1,0 +1,320 @@
+---
+/**
+ * PageHero — shared hero/header for top-level section index pages.
+ *
+ * Complements ArticleHero.astro (which handles individual article
+ * pages with cover image + breadcrumb). This one is for the big
+ * landing headers on pages like /soundscape, /resources, /contribute,
+ * /data, /map, /taiwan-shape.
+ *
+ * All axes derived from analysis of 聲景 / 資源導覽 / 參與:
+ * - eyebrow kicker (聲景)
+ * - plain vs gradient-clip vs inherit title color (資源 / 參與)
+ * - light-on-dark vs dark-on-light tone (參與)
+ * - i18n set:html subtitle (資源)
+ * - stats meta line (聲景)
+ * - glass "note" card (參與)
+ * - footer link area (聲景)
+ * - container width narrow/default/wide/full-bleed
+ *
+ * Any of the content fields can be driven via a prop (plain string)
+ * OR a named slot (rich HTML). Slot wins when both are present.
+ *
+ * IMPORTANT: the `hero-title` class on the <h1> is a hook used by
+ * justfont's dynamic loader to apply the rixingsong-semibold face.
+ * Do not remove it — see about.template.astro:1433-1437 for context.
+ */
+
+export interface Props {
+  // ── Content shortcuts (slots override) ──
+  eyebrow?: string;
+  title?: string;
+  subtitle?: string;
+  subtitleHtml?: string; // for i18n set:html patterns
+
+  // ── Title styling ──
+  /**
+   * solid    = plain color (titleColor or auto per tone)
+   * gradient = bg-clip-text gradient (requires titleGradient)
+   * inherit  = inherit from parent (e.g. white on dark section)
+   */
+  titleVariant?: 'solid' | 'gradient' | 'inherit';
+  titleColor?: string;
+  /** CSS linear-gradient(...) string; required when titleVariant='gradient'. */
+  titleGradient?: string;
+  /**
+   * sm    = 2.2rem   (assets)
+   * md    = 2.8rem   (en/soundscape)
+   * lg    = 3.5rem   (聲景/資源/參與 — default)
+   * clamp = clamp(2.5rem,6vw,3.5rem)  (data)
+   */
+  titleSize?: 'sm' | 'md' | 'lg' | 'clamp';
+  /**
+   * display (default) = `hero-title` class → rixingsong-semibold via
+   *                     justfont's dynamic loader. Use for big display
+   *                     headers (聲景/資源/參與/地圖/數據).
+   * sans              = jf-jinxuanlatte / Noto Sans TC stack, no
+   *                     `hero-title` class. Use for utility/docs pages
+   *                     (assets/changelog) where the big editorial face
+   *                     is too heavy.
+   */
+  titleFont?: 'display' | 'sans';
+  /** Default 'black'. Override for pages that want a lighter title. */
+  titleWeight?: 'normal' | 'bold' | 'extrabold' | 'black';
+  /**
+   * tight  = -tracking-[0.02em]   (default — 聲景/資源/參與)
+   * normal = no tracking adjustment
+   * wide   = tracking-[0.05em]    (changelog — spaced-out look)
+   */
+  titleTracking?: 'tight' | 'normal' | 'wide';
+
+  // ── Background / tone ──
+  /** Sets default text color for children. */
+  tone?: 'light' | 'dark';
+  bgVariant?: 'none' | 'solid' | 'gradient';
+  /** Solid CSS color (e.g. '#1a3c34'); required when bgVariant='solid'. */
+  bgColor?: string;
+  /** CSS linear-gradient(...) string; required when bgVariant='gradient'. */
+  bgGradient?: string;
+
+  // ── Layout ──
+  /**
+   * narrow = 900px   (聲景)
+   * default = 1000px
+   * wide = 1200px    (資源)
+   * full = no max    (參與 full-bleed)
+   */
+  containerWidth?: 'narrow' | 'default' | 'wide' | 'full';
+  /**
+   * compact  = py-8
+   * default  = py-16 (responsive py-8 on mobile)
+   * spacious = py-20
+   */
+  padding?: 'compact' | 'default' | 'spacious';
+
+  // ── Accent ──
+  /** Color for the eyebrow kicker. Falls back to tone default. */
+  accentColor?: string;
+}
+
+const {
+  eyebrow,
+  title,
+  subtitle,
+  subtitleHtml,
+  titleVariant = 'solid',
+  titleColor,
+  titleGradient,
+  titleSize = 'lg',
+  titleFont = 'display',
+  titleWeight = 'black',
+  titleTracking = 'tight',
+  tone = 'light',
+  bgVariant = 'none',
+  bgColor,
+  bgGradient,
+  containerWidth = 'default',
+  padding = 'default',
+  accentColor,
+} = Astro.props;
+
+// ── Title size presets ──
+const titleSizeClass = {
+  sm: 'text-[2.2rem] max-[640px]:text-[1.6rem]',
+  md: 'text-[2.8rem] max-[600px]:text-[2rem]',
+  lg: 'text-[3.5rem] max-[768px]:text-[2.5rem] max-[480px]:text-[2rem]',
+  clamp: 'text-[clamp(2.5rem,6vw,3.5rem)]',
+}[titleSize];
+
+// ── Title font stack ──
+// 'display' applies the `hero-title` class so justfont's dynamic
+// loader swaps in rixingsong-semibold. 'sans' opts out and uses
+// jf-jinxuanlatte — picked by pages with a more utility/docs feel.
+const titleFontClass =
+  titleFont === 'display'
+    ? 'hero-title'
+    : "font-['jf-jinxuanlatte','Noto_Sans_TC','Source_Han_Sans_TC',sans-serif]";
+
+// ── Title weight ──
+const titleWeightClass = {
+  normal: 'font-normal',
+  bold: 'font-bold',
+  extrabold: 'font-extrabold',
+  black: 'font-black',
+}[titleWeight];
+
+// ── Title tracking (letter-spacing) ──
+const titleTrackingClass = {
+  tight: '-tracking-[0.02em]',
+  normal: '',
+  wide: 'tracking-[0.05em]',
+}[titleTracking];
+
+// ── Title variant → class + inline style ──
+const titleVariantClass =
+  titleVariant === 'gradient' ? 'bg-clip-text text-transparent' : '';
+
+const titleStyle: Record<string, string> = {};
+if (titleVariant === 'gradient' && titleGradient) {
+  // Tailwind JIT can't resolve dynamic arbitrary values, so we go inline.
+  titleStyle.backgroundImage = titleGradient;
+} else if (titleVariant === 'solid' && titleColor) {
+  titleStyle.color = titleColor;
+}
+
+// ── Container width presets ──
+const containerWidthClass = {
+  narrow: 'max-w-[900px]',
+  default: 'max-w-[1000px]',
+  wide: 'max-w-[1200px]',
+  full: '',
+}[containerWidth];
+
+// ── Vertical padding presets ──
+const paddingClass = {
+  compact: 'py-8 max-[768px]:py-6',
+  default: 'py-16 max-[768px]:py-8',
+  spacious: 'py-20 max-[768px]:py-12',
+}[padding];
+
+// ── Horizontal padding ──
+// When there's a bg fill (solid or gradient), put px on the section so
+// the colored area has breathing room. When containerWidth='full' with
+// no bg, the hero is expected to sit inside a parent wrapper that
+// already provides horizontal padding — skip px to avoid double-padding.
+// Otherwise (bounded widths) put px on the inner div.
+const hasBg = bgVariant !== 'none';
+const sectionPaddingX = hasBg ? 'px-8 max-[768px]:px-4' : '';
+const innerPaddingX =
+  hasBg || containerWidth === 'full'
+    ? ''
+    : 'px-8 max-[768px]:px-4 max-[480px]:px-3';
+
+// ── Section bg inline style ──
+const sectionStyle: Record<string, string> = {};
+if (bgVariant === 'gradient' && bgGradient) {
+  sectionStyle.backgroundImage = bgGradient;
+} else if (bgVariant === 'solid' && bgColor) {
+  sectionStyle.backgroundColor = bgColor;
+}
+
+// ── Tone-driven default colors ──
+const toneTextClass = tone === 'dark' ? 'text-white' : 'text-[#1a1a2e]';
+
+const subtitleToneClass = tone === 'dark' ? 'opacity-90' : 'text-[#64748b]';
+
+const metaToneClass = tone === 'dark' ? 'opacity-75' : 'text-[#64748b]';
+
+const noteToneClass =
+  tone === 'dark'
+    ? 'border-white/20 bg-white/[0.12] opacity-90'
+    : 'border-[#e2e8f0] bg-[#f8fafc] text-[#334155]';
+
+const eyebrowDefaultClass = tone === 'dark' ? 'opacity-80' : 'text-[#64748b]';
+
+// ── Slot / prop presence checks ──
+const hasEyebrow = Astro.slots.has('eyebrow') || Boolean(eyebrow);
+const hasTitle = Astro.slots.has('title') || Boolean(title);
+const hasSubtitle =
+  Astro.slots.has('subtitle') || Boolean(subtitle) || Boolean(subtitleHtml);
+const hasMeta = Astro.slots.has('meta');
+const hasNote = Astro.slots.has('note');
+const hasFooter = Astro.slots.has('footer');
+---
+
+<section class:list={['page-hero', sectionPaddingX]} style={sectionStyle}>
+  <div
+    class:list={[
+      'mx-auto text-center',
+      containerWidthClass,
+      innerPaddingX,
+      paddingClass,
+      toneTextClass,
+    ]}
+  >
+    {
+      hasEyebrow && (
+        <p
+          class:list={[
+            'mb-3 text-[0.9rem] uppercase tracking-[0.15em]',
+            !accentColor && eyebrowDefaultClass,
+          ]}
+          style={accentColor ? { color: accentColor } : undefined}
+        >
+          <slot name="eyebrow">{eyebrow}</slot>
+        </p>
+      )
+    }
+
+    {
+      hasTitle && (
+        <h1
+          class:list={[
+            'mb-4',
+            titleFontClass,
+            titleWeightClass,
+            titleTrackingClass,
+            titleSizeClass,
+            titleVariantClass,
+          ]}
+          style={titleStyle}
+        >
+          <slot name="title">{title}</slot>
+        </h1>
+      )
+    }
+
+    {
+      hasSubtitle &&
+        (subtitleHtml ? (
+          <p
+            class:list={[
+              'mx-auto mt-4 max-w-[600px] text-[1.3rem] leading-[1.7] max-[768px]:text-[1.1rem]',
+              subtitleToneClass,
+            ]}
+            set:html={subtitleHtml}
+          />
+        ) : (
+          <p
+            class:list={[
+              'mx-auto mt-4 max-w-[600px] text-[1.3rem] leading-[1.7] max-[768px]:text-[1.1rem]',
+              subtitleToneClass,
+            ]}
+          >
+            <slot name="subtitle">{subtitle}</slot>
+          </p>
+        ))
+    }
+
+    {
+      hasMeta && (
+        <p class:list={['mt-4 text-[0.85rem] tracking-[0.1em]', metaToneClass]}>
+          <slot name="meta" />
+        </p>
+      )
+    }
+
+    {
+      hasNote && (
+        <div
+          class:list={[
+            'mx-auto mt-4 max-w-[560px] rounded-xl border px-6 py-4 text-[0.95rem] leading-[1.8]',
+            noteToneClass,
+          ]}
+        >
+          <slot name="note" />
+        </div>
+      )
+    }
+
+    {
+      hasFooter && (
+        <div class="mt-2 text-[0.9rem]">
+          <slot name="footer" />
+        </div>
+      )
+    }
+
+    <slot />
+  </div>
+</section>

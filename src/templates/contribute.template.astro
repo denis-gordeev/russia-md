@@ -1,5 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import PageHero from '../components/PageHero.astro';
 import ProticoScript from '../components/ProticoScript.astro';
 import { getLangFromUrl, useTranslations } from '../i18n/utils';
 
@@ -20,24 +21,17 @@ const t = useTranslations(lang);
       stay scoped (too many repeating patterns and tight JS coupling
       to inline cleanly).
     -->
-    <section
-      class="bg-[linear-gradient(135deg,#2d5016,#4a7c59)] px-8 py-16 text-center text-white"
+    <PageHero
+      bgVariant="gradient"
+      bgGradient="linear-gradient(135deg,#2d5016,#4a7c59)"
+      tone="dark"
+      titleVariant="inherit"
+      containerWidth="full"
+      title={t('contribute.hero.title')}
+      subtitle={t('contribute.hero.subtitle')}
     >
-      <h1
-        class="hero-title mb-4 text-[3.5rem] font-black -tracking-[0.02em] max-[768px]:text-[2.5rem]"
-      >
-        {t('contribute.hero.title')}
-      </h1>
-      <p
-        class="mx-auto max-w-[600px] text-[1.3rem] leading-[1.7] opacity-90 max-[768px]:text-[1.1rem]"
-      >
-        {t('contribute.hero.subtitle')}
-      </p>
-      <p
-        class="mx-auto mt-4 max-w-[560px] rounded-xl border border-white/20 bg-white/[0.12] px-6 py-4 text-[0.95rem] leading-[1.8] opacity-90"
-        set:html={t('contribute.hero.note.html')}
-      />
-    </section>
+      <p slot="note" set:html={t('contribute.hero.note.html')} />
+    </PageHero>
 
     <!-- How It Works Section - Position 2 -->
     <section class="how-it-works">

@@ -1,5 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import PageHero from '../components/PageHero.astro';
 import markersData from '../data/map-markers.json';
 import { getLangFromUrl, useTranslations } from '../i18n/utils';
 import { getMapRoutes } from '../utils/mapConfig';
@@ -30,25 +31,17 @@ const routesData = getMapRoutes(t);
       sidebar list pattern (.sidebar-article-item, .article-*,
       .category-group*), and the route picker (.route-btn states).
     -->
-    <section class="bg-[#1a3c34] px-8 pb-12 pt-16 text-center">
-      <div class="mx-auto max-w-[1200px] text-center">
-        <p
-          class="mb-3 text-[0.9rem] font-semibold uppercase tracking-[0.15em] text-white/70"
-        >
-          {t('map.hero.kicker')}
-        </p>
-        <h1
-          class="hero-title mb-4 text-[3.5rem] font-black -tracking-[0.02em] text-white max-[768px]:text-[2.5rem]"
-        >
-          {t('map.hero.title')}
-        </h1>
-        <p
-          class="mx-auto max-w-[600px] text-[1.3rem] leading-[1.7] text-white/80 max-[768px]:text-[1.1rem]"
-        >
-          {t('map.hero.subtitle')}
-        </p>
-      </div>
-    </section>
+    <PageHero
+      bgVariant="solid"
+      bgColor="#1a3c34"
+      tone="dark"
+      titleVariant="inherit"
+      containerWidth="wide"
+      eyebrow={t('map.hero.kicker')}
+      title={t('map.hero.title')}
+      subtitle={t('map.hero.subtitle')}
+      accentColor="rgba(255,255,255,0.7)"
+    />
 
     <section class="border-b border-[#e5e7eb] bg-white px-4 py-6">
       <div
