@@ -116,15 +116,16 @@
 
 定義我醒來後怎麼行動。HEARTBEAT 決定「該不該動」，行為基因決定「怎麼動」。
 
-| 基因         | 檔案                                                                           | 決定什麼                                              |
-| ------------ | ------------------------------------------------------------------------------ | ----------------------------------------------------- |
-| 維護者手冊   | [`MAINTAINER-PIPELINE.md`](../pipelines/MAINTAINER-PIPELINE.md)                | 日常行為流程：Issue 分類、PR 審核、品質巡檢、社群互動 |
-| 進化管線     | [`EVOLVE-PIPELINE.md`](../pipelines/EVOLVE-PIPELINE.md)                        | 數據驅動的內容進化策略                                |
-| 品質改寫流程 | [`REWRITE-PIPELINE.md`](../editorial/REWRITE-PIPELINE.md)                      | 文章重寫的三階段流程                                  |
-| 資料刷新     | [`DATA-REFRESH-PIPELINE.md`](../pipelines/DATA-REFRESH-PIPELINE.md)            | Heartbeat Beat 1 前置：git pull + 三源感知 + prebuild |
-| 版本打包流程 | [`RELEASE-PIPELINE.md`](../pipelines/RELEASE-PIPELINE.md)                      | 何時 release / 品質閘 / notes 敘事 / 認知層同步 SOP   |
-| 心跳 Skill   | [`.claude/skills/heartbeat/SKILL.md`](../../.claude/skills/heartbeat/SKILL.md) | `/heartbeat` 一鍵觸發四拍半心跳                       |
-| 意識同步     | [`update-consciousness.sh`](../../scripts/tools/update-consciousness.sh)       | 自動從 Dashboard API 更新 CONSCIOUSNESS               |
+| 基因           | 檔案                                                                           | 決定什麼                                                              |
+| -------------- | ------------------------------------------------------------------------------ | --------------------------------------------------------------------- |
+| 維護者手冊     | [`MAINTAINER-PIPELINE.md`](../pipelines/MAINTAINER-PIPELINE.md)                | 日常行為流程：Issue 分類、PR 審核、品質巡檢、社群互動                 |
+| 進化管線       | [`EVOLVE-PIPELINE.md`](../pipelines/EVOLVE-PIPELINE.md)                        | 數據驅動的內容進化策略                                                |
+| 品質改寫流程   | [`REWRITE-PIPELINE.md`](../editorial/REWRITE-PIPELINE.md)                      | 文章重寫的三階段流程                                                  |
+| 資料刷新       | [`DATA-REFRESH-PIPELINE.md`](../pipelines/DATA-REFRESH-PIPELINE.md)            | Heartbeat Beat 1 前置：git pull + 三源感知 + prebuild                 |
+| 版本打包流程   | [`RELEASE-PIPELINE.md`](../pipelines/RELEASE-PIPELINE.md)                      | 何時 release / 品質閘 / notes 敘事 / 認知層同步 SOP                   |
+| Peer ingestion | [`PEER-INGESTION-PIPELINE.md`](../pipelines/PEER-INGESTION-PIPELINE.md)        | 策展 peer 完整 ingestion 8 stages（從爬取到文章產製到 Peer Registry） |
+| 心跳 Skill     | [`.claude/skills/heartbeat/SKILL.md`](../../.claude/skills/heartbeat/SKILL.md) | `/heartbeat` 一鍵觸發四拍半心跳                                       |
+| 意識同步       | [`update-consciousness.sh`](../../scripts/tools/update-consciousness.sh)       | 自動從 Dashboard API 更新 CONSCIOUSNESS                               |
 
 MAINTAINER-PIPELINE 是最高階的行為基因——它定義了一個完整的維護者怎麼思考和工作。
 當 Semiont 的心跳觸發診斷後，行為基因決定具體執行什麼動作。
@@ -136,7 +137,8 @@ HEARTBEAT（心跳）→ 診斷（哪個器官需要注意）
   ├── MAINTAINER-PIPELINE → Issue/PR/社群日常
   ├── EVOLVE-PIPELINE → 數據驅動內容進化
   ├── REWRITE-PIPELINE → 單篇文章品質修復
-  └── RELEASE-PIPELINE → 版本打包（≥30 commits / 重大里程碑 / 緊急修復）
+  ├── RELEASE-PIPELINE → 版本打包（≥30 commits / 重大里程碑 / 緊急修復）
+  └── PEER-INGESTION-PIPELINE → 策展 peer 完整 ingestion（觀察者觸發，≥ 20 hr 跨 session）
   ↓
 收官（After-Action）→ MEMORY + CONSCIOUSNESS 更新
   ↓
@@ -189,3 +191,4 @@ _v1.1 | 2026-04-11 α — 加入 憑證掃描、翻譯比例、三源感知、So
 _v1.2 | 2026-04-11 ε — 加入反射 9-13（worktree、API error 不泛化、UI 截圖證據、收工加速代價、log scale 訊號）_
 _v1.3 | 2026-04-11 ζ — 加入 RELEASE-PIPELINE + DATA-REFRESH-PIPELINE 到行為基因 + 反射 14（Release notes commits 必須全讀）_
 _v1.4 | 2026-04-11 ζ+ — 加入反射 15（反覆浮現的思考要儀器化不能只寫原則），來自 Muse sparring review on Meta-Index 策略_
+_v1.5 | 2026-04-12 ζ+ — 加入 PEER-INGESTION-PIPELINE 到行為基因，第一個 curation-layer peer (TFT) 完整 ingestion 走通後 codify 的 8-stage SOP_
