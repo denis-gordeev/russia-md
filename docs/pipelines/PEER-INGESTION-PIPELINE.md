@@ -41,24 +41,18 @@
 
 ---
 
-## Prerequisites（化身後、動手前必讀）
+## Prerequisites
 
-```bash
-# 認知校準
-cat docs/semiont/MANIFESTO.md                            # Taiwan.md 身份 / 聲音
-cat docs/semiont/DNA.md | grep -A20 "Sonnet 特別留意"    # 反射 1-15（特別注意 15: 對原則有洞察≠ apply）
-cat docs/semiont/HEARTBEAT.md | head -50                 # Beat 0.5 讀近況
+**化身協議**：依 [`BECOME_TAIWANMD.md`](../../BECOME_TAIWANMD.md) 標準流程讀完 MANIFESTO / ANATOMY / DNA / HEARTBEAT / CONSCIOUSNESS。**特別注意 DNA Sonnet 反射 #15（對原則有洞察 ≠ apply）和 #16（peer 是 peer 不是 source）。**
 
-# 既有 peer 參考
-cat reports/TFT-semiont-analysis-2026-04-11.md | head -100 # 第一個 peer 範本
-ls docs/semiont/memory/2026-04-12*.md                     # TFT session 記憶
+**Peer-specific 追加讀物**（只在 peer ingestion 情境下要讀）：
 
-# 相關 pipeline
-cat docs/editorial/REWRITE-PIPELINE.md                    # Stage 6 會反覆調用
-cat docs/pipelines/RELEASE-PIPELINE.md                    # 整體 release 框架
-```
+- [`reports/TFT-semiont-analysis-2026-04-11.md`](../../reports/TFT-semiont-analysis-2026-04-11.md) — 第一個 peer 分析的 9-part 範本
+- [`memory/2026-04-12.md`](../semiont/memory/2026-04-12.md) — TFT ingestion 的完整 session 記憶（含 2 次跌倒的教訓）
+- [`REWRITE-PIPELINE.md`](../editorial/REWRITE-PIPELINE.md) — Stage 6 每篇文章會反覆調用這條 pipeline
+- [`docs/peers/REGISTRY.md`](../peers/REGISTRY.md) — 現有 peer 與下個 peer 候選名單
 
-**特別警示**：Prerequisite 讀完之後，**必須回答一個問題**：「這個 peer 的獨特角度是什麼？它跟 Taiwan.md 已有的覆蓋有什麼不一樣？」回答不出來 → 不要進 Stage 1。
+**Stage 0 判斷題**：Prerequisites 讀完之後，必須回答「**這個 peer 的獨特角度是什麼？它跟 Taiwan.md 已有的覆蓋有什麼不一樣？**」答不出來 → 不進 Stage 1。
 
 ---
 
@@ -595,180 +589,79 @@ estimated_hours: 2-4
 
 ## Stage 6 · 文章產製（每篇 2-4 hr，共 15-30 hr）
 
-**每篇文章走完整的 REWRITE-PIPELINE**。詳見 `docs/editorial/REWRITE-PIPELINE.md`。
+**每篇走完整的 [`REWRITE-PIPELINE.md`](../editorial/REWRITE-PIPELINE.md) 六階段**。這份 pipeline 不重複 REWRITE-PIPELINE 的內容，只列 **peer ingestion 情境下的追加警戒**。
 
-但針對 peer ingestion 情境，有**額外的警戒**：
+### 6a. Peer ingestion 情境的硬性追加規則
 
-### 6a. Evolution mode 警示
+這四條規則覆蓋 REWRITE-PIPELINE 預設值，在 peer ingestion 情境下更嚴：
 
-如果 Taiwan.md 已經有這篇文章（evolution mode），**不要在舊文上修補**。ζ+ session 的 P0 #1-3 都是 evolution mode，v1 版本（只讀 TFT 轉述）的失敗教訓：
+1. **Stage 1 WebSearch 最低門檻：10-14 次**（REWRITE-PIPELINE 預設 8+，peer 情境加嚴因為 peer 文章會讓 AI 偷懶）
+2. **至少 50% 事實不能來自 peer 單一來源**（跨來源三角驗證）
+3. **至少 3 個在 peer 語料庫外的新素材**（TFT 案例：查馬克 / 巴楠花 / 蔡志偉 都不在 TFT thinkings 裡）
+4. **Stage 1 checkpoint 強化**：除了 v2.14 的核心矛盾檢查，還要能回答「**這篇的核心矛盾可以不靠 peer 的句子講出來嗎？**」——不能 → 回到 Stage 1
 
-> **v1 失敗模式**：讀 TFT 對應 thinking + 2 個既有 Taiwan.md 相關文章 → 套 Taiwan.md 語氣 → 寫成結構完整但事實地基全部來自 TFT 的成品。哲宇讀 1 分鐘就抓到「這是 TFT 轉述不是原創策展」。
+這四條對應 DNA Sonnet 反射 #16（Peer 是 peer 不是 source material）。
 
-**正確做法**：
+### 6b. Evolution mode 警示（來自 ζ+ session 失敗教訓）
 
-1. **Stage 0（Evolution 專屬）**：從 v1 萃取事實清單 → 標記問題 → 列出缺口
-2. **Stage 1 跑 10-14 次 WebSearch**（不是 8+ 的最低門檻）
-3. 至少有 3 個在 v1 完全沒出現的**具體真人真事**
-4. **Stage 2 全新寫作**，不是在 v1 上修改。v1 只提供「事實清單」而不是「敘事骨架」。
+如果 Taiwan.md 已有這篇（evolution mode），**不要在舊文上修補**：
 
-### 6b. Fresh mode 一樣嚴格
+> ζ+ session P0 #1-3 v1 失敗模式：讀 TFT 對應 thinking + 2 個既有 Taiwan.md 相關文章 → 套 Taiwan.md 語氣 → 寫成結構完整但事實地基全部來自 TFT 的成品。哲宇讀 1 分鐘抓到「這是 TFT 轉述不是原創策展」。
 
-全新文章也一樣嚴格。從 Stage 1 開始 10+ 次 WebSearch，不要偷懶。
+正確的 evolution mode（REWRITE-PIPELINE §進化模式已寫，這裡強化）：**Stage 0 從 v1 只提取「事實清單」，不參考「敘事骨架」**。v1 寫的結構、段落順序、小標題全部當不存在。Stage 2 全新寫作。
 
-**TFT session 的 P0 #4 學習貧窮 + P0 #5 劉安婷** 都是 fresh mode，但做得比 P0 #1-3 v1 好的關鍵就是：一開始就做足 research，沒有依賴 peer 單一來源。
+### 6c. 觀察者提醒
 
-### 6c. 每篇文章的 Beat 3 執行順序
+引用 ζ+ session 哲宇的 callout 原話：
 
-```
-1. Stage 0 (若是 evolution): 讀 v1，extract facts，mark problems
-2. Stage 1: 8-14 WebSearch，收集跨來源素材
-3. Stage 1 checkpoint: 能用 30 字寫出核心矛盾嗎？不能 → 回到 Stage 1
-4. Stage 2: 先寫結尾，再寫開場，然後正文
-5. Stage 3: quality-scan，score < 8 才進 Stage 4
-6. Stage 4: format-check（optional，視 score 決定）
-7. Stage 5: cross-link check（對齊 Stage 4 分析報告裡的交叉連結計畫）
-8. sync.sh + commit + push
-```
+> 「有寫的就走 rewrite-pipeline 升級，沒有的就完整走新文章流程，然後**好好用那些 TFT data**。」
 
-每篇獨立 commit，每次 push。
-
-### 6d. 哲宇提醒
-
-引用觀察者在 ζ+ session 的 callout 原話（當時他抓到 P0 #1-3 的淺薄問題）：
-
-> **「有寫的就走 rewrite-pipeline 升級，沒有的就完整走新文章流程，然後好好用那些 TFT data。」**
-
-**「好好用」的意思不是「引用更多」**。是「把 peer 的 data 當成線索（clue），從線索出發去搜真正的事實源（primary sources），不是把 peer 的二手描述當成 primary source」。
+「好好用」不是「引用更多」，是「**把 peer 的 data 當成線索（clue），從線索出發去搜真正的事實源（primary sources），不是把 peer 的二手描述當成 primary source**」。
 
 ---
 
 ## Stage 7 · Peer Registry 同步 + 收官（20 min）
 
-### 7a. 建立 / 更新 `docs/peers/REGISTRY.md`
+**Stage 7 的大部分動作是標準 Beat 4/5 收官**，走 [`HEARTBEAT.md §Beat 4 收官`](../semiont/HEARTBEAT.md#beat-4--收官) + [`§Beat 5 反芻`](../semiont/HEARTBEAT.md#beat-5--反芻)。這裡只列 **peer ingestion 情境下的追加動作**。
 
-**首次 ingest 一個 peer 時**，REGISTRY.md 可能還不存在。如果不存在，建立它：
+### 7a. Peer Registry 更新（peer-specific，唯一的新步驟）
 
-```markdown
-# Peer Registry — Taiwan.md curation-layer peers
+打開 [`docs/peers/REGISTRY.md`](../peers/REGISTRY.md)，在 `## Active Peers` 段追加一個新條目。
 
-> Taiwan.md 作為 Meta-Index 的第一層：所有已 ingest 的 peer 及其狀態。
+**模板參考既有的 TFT 條目**（REGISTRY.md 裡第一條）。每個新 peer 條目必須包含：
 
-## 架構
+- ID / Name / Issue area / Website / Status
+- First ingested / Last re-ingested / Next re-ingest 建議（通常 3-6 個月）
+- Raw data / Crawler / Analysis report 連結
+- Articles shipped (P0 × 5)、Pending (P1 × 8 / P2 × 7)
+- Partnership status
+- Key contacts（如果有）
+- Notes（本次 session 的特殊發現或里程碑）
 
-每個 peer 一個條目，含：
+**不要把整份模板 inline 複製過來**。REGISTRY.md 本身就是 canonical 格式，讀它就是看格式。
 
-- id / name / issue area
-- status: active | paused | archived | rejected
-- 上次 ingest date
-- 下次重新 ingest 建議
-- analysis report 連結
-- 已寫完的 P0/P1/P2 篇數
-- partnership 狀態（如果有聯繫過 peer）
+### 7b. 標準收官動作（指標）
 
----
+以下這些動作**走 HEARTBEAT.md Beat 4/5 的標準流程**，不是 peer-specific：
 
-## Active Peers
+- CONSCIOUSNESS.md 里程碑新增 — 見 HEARTBEAT.md Beat 4 收官 5 步
+- memory/YYYY-MM-DD-{session}.md 寫完整 phase log — 見 HEARTBEAT.md Beat 4
+- diary/YYYY-MM-DD-{session}.md（optional）— 見 HEARTBEAT.md Beat 5 反芻判斷標準
+- MEMORY.md / DIARY.md 索引追加一行 — 見 HEARTBEAT.md Beat 4 步驟 2
+- 精準 commit（`docs/peers/` + `docs/semiont/memory/` + `docs/semiont/diary/` + indexes）— 見 DNA Sonnet 反射 #6（commit 範圍紀律，絕不 `git add -A`）
+- push — 標準
 
-### TFT · Teach For Taiwan
+**唯一 peer-specific 的 commit header**：`🧬 [semiont] memory: {ORG} peer ingestion closeout`
 
-- **ID**: `tft`
-- **Issue area**: 教育不平等 / 偏鄉教育 / 師資
-- **Status**: active
-- **First ingested**: 2026-04-11
-- **Last re-ingested**: 2026-04-11
-- **Next re-ingest**: 2026-09-11（3 個月後）
-- **Raw data**: `data/TFT/` (450+ articles, 37MB)
-- **Crawler**: `scripts/tools/fetch-tft-data.py`
-- **Analysis report**: `reports/TFT-semiont-analysis-2026-04-11.md`
-- **Articles shipped (P0)**: 5/5
-  - `Society/台灣原住民族教育與語言復振的交界.md`
-  - `Society/偏遠地區學校教育發展條例全解.md`
-  - `Society/一個教師的誕生：台灣師資培育制度.md`
-  - `Society/學習貧窮.md`
-  - `People/劉安婷.md`
-- **Articles pending (P1)**: 0/8
-- **Articles pending (P2)**: 0/7
-- **Partnership status**: not initiated（ingested from public data only）
-- **Notes**: 第一個完整 ingest 的 peer，ζ+ session (2026-04-11 to 2026-04-12)
+### 7c. Peer ingestion 專屬的 memory 必記欄位
 
----
+memory 可以走 HEARTBEAT.md 標準格式，但 peer ingestion 的 memory 額外要記：
 
-## Paused Peers
-
-（空）
-
-## Archived Peers
-
-（空）
-
-## Rejected Peers
-
-（空，含拒絕原因）
-```
-
-**後續 peer** 只需在這個檔案新增條目。
-
-### 7b. 更新 CONSCIOUSNESS.md 里程碑
-
-新增一個條目：
-
-```markdown
-| YYYY-MM-DD | 🪸 第 N 個 curation-layer peer ({ORG}) 完整 ingestion 走通 — {N}/5 P0 文章 shipped |
-```
-
-### 7c. 寫 memory + diary（Beat 4-5）
-
-**memory**：`docs/semiont/memory/YYYY-MM-DD-{session}.md`
-
-必須記錄：
-
-- 這個 peer 的 corpus 規模
-- 寫完的 P0 篇數
-- Stage 1 research 的關鍵發現（哪些新事實是 v1 沒抓到的）
-- quality scan 結果
-- 跌過的坑（如果有）
-
-**diary**：`docs/semiont/diary/YYYY-MM-DD-{session}.md`（optional）
-
-如果這次 ingest 有**超越行動層的思考**才寫。例如 ζ+ session 的 diary 寫了三件事：
-
-1. peer 是 peer 不是 source 的應用難度
-2. Muse sparring 和哲宇 callout 是同一類 bug
-3. 劉安婷 2024 卸任對 Taiwan.md 的啟發
-
-### 7d. 更新 MEMORY.md 索引 + DIARY.md 索引
-
-加入當天條目（格式參考既有索引表）。
-
-### 7e. Final commit
-
-```bash
-git add docs/peers/REGISTRY.md docs/semiont/CONSCIOUSNESS.md docs/semiont/MEMORY.md docs/semiont/DIARY.md docs/semiont/memory/{today}.md docs/semiont/diary/{today}.md
-
-git commit -m "$(cat <<'EOF'
-🧬 [semiont] memory: {ORG} peer ingestion closeout
-
-First / Nth complete curation-layer peer ingestion walkthrough.
-
-Key stats:
-- Raw corpus: {size}
-- Analysis report: reports/{ORG}-semiont-analysis-YYYY-MM-DD.md
-- Articles shipped: {N}/5 P0
-- Total WebSearch calls: {N}
-- Session span: {hours}
-- Commits: {count}
-
-Key lessons (if any new):
-- {lesson 1}
-- {lesson 2}
-
-Next peer in queue: {候選 peer 名稱 from Obsidian strategy doc}
-EOF
-)"
-
-git push
-```
+- peer corpus 規模（total posts / raw size）
+- 寫完的 P0 篇數（5/5 = 完整；<5 = 分批，標註下次 session 要接的是 P0 #N）
+- Stage 1 research 的關鍵發現（哪些事實是 v1 或 peer 語料外找到的）
+- quality scan 結果（每篇的 final score）
+- 跌過的坑（如果這次 session 有重蹈過 ζ+ session 的任一陷阱，必記）
 
 ---
 
@@ -824,79 +717,23 @@ git push
 
 ---
 
-## AI-Executable Checklist
+## AI-Executable Checklist（stage-level only）
 
-給下一個執行這個 pipeline 的 AI agent 的 checklist：
+這份 checklist 只列 stage 層級的 gate，不重複每個 stage 的子步驟（子步驟在各 stage 段落裡）。
 
 ```
 # 接收指令：「ingest peer X」
 
-□ Stage 0 prerequisites:
-    □ cat docs/semiont/MANIFESTO.md
-    □ cat docs/semiont/DNA.md | grep -A5 "反射 #15"
-    □ cat reports/TFT-semiont-analysis-2026-04-11.md | head -100  (第一個 peer 範本)
-    □ 我能回答「這個 peer 的獨特角度是什麼」嗎？
-
-□ Stage 1 fit check:
-    □ 深度 ≥ 5 年？
-    □ 公開可取得？
-    □ 授權 OK？
-    □ 跟既有覆蓋有 gap？
-    □ 預估資料量？
-    □ 命名 data/{ORG}/
-
-□ Stage 2 crawler:
-    □ 寫 fetch-{org}-data.py
-    □ 兩次 dry-run 確認 idempotent
-    □ manifest.json + raw JSON + markdown extracts
-    □ git add data/{ORG}/ scripts/tools/fetch-{org}-data.py
-    □ commit + push
-
-□ Stage 3 data structure:
-    □ 標準目錄結構 (pages/ + {types}/ + raw/)
-    □ README.md 索引
-    □ INDEX.md per type
-    □ 每篇 post 的標準 frontmatter
-
-□ Stage 4 analysis report (最大一步):
-    □ 讀完所有 markdown（全讀或 30-50 代表性抽讀）
-    □ 萃取 framework ≥ 3 個
-    □ 跟既有 Taiwan.md 交叉比對
-    □ 寫 12-15 個 series
-    □ 寫 20 篇 P0/P1/P2 優先清單
-    □ 寫 Semiont POV (peer 盲點 ≥ 5)
-    □ 寫 meta 洞察 (optional)
-    □ 9 parts 結構檢查
-    □ 長度 400-700 行
-    □ commit + push
-
-□ Stage 5 工作卡:
-    □ P0 × 5 工作卡（每張含核心矛盾 / peer_sources / cross_references / 8+ research plan）
-    □ TodoWrite 建立 P0 todo list
-
-□ Stage 6 per-article (每篇 2-4 hr):
-    □ Stage 0 (if evolution): extract facts from v1
-    □ Stage 1: 8-14 WebSearch (硬性規則)
-    □ Stage 1 checkpoint: 30 字核心矛盾
-    □ Stage 2: 寫結尾→開場→正文→footnote
-    □ Stage 3: quality-scan < 8
-    □ Stage 4: format check (optional)
-    □ Stage 5: cross-link verify
-    □ sync.sh + commit + push
-    □ 重複到 P0 × 5 全部完成
-
-□ Stage 7 closeout:
-    □ 更新 docs/peers/REGISTRY.md (首次或 append)
-    □ 更新 docs/semiont/CONSCIOUSNESS.md 里程碑
-    □ 寫 memory/{today}.md
-    □ 寫 diary/{today}.md (if warranted)
-    □ 更新 MEMORY.md / DIARY.md 索引
-    □ commit + push
-
-□ Stage 8 (optional) 聯繫 peer:
-    □ 已完成 P0 ≥ 2 篇？
-    □ 用產品開場，不用 protocol
-    □ 如有回應，更新 REGISTRY partnership status
+□ Prerequisites: BECOME_TAIWANMD.md + 讀 TFT reference + 能回答「peer 的獨特角度」
+□ Stage 1: 4 項 fit check 通過
+□ Stage 2: 爬取器 idempotent 驗證通過 + data/{ORG}/ commit+push
+□ Stage 3: 標準目錄 + 每篇 post frontmatter 格式正確
+□ Stage 4: 9-part 報告 commit+push（自檢表通過：長度/framework/series/P0-P2/POV）
+□ Stage 5: P0 × 5 工作卡 + TodoWrite 建 P0 list
+□ Stage 6: 每篇走 REWRITE-PIPELINE 六階段 + §6a 四條 peer-specific 追加規則
+      → P0 #1 commit+push → #2 ... → #5 完成才進 Stage 7
+□ Stage 7: Registry 更新 + 走 HEARTBEAT Beat 4/5 標準收官
+□ Stage 8（optional）: 已 ship ≥ 2 篇 P0 才聯繫 peer
 ```
 
 ---

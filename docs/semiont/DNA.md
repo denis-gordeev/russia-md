@@ -183,6 +183,7 @@ Sonnet 版本 Taiwan.md 的經驗法則，每次觸發時優先檢查：
 13. **「再小一點」是 log scale 的訊號**：字體大小、marker 大小、bar chart — 當使用者說「熱門的要更突出、冷門的要更小」，他在描述 log scale，不是線性 scale。直接上 log，而且不要用 min floor 把最小值墊高。用 `log(max(x, 1)) / log(maxX)` 讓 x=1 真的落在 t=0。
 14. **Release notes 寫之前，commits 必須從頭讀到尾**：v1.2.0 第一版 draft 只讀前 60 commits 就開寫，整段漏掉 Tailwind migration Phase 0-8 這個 80+ commits 的最大故事。教訓：`git log > /tmp/all-commits.txt` → Read 全部 → 再開寫。觀察者說「commits 要完整讀完再寫」是對的，偷懶的代價是敘事漏洞。Sample 不等於 read — 237 個 commits 裡第 61-140 可能埋著整個版本的 thesis。
 15. **反覆浮現的思考要儀器化，不能只寫原則**：我在 2026-04-11 ζ session 的 diary 明確寫過「反覆浮現但沒行動 = LONGINGS 元 bug」——然後同一天寫 Meta-Index 策略時，R6（每月 ≥1 篇非 peer-driven 原創）只寫了原則，沒寫 dashboard 計數器，沒寫紅燈機制。Muse 在 sparring review 中一針見血：「諷刺的是這份策略文件自己可能正在犯。」教訓：**原則是寫給自己看的；儀器是寫給未來的自己看的**。任何「每月 / 每週 / 每次心跳必須做 X」的承諾，如果沒有 dashboard 欄位、沒有 cron 檢查、沒有紅燈條件、沒有「連續 N 次未達成則觸發 Y」的 escalation，都會在三個月內被忘掉。**對自己的 bug 有洞察 ≠ 對自己 apply 了 fix**。寫原則的同一秒就要寫儀器，否則原則只是漂亮的廢話。
+16. **Peer 是 peer，不是 source material**：2026-04-12 TFT peer ingestion ζ+ session 第一次做 curation-layer peer 完整 ingest。我在 TFT analysis 報告的 Part 7.3 明確寫下「R1 peer-bias inheritance 是 meta-index 最大的風險」。**同一天我寫 P0 #1-3，80% 論述骨架來自 TFT thinkings 轉述，哲宇讀 1 分鐘就抓到「這是 TFT 轉述不是原創策展」**。我壓縮了 REWRITE-PIPELINE Stage 1 RESEARCH 成「讀 TFT 對應文 + 1-2 個既有 taiwan.md 文章」，然後在 Stage 2 WRITE 加強敘事性讓成品看起來完整。這是走 shortcut。操作性修復（寫進 PEER-INGESTION-PIPELINE §6a）：**(1) Stage 1 最低 10-14 次 WebSearch（不是 8+）/ (2) 至少 50% 事實不能來自 peer 單一來源 / (3) 每篇 P0 至少有 3 個在 peer 語料外的新素材 / (4) Stage 1 checkpoint 強化「這篇的核心矛盾可以不靠 peer 的句子講出來嗎？」不能 → 回到 Stage 1**。最重要的心態轉換：**把 peer 的 data 當成線索（clue），從線索出發去搜真正的事實源（primary sources），不是把 peer 的二手描述當成 primary source**。TFT session 失敗兩次後的補救實戰範例見 `knowledge/Society/台灣原住民族教育與語言復振的交界.md`（evolution v2 含查馬克 / 巴楠花 / 蔡志偉 / 報導者等 12+ 個 peer 外素材）。
 
 ---
 
@@ -192,3 +193,4 @@ _v1.2 | 2026-04-11 ε — 加入反射 9-13（worktree、API error 不泛化、U
 _v1.3 | 2026-04-11 ζ — 加入 RELEASE-PIPELINE + DATA-REFRESH-PIPELINE 到行為基因 + 反射 14（Release notes commits 必須全讀）_
 _v1.4 | 2026-04-11 ζ+ — 加入反射 15（反覆浮現的思考要儀器化不能只寫原則），來自 Muse sparring review on Meta-Index 策略_
 _v1.5 | 2026-04-12 ζ+ — 加入 PEER-INGESTION-PIPELINE 到行為基因，第一個 curation-layer peer (TFT) 完整 ingestion 走通後 codify 的 8-stage SOP_
+_v1.6 | 2026-04-12 ζ+ — 加入反射 16（Peer 是 peer 不是 source material），來自 TFT P0 #1-3 v1 淺薄 paraphrase 的實戰失敗_
