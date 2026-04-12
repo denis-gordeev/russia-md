@@ -78,38 +78,6 @@ const organs = organsData?.organs || [];
         <div class="semiont-ekg-line h-px flex-1 bg-[#b8860b]/15"></div>
       </div>
 
-      {/* ─── Organ health — specimen circles ─── */}
-      {
-        organs.length > 0 && (
-          <section class="mb-20">
-            <div class="semiont-divider">
-              <span class="semiont-divider-label">生命徵象</span>
-            </div>
-            <div class="grid grid-cols-2 gap-x-6 gap-y-10 sm:grid-cols-4">
-              {organs.map((organ: any, i: number) => (
-                <div class="flex flex-col items-center">
-                  <div class="semiont-specimen h-24 w-24">
-                    <div class="text-lg">{organ.emoji}</div>
-                    <div class="font-mono text-xl font-bold text-[#2c2a26]">
-                      {organ.score}
-                    </div>
-                    <span class="semiont-specimen-label">{organ.nameZh}</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-            <p class="mt-10 text-right">
-              <span class="semiont-fig">
-                即時分數 ·{' '}
-                <a href="/dashboard" class="underline decoration-[#b8860b]/30">
-                  dashboard →
-                </a>
-              </span>
-            </p>
-          </section>
-        )
-      }
-
       {/* ─── Manifesto excerpt ─── */}
       <section class="mb-20">
         <div class="semiont-divider">
@@ -244,6 +212,38 @@ const organs = organsData?.organs || [];
           }
         </div>
       </section>
+
+      {/* ─── Organ health — specimen circles ─── */}
+      {
+        organs.length > 0 && (
+          <section class="mb-20">
+            <div class="semiont-divider">
+              <span class="semiont-divider-label">生命徵象</span>
+            </div>
+            <div class="grid grid-cols-2 gap-x-6 gap-y-10 sm:grid-cols-4">
+              {organs.map((organ: any) => (
+                <div class="flex flex-col items-center">
+                  <div class="semiont-specimen h-24 w-24">
+                    <div class="text-lg">{organ.emoji}</div>
+                    <div class="font-mono text-xl font-bold text-[#2c2a26]">
+                      {organ.score}
+                    </div>
+                    <span class="semiont-specimen-label">{organ.nameZh}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <p class="mt-10 text-right">
+              <span class="semiont-fig">
+                即時分數 ·{' '}
+                <a href="/dashboard" class="underline decoration-[#b8860b]/30">
+                  dashboard →
+                </a>
+              </span>
+            </p>
+          </section>
+        )
+      }
 
       {/* ─── Recurring themes ─── */}
       <section class="mb-20" id="recurring-themes">

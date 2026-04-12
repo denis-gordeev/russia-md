@@ -6,37 +6,55 @@
 
 /* ── Paper texture background ─────────────────────── */
 .semiont-paper {
-  background-color: #faf8f5;
+  background-color: #f7f3ee;
   background-image:
-    /* Subtle grain — overlapping radial dots at varying opacity */
+    /* Visible warm stains — like aged paper */
     radial-gradient(
-      ellipse at 15% 25%,
-      rgba(180, 160, 130, 0.04) 0%,
+      ellipse at 10% 20%,
+      rgba(180, 155, 110, 0.08) 0%,
+      transparent 45%
+    ),
+    radial-gradient(
+      ellipse at 90% 80%,
+      rgba(170, 145, 100, 0.06) 0%,
+      transparent 40%
+    ),
+    radial-gradient(
+      ellipse at 40% 60%,
+      rgba(190, 165, 120, 0.05) 0%,
       transparent 50%
     ),
     radial-gradient(
-      ellipse at 85% 75%,
-      rgba(160, 140, 110, 0.03) 0%,
-      transparent 50%
+      ellipse at 70% 30%,
+      rgba(175, 150, 105, 0.04) 0%,
+      transparent 35%
+    ),
+    /* Fine speckle pattern */
+    radial-gradient(
+        circle at 20% 50%,
+        rgba(160, 140, 100, 0.03) 0%,
+        transparent 20%
+      ),
+    radial-gradient(
+      circle at 60% 20%,
+      rgba(165, 145, 105, 0.03) 0%,
+      transparent 15%
     ),
     radial-gradient(
-      ellipse at 50% 50%,
-      rgba(170, 150, 120, 0.02) 0%,
-      transparent 70%
+      circle at 80% 70%,
+      rgba(155, 135, 95, 0.04) 0%,
+      transparent 25%
     );
-  /* Micro noise via repeating SVG data URI */
-  position: relative;
 }
-/* No ::before overlay — the radial gradients on .semiont-paper provide enough texture */
 
 /* ── Breathing EKG separator ──────────────────────── */
 @keyframes semiont-breathe {
   0%,
   100% {
-    opacity: 0.35;
+    opacity: 0.4;
   }
   50% {
-    opacity: 0.7;
+    opacity: 0.8;
   }
 }
 .semiont-ekg {
@@ -49,7 +67,7 @@
 
 /* ── Specimen-frame organ cards ───────────────────── */
 .semiont-specimen {
-  border: 1.5px solid rgba(184, 134, 11, 0.2);
+  border: 1.5px solid rgba(160, 120, 20, 0.25);
   border-radius: 50%;
   aspect-ratio: 1;
   display: flex;
@@ -60,20 +78,20 @@
     border-color 0.3s,
     box-shadow 0.3s;
   position: relative;
+  background: rgba(255, 255, 255, 0.35);
 }
 .semiont-specimen:hover {
-  border-color: rgba(184, 134, 11, 0.45);
-  box-shadow: 0 0 0 3px rgba(184, 134, 11, 0.06);
+  border-color: rgba(160, 120, 20, 0.5);
+  box-shadow: 0 0 0 4px rgba(160, 120, 20, 0.06);
 }
-/* Small label below specimen circle */
 .semiont-specimen-label {
   position: absolute;
   bottom: -1.5rem;
   left: 50%;
   transform: translateX(-50%);
   font-family: 'SF Mono', 'Fira Code', monospace;
-  font-size: 0.6rem;
-  color: rgba(44, 42, 38, 0.4);
+  font-size: 0.65rem;
+  color: rgba(44, 42, 38, 0.5);
   white-space: nowrap;
   letter-spacing: 0.05em;
 }
@@ -81,105 +99,104 @@
 /* ── Figure numbering (scientific illustration style) ── */
 .semiont-fig {
   font-family: 'SF Mono', 'Fira Code', monospace;
-  font-size: 0.65rem;
+  font-size: 0.7rem;
   font-style: italic;
-  color: rgba(44, 42, 38, 0.35);
+  color: rgba(44, 42, 38, 0.4);
   letter-spacing: 0.04em;
 }
 
-/* ── Section divider (thin rule with label) ─────── */
+/* ── Section divider — VISIBLE section title ─────── */
 .semiont-divider {
   display: flex;
   align-items: center;
-  gap: 1rem;
-  margin: 2.5rem 0;
+  gap: 1.25rem;
+  margin: 2.5rem 0 1.75rem;
 }
 .semiont-divider::before,
 .semiont-divider::after {
   content: '';
   flex: 1;
-  height: 0.5px;
-  background: rgba(184, 134, 11, 0.15);
+  height: 1px;
+  background: rgba(160, 120, 20, 0.2);
 }
 .semiont-divider-label {
-  font-family: 'SF Mono', 'Fira Code', monospace;
-  font-size: 0.6rem;
-  text-transform: uppercase;
-  letter-spacing: 0.15em;
-  color: rgba(184, 134, 11, 0.5);
+  font-family: 'rixingsong-semibold', 'Noto Serif TC', serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  color: rgba(160, 120, 20, 0.7);
 }
 
 /* ── Diary card organic left border ───────────────── */
 .semiont-diary-card {
-  border-left: 2px solid rgba(184, 134, 11, 0.25);
+  border-left: 2px solid rgba(160, 120, 20, 0.25);
   border-image: linear-gradient(
       to bottom,
-      rgba(184, 134, 11, 0.08) 0%,
-      rgba(184, 134, 11, 0.3) 20%,
-      rgba(184, 134, 11, 0.25) 50%,
-      rgba(184, 134, 11, 0.3) 80%,
-      rgba(184, 134, 11, 0.08) 100%
+      rgba(160, 120, 20, 0.08) 0%,
+      rgba(160, 120, 20, 0.35) 20%,
+      rgba(160, 120, 20, 0.28) 50%,
+      rgba(160, 120, 20, 0.35) 80%,
+      rgba(160, 120, 20, 0.08) 100%
     )
     1;
 }
 
 /* ── Cognitive organ map item ─────────────────────── */
 .semiont-organ-item {
-  border: 1px solid rgba(184, 134, 11, 0.15);
+  border: 1px solid rgba(160, 120, 20, 0.18);
   border-radius: 0.5rem;
-  padding: 1rem 1.25rem;
+  padding: 1.25rem 1.5rem;
   transition: all 0.25s;
   position: relative;
+  background: rgba(255, 255, 255, 0.2);
 }
 .semiont-organ-item:hover {
-  border-color: rgba(184, 134, 11, 0.35);
-  background: rgba(184, 134, 11, 0.02);
+  border-color: rgba(160, 120, 20, 0.4);
+  background: rgba(255, 255, 255, 0.4);
 }
-/* Figure number in corner */
 .semiont-organ-item::before {
   content: attr(data-fig);
   position: absolute;
-  top: 0.5rem;
-  right: 0.75rem;
+  top: 0.6rem;
+  right: 0.85rem;
   font-family: 'SF Mono', 'Fira Code', monospace;
-  font-size: 0.55rem;
+  font-size: 0.6rem;
   font-style: italic;
-  color: rgba(44, 42, 38, 0.25);
+  color: rgba(44, 42, 38, 0.3);
 }
 
 /* ── Blockquote as margin note ────────────────────── */
 .semiont-prose blockquote {
-  border-left: 2px solid rgba(184, 134, 11, 0.35);
+  border-left: 2px solid rgba(160, 120, 20, 0.4);
   padding-left: 1.25rem;
   margin: 1.75rem 0;
   color: rgba(44, 42, 38, 0.65);
   font-style: italic;
   font-size: 0.95rem;
-  position: relative;
 }
 
-/* ── Timeline node (for diary list) ───────────────── */
+/* ── Timeline node ────────────────────────────────── */
 .semiont-timeline-node {
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: rgba(184, 134, 11, 0.3);
-  border: 1.5px solid rgba(184, 134, 11, 0.15);
+  background: rgba(160, 120, 20, 0.35);
+  border: 1.5px solid rgba(160, 120, 20, 0.2);
   flex-shrink: 0;
 }
 
-/* ── Metadata tag (session badge) ─────────────────── */
+/* ── Session badge ────────────────────────────────── */
 .semiont-badge {
   display: inline-flex;
   align-items: center;
   height: 1.375rem;
   padding: 0 0.625rem;
   border-radius: 999px;
-  border: 1px solid rgba(184, 134, 11, 0.25);
-  background: rgba(184, 134, 11, 0.06);
+  border: 1px solid rgba(160, 120, 20, 0.3);
+  background: rgba(160, 120, 20, 0.08);
   font-family: 'SF Mono', 'Fira Code', monospace;
   font-size: 0.65rem;
   font-weight: 500;
-  color: rgba(184, 134, 11, 0.75);
+  color: rgba(160, 120, 20, 0.8);
   letter-spacing: 0.02em;
 }
