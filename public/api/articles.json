@@ -58,6 +58,17 @@
     "path": "Society/一個教師的誕生：台灣師資培育制度.md"
   },
   {
+    "title": "乙未之役：臺灣民主國的 148 天",
+    "description": "1895年，清廷把台灣割給日本。島上的官員宣布建立亞洲第一個共和國，但總統十天就跑了，詩人四天就走了。真正留下來打仗的，是一個19歲的客家少年和他散盡家產召來的民兵。148天後，民主國消失了，日本統治開始了。",
+    "category": "History",
+    "tags": [],
+    "url": "https://taiwan.md/History/%E4%B9%99%E6%9C%AA%E4%B9%8B%E5%BD%B9",
+    "readingTime": 19,
+    "featured": true,
+    "date": "2026-04-12",
+    "path": "History/乙未之役.md"
+  },
+  {
     "title": "九天玄女：從黃帝的軍師到台灣陣頭少年的守護神",
     "description": "一個高中畢業的廟會團長，被文建會評審羞辱了十幾年，花11年拿到博士，只為證明帶中輟生打鼓也是藝術。他背後站的，是一位四千年前教黃帝打仗的女神。",
     "category": "Culture",
@@ -391,14 +402,14 @@
     "path": "ja/Economy/compal-electronics.md"
   },
   {
-    "title": "太陽花學運",
-    "description": "一個30秒的麥克風宣布，最終讓台灣對中貿易依存度從42%跌至32%——十年後回望，這場佔領運動真正改變的不是任何法案，而是台灣的經濟命運",
+    "title": "太陽花學運——那三十秒之後的十二年",
+    "description": "一個立委趴在地上用領口麥克風唸了三十秒，觸發二十四天的國會佔領、一個世代的政治覺醒，以及台灣經濟從中國轉向的起點。十二年後，學生要求的法律沒有通過，但他們贏了一場自己不知道在打的戰爭。",
     "category": "Society",
-    "tags": ["Society", "歷史", "政治", "公民運動", "科技", "民主"],
+    "tags": ["社會運動", "民主", "兩岸關係", "公民科技"],
     "url": "https://taiwan.md/Society/%E5%A4%AA%E9%99%BD%E8%8A%B1%E5%AD%B8%E9%81%8B",
-    "readingTime": 16,
+    "readingTime": 25,
     "featured": true,
-    "date": "2026-03-22",
+    "date": "2026-04-12",
     "path": "Society/太陽花學運.md"
   },
   {
@@ -1397,6 +1408,17 @@
     "featured": false,
     "date": "2026-03-18",
     "path": "ja/Technology/taiwan-5g-and-digital-transformation.md"
+  },
+  {
+    "title": "台湾の工作機械産業",
+    "description": "大肚山の「黄金の縦谷」から TMTS 2026 まで。台湾の工作機械産業のレジリエンス、崩壊、再生、そしてなぜ 2024 年に世界第 5 位から第 7 位へ後退したのかという構造的不安をたどる。",
+    "category": "ja",
+    "tags": [],
+    "url": "https://taiwan.md/ja/Economy/taiwan-machine-tool-industry",
+    "readingTime": 43,
+    "featured": false,
+    "date": "2026-04-11",
+    "path": "ja/Economy/taiwan-machine-tool-industry.md"
   },
   {
     "title": "台湾の中小企業と隠れたチャンピオン：171万社の「無名企業」が支える経済の奇跡",
@@ -4838,7 +4860,7 @@
       "台鐵"
     ],
     "url": "https://taiwan.md/History/%E5%8F%B0%E7%81%A3%E9%90%B5%E9%81%93%E5%8F%B2",
-    "readingTime": 18,
+    "readingTime": 19,
     "featured": false,
     "date": "2026-03-24",
     "path": "History/台灣鐵道史.md"
@@ -4897,6 +4919,17 @@
     "featured": true,
     "date": "2026-03-17",
     "path": "History/史前時代與原住民.md"
+  },
+  {
+    "title": "史溫侯：當外交官變成博物學家",
+    "description": "1856年，一個19歲的英國翻譯官在福爾摩沙西海岸記下他看到的第一隻鳥。四年後，他以52篇論文讓世界第一次認識這座島上住著什麼生物。他41歲死在倫敦，但他命名的物種至今仍在台灣的山林裡活著。",
+    "category": "People",
+    "tags": [],
+    "url": "https://taiwan.md/People/%E5%8F%B2%E6%BA%AB%E4%BE%AF",
+    "readingTime": 26,
+    "featured": true,
+    "date": "2026-04-12",
+    "path": "People/史溫侯.md"
   },
   {
     "title": "巧固球：台灣隱形的43年世界冠軍",
@@ -5326,6 +5359,17 @@
     "featured": true,
     "date": "2026-03-17",
     "path": "History/戒嚴時期.md"
+  },
+  {
+    "title": "李仙得：締約者與出賣者是同一個人",
+    "description": "1867年，美國商船羅發號在恆春半島船難，14人被排灣族殺害。美國領事李仙得八次來台交涉，跟原住民首領卓杞篤簽了一份沒有清政府參與的協議。然後他帶著對福爾摩沙的全部了解，跳槽到日本政府。五年後，日本用他的情報出兵台灣。",
+    "category": "People",
+    "tags": [],
+    "url": "https://taiwan.md/People/%E6%9D%8E%E4%BB%99%E5%BE%97",
+    "readingTime": 22,
+    "featured": true,
+    "date": "2026-04-12",
+    "path": "People/李仙得.md"
   },
   {
     "title": "李安",
@@ -6840,6 +6884,17 @@
     "path": "People/張惠妹.md"
   },
   {
+    "title": "從張懸到安溥——兩個名字，同一個問題",
+    "description": "13 歲寫出〈寶貝〉，32 歲因一面旗子被中國封殺，34 歲親手殺死自己的藝名。焦安溥用兩段人生回答了一個台灣人都在問的問題：你到底站哪邊？",
+    "category": "Music",
+    "tags": ["獨立音樂", "社會運動", "身份認同"],
+    "url": "https://taiwan.md/Music/%E5%BC%B5%E6%87%B8%E8%88%87%E5%AE%89%E6%BA%A5",
+    "readingTime": 19,
+    "featured": false,
+    "date": "2026-04-12",
+    "path": "Music/張懸與安溥.md"
+  },
+  {
     "title": "教育制度與升學文化",
     "description": "從聯考制度到十二年國教，台灣教育如何在競爭與多元之間尋求平衡",
     "category": "Society",
@@ -6889,7 +6944,7 @@
     "category": "History",
     "tags": ["History", "清朝", "開港通商", "牡丹社事件"],
     "url": "https://taiwan.md/History/%E6%B8%85%E6%B2%BB%E6%99%82%E6%9C%9F",
-    "readingTime": 6,
+    "readingTime": 7,
     "featured": false,
     "date": "2026-03-17",
     "path": "History/清治時期.md"
@@ -6904,6 +6959,17 @@
     "featured": false,
     "date": "2026-03-17",
     "path": "ja/History/qing-dynasty-era.md"
+  },
+  {
+    "title": "清法戰爭：基隆與淡水的八個月",
+    "description": "1884年秋天，法國艦隊砲轟基隆港，兩千名海軍陸戰隊登陸，佔領了港口。但他們花了七個月，始終走不出基隆的山嶺。同一週，600名法軍水兵在淡水登陸，兩小時內被趕回海上。戰爭結束時，法國拿到了越南，放棄了台灣。清廷差點輸掉，卻因此讓台灣從附屬變成一個省。",
+    "category": "History",
+    "tags": [],
+    "url": "https://taiwan.md/History/%E6%B8%85%E6%B3%95%E6%88%B0%E7%88%AD",
+    "readingTime": 23,
+    "featured": true,
+    "date": "2026-04-12",
+    "path": "History/清法戰爭.md"
   },
   {
     "title": "現代台湾文学：枠を超え、再構築された時代",
@@ -7897,6 +7963,17 @@
     "featured": false,
     "date": "2026-03-23",
     "path": "Geography/漯底山.md"
+  },
+  {
+    "title": "福爾摩沙：西方人如何「發現」一座早就有人住的島",
+    "description": "1704年，一個從未去過亞洲的法國人站在倫敦皇家學會，用一套自己發明的文字和宗教，說服了全場學者他是「福爾摩沙人」。這個騙局持續了十年。但更大的問題是：當歐洲人說「發現福爾摩沙」時，島上的南島語族已經住了六千年。「發現」是誰的敘事？",
+    "category": "History",
+    "tags": [],
+    "url": "https://taiwan.md/History/%E7%A6%8F%E7%88%BE%E6%91%A9%E6%B2%99",
+    "readingTime": 20,
+    "featured": true,
+    "date": "2026-04-12",
+    "path": "History/福爾摩沙.md"
   },
   {
     "title": "粽子",
@@ -10231,6 +10308,17 @@
     "featured": false,
     "date": "2026-03-17",
     "path": "en/About/founder.md"
+  },
+  {
+    "title": "From Deserts Chang to Anpu — Two Names, One Question",
+    "description": "She wrote her most famous song at 13, got banned from China at 32 for holding a flag, and killed her own stage name at 34. Chiao An-pu lived two careers under two names — and still could not escape the question: whose side are you on?",
+    "category": "en",
+    "tags": ["indie music", "social movements", "identity"],
+    "url": "https://taiwan.md/en/Music/deserts-chang-anpu",
+    "readingTime": 51,
+    "featured": false,
+    "date": "2026-04-12",
+    "path": "en/Music/deserts-chang-anpu.md"
   },
   {
     "title": "From Pole Dancers at Funerals to Ashes Under a Tree: Taiwan's Quiet Death Revolution",
@@ -14274,21 +14362,19 @@
     "path": "en/Technology/artificial-intelligence-development-strategy.md"
   },
   {
-    "title": "The Sunflower Movement",
-    "description": "A 30-second microphone announcement that ultimately reduced Taiwan's trade dependence on China from 42% to 32%—ten years later, this occupation movement truly changed not any legislation, but Taiwan's economic destiny",
+    "title": "The Sunflower Movement — Twelve Years After Those Thirty Seconds",
+    "description": "A legislator pinned to the floor mumbled into a lapel mic for thirty seconds, triggering a 24-day occupation of parliament, a generational political awakening, and the beginning of Taiwan's economic pivot away from China. Twelve years later, the law the students demanded was never passed — but they won a war they didn't know they were fighting.",
     "category": "en",
     "tags": [
-      "Society",
-      "History",
-      "Politics",
-      "Civic Movement",
-      "Technology",
-      "Democracy"
+      "social movements",
+      "democracy",
+      "cross-strait relations",
+      "civic tech"
     ],
     "url": "https://taiwan.md/en/Society/sunflower-movement",
-    "readingTime": 53,
+    "readingTime": 70,
     "featured": true,
-    "date": "2026-03-22",
+    "date": "2026-04-12",
     "path": "en/Society/sunflower-movement.md"
   },
   {
