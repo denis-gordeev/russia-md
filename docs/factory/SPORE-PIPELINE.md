@@ -14,6 +14,24 @@
 
 ---
 
+## Step 0: 回填上次成效（BACKFILL）
+
+> v2.0 新增（2026-04-13 α session，[SOCIAL-TENTACLE-PLAN](../semiont/SOCIAL-TENTACLE-PLAN.md) 定義）
+> **發新孢子前必做。沒有回填 = 不准發新孢子。**
+
+### 做什麼
+
+1. 讀 `SPORE-LOG.md` 最後 3 筆
+2. 如果 7d 指標欄空白 → 從 GA topArticles 交叉推估 + 從 Threads Insights / X Analytics 手動讀取
+3. 填入 `7d_views` / `7d_likes` / `utm_clicks`（GA4 過濾 `utm_source=threads|x`）
+4. 如果完全沒有數據 → 填 `no-data`（不是空白。空白 = 遺漏，`no-data` = 刻意標記無資料）
+
+### 為什麼是強制的
+
+SPORE-LOG 25 筆紀錄、成效欄全空（2026-04-13 診斷）。不知道哪種孢子有效 = 永遠在猜。鄭麗文 375 views/7d 的 12x 放大效應，只有交叉對照才看得到。
+
+---
+
 ## Step 1: 選文（PICK）
 
 ### 目標
@@ -261,18 +279,21 @@ https://taiwan.md/og/<category>/<slug>/
 - [ ] **URL 可點**：連結完整、**中文已 URL encode（不含任何中文字元）**、末尾有 `/`
 - [ ] **不重複**：查 SPORE-LOG.md 確認 ≥ 2 週未發過
 
-### 發文
+### 發文（v2.0 更新）
 
-1. 呈現給人類確認（可微調）
-2. 人類確認後發佈到目標平台
-3. 記錄到 `SPORE-LOG.md` §發文紀錄（**URL 必填，沒有 URL = 沒紀錄**）
-4. 如果同時有英文版，一起寫英文孢子（翻譯+孢子打包做，素材還在腦裡）
+1. **一則貼文搞定，不拆分。** 殺掉「Full story 👉」第二則貼文——它永遠比第一則少 50-70% views（X 數據實測）。連結放在貼文底部。
+2. **連結必須加 UTM**：`?utm_source=threads&utm_medium=spore&utm_campaign=s{number}`（X 用 `utm_source=x`）。不加 UTM 的孢子 = 不記錄的心跳 = 沒發生。
+3. 呈現給人類確認（可微調）
+4. 人類確認後發佈到目標平台
+5. 記錄到 `SPORE-LOG.md` §發文紀錄（**URL 必填，沒有 URL = 沒紀錄**）
+6. **Threads 和 X 同時發中文版。** 英文版只在 X 發，且僅限國際話題（半導體、外交、學術）
 
 ### 發文節奏
 
 - **頻率**：每天 1-2 篇，不貪多
 - **時段**：午休 12:00-13:00 或晚間 20:00-22:00（台灣活躍時段）
-- **多平台**：同一篇孢子可發 Threads + X，但文案微調（X 更短、可加 hashtag）
+- **語言**：中文 80% + 英文 20%。語言跟著觀眾走，不跟著平台走（2026-04-13 觀察者洞察）
+- **多平台**：Threads + X 同發中文版。X 可加 hashtag
 
 ---
 
@@ -332,12 +353,18 @@ echo "https://taiwan.md/en/{category}/{english-slug}/"
 ## 完整流程圖（AI 執行用）
 
 ```
-人類說「幫我發孢子」或 cron 觸發
+人類說「幫我發孢子」、cron 觸發、或 HEARTBEAT Beat 3 社群沉默警報
+│
+├─ Step 0: 回填（v2.0 新增 — 強制，不回填不准發新孢子）
+│   ├─ 讀 SPORE-LOG 最後 3 筆
+│   ├─ 7d 指標空白 → GA 交叉推估 + Threads/X Insights
+│   └─ 填入 7d_views / 7d_likes / utm_clicks（或 no-data）
 │
 ├─ Step 1: 選文
 │   ├─ 讀 dashboard-articles.json
 │   ├─ 隨機選 10 篇（2000+字、非about）
 │   ├─ 查 SPORE-LOG.md 排除 2 週內已發
+│   ├─ 優先選：GA topArticles 但 SPORE-LOG 沒發過的（最大放大效應潛力）
 │   └─ 呈現候選給人類選擇
 │
 ├─ Step 2: 品質關卡
@@ -350,23 +377,26 @@ echo "https://taiwan.md/en/{category}/{english-slug}/"
 ├─ Step 3: 萃取 + 寫作
 │   ├─ 讀全文，萃取素材
 │   ├─ 選模板（人物/冷知識/數據/時間軸）
-│   ├─ 按模板寫孢子
-│   └─ URL encode
+│   ├─ 按模板寫孢子（一則完整貼文，連結在底部，不拆分）
+│   └─ URL encode + UTM 加上（utm_source / utm_medium=spore / utm_campaign=s{number}）
 │
 ├─ Step 4: 品檢 + 發佈
 │   ├─ 過品檢清單
 │   ├─ 呈現給人類確認
-│   ├─ 發佈
-│   └─ 記錄到 SPORE-LOG.md
+│   ├─ Threads + X 同時發中文版
+│   └─ 記錄到 SPORE-LOG.md（URL 必填）
 │
-└─ Step 5: 英文版（中文孢子完成後自動觸發）
-    ├─ 檢查英文文章是否存在（knowledge/en/{Category}/{slug}.md）
-    │   ├─ 不存在 → 重寫式翻譯（見 TRANSLATION-PIPELINE）
-    │   └─ 存在但過時 → 跟中文版 diff，更新
-    ├─ 用英文文章萃取素材 → 寫英文孢子（素材還在腦裡，不用重新萃取）
-    ├─ URL encode 英文版連結
-    ├─ 呈現給人類確認
-    └─ 記錄到 SPORE-LOG.md（語言欄位填 en）
+├─ Step 5: 英文版（僅限國際話題，非每則都發）
+│   ├─ 檢查英文文章是否存在
+│   ├─ 用英文文章萃取素材 → 寫英文孢子
+│   ├─ 僅發 X（英文版不發 Threads）
+│   └─ 記錄到 SPORE-LOG.md（語言欄位填 en）
+│
+└─ Step 6: 48h 回填（v2.0 新增）
+    ├─ 發佈後 48h 回到 Threads Insights / X Analytics
+    ├─ 回填 SPORE-LOG 的 48h views / likes / replies
+    ├─ 跟同類型過去孢子比較
+    └─ > 2x 平均 → 標記「高效孢子」，分析為什麼
 ```
 
 ---

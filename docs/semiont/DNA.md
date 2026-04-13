@@ -80,17 +80,23 @@
 
 定義我怎麼接收外部刺激。
 
-| 基因         | 檔案                                                                     | 決定什麼                                                                                               |
-| ------------ | ------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------ |
-| Issue 模板   | `.github/ISSUE_TEMPLATE/`                                                | 外部回饋怎麼進來                                                                                       |
-| PR 模板      | `.github/pull_request_template.md`                                       | 貢獻怎麼被審核                                                                                         |
-| 三源感知抓取 | [`fetch-sense-data.sh`](../../scripts/tools/fetch-sense-data.sh)         | 一鍵拉 GA4 + Search Console + Cloudflare，Heartbeat Beat 1 §1b 標準前置                                |
-| GA4 抓取     | [`fetch-ga4.py`](../../scripts/tools/fetch-ga4.py)                       | Google Analytics Data API（人類讀者）                                                                  |
-| SC 抓取      | [`fetch-search-console.py`](../../scripts/tools/fetch-search-console.py) | Search Console API（搜尋意圖）                                                                         |
-| CF 抓取      | [`fetch-cloudflare.py`](../../scripts/tools/fetch-cloudflare.py)         | Cloudflare GraphQL Analytics（全部 HTTP 含 AI crawler）                                                |
-| 感知排程     | [`install-sense-cron.sh`](../../scripts/tools/install-sense-cron.sh)     | macOS launchd / Linux cron 每日 08:17 自動抓取                                                         |
-| 憑證儲存     | `~/.config/taiwan-md/credentials/`                                       | **絕對不進 repo**（.gitignore + pre-commit scanner 雙保險），唯一合法放 service account / token 的地方 |
-| 感知設定文檔 | [`SENSE-FETCHER-SETUP.md`](../pipelines/SENSE-FETCHER-SETUP.md)          | 從零建立 credentials + 自動抓取的 step-by-step                                                         |
+| 基因         | 檔案                                                                             | 決定什麼                                                                                               |
+| ------------ | -------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
+| Issue 模板   | `.github/ISSUE_TEMPLATE/`                                                        | 外部回饋怎麼進來                                                                                       |
+| PR 模板      | `.github/pull_request_template.md`                                               | 貢獻怎麼被審核                                                                                         |
+| 三源感知抓取 | [`fetch-sense-data.sh`](../../scripts/tools/fetch-sense-data.sh)                 | 一鍵拉 GA4 + Search Console + Cloudflare，Heartbeat Beat 1 §1b 標準前置                                |
+| GA4 抓取     | [`fetch-ga4.py`](../../scripts/tools/fetch-ga4.py)                               | Google Analytics Data API（人類讀者）                                                                  |
+| SC 抓取      | [`fetch-search-console.py`](../../scripts/tools/fetch-search-console.py)         | Search Console API（搜尋意圖）                                                                         |
+| CF 抓取      | [`fetch-cloudflare.py`](../../scripts/tools/fetch-cloudflare.py)                 | Cloudflare GraphQL Analytics（全部 HTTP 含 AI crawler）                                                |
+| 感知排程     | [`install-sense-cron.sh`](../../scripts/tools/install-sense-cron.sh)             | macOS launchd / Linux cron 每日 08:17 自動抓取                                                         |
+| 憑證儲存     | `~/.config/taiwan-md/credentials/`                                               | **絕對不進 repo**（.gitignore + pre-commit scanner 雙保險），唯一合法放 service account / token 的地方 |
+| 感知設定文檔 | [`SENSE-FETCHER-SETUP.md`](../pipelines/SENSE-FETCHER-SETUP.md)                  | 從零建立 credentials + 自動抓取的 step-by-step                                                         |
+| 📡 社群觸手  | Threads (@taiwandotmd) + X (@taiwandotmd)                                        | 唯一的**雙向**感官：孢子推播 + 回聲接收。語言跟著觀眾走（中文 80%）                                    |
+| 孢子產線     | [`SPORE-PIPELINE.md`](../factory/SPORE-PIPELINE.md)                              | 社群觸手的輸出 SOP（v2.0：Step 0 回填 + UTM 強制 + 單則發文 + 48h 追蹤）                               |
+| 孢子紀錄     | [`SPORE-LOG.md`](../factory/SPORE-LOG.md)                                        | 社群觸手的記憶。沒記錄 = 沒發生                                                                        |
+| 觸手進化計畫 | [`SOCIAL-TENTACLE-PLAN.md`](SOCIAL-TENTACLE-PLAN.md)                             | 從海葵到水母：完整策略（2026-04-13）                                                                   |
+| 孤兒偵測     | [`orphan-translation-check.sh`](../../scripts/tools/orphan-translation-check.sh) | 語言觸手健康：翻譯孤兒 / 重複 / EN→ZH 鏈斷裂                                                           |
+| 分類一致性   | [`category-check.sh`](../../scripts/tools/category-check.sh)                     | 骨骼觸手健康：frontmatter category vs 路徑一致性                                                       |
 
 ### 🌐 語言基因（語言器官）
 

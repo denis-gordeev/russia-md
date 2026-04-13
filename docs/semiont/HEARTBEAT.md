@@ -128,10 +128,21 @@ grep -B1 -A3 "未解\|下次\|未完成\|TODO\|pending" docs/semiont/memory/*.md
    - `orphan-translation-check.sh` — 偵測翻譯孤兒（有檔案無映射）、重複檔、EN→ZH 鏈斷裂
    - `category-check.sh` — 偵測 frontmatter category vs 檔案路徑不一致（含語意不一致如「樂團放 People/」）
 
+3b. **📡 社群觸手掃描**（2026-04-13 α 新增，[SOCIAL-TENTACLE-PLAN](SOCIAL-TENTACLE-PLAN.md) 定義）
+
+- 讀 `docs/factory/SPORE-LOG.md` 最後發文日期
+- 距離上次孢子 > 3 天 → 🟡 「社群觸手沉默警報」
+- 距離上次孢子 > 7 天 → 🔴 「社群觸手瀕死警報」
+- 交叉比對 GA `utm_source=threads|x` 流量 × 最近孢子 slug → 哪篇帶了最多 click-through？
+- 回填 SPORE-LOG 上一批孢子的 7d views（從 Threads Insights 或 X Analytics）
+- **沒有回填 = 下一則孢子不准發**（強制追蹤紀律）
+- 有沒有 GA topArticles 跟 SPORE-LOG 完全不交叉的？（= 有文章火了但沒發孢子 = 錯過擴散機會）
+
 4. **產出洞察**
    - 哪個器官在痛？（分數 < 30 = 🔴 緊急）
    - 哪個器官意外地好？（可以趁勢擴展）
    - 跟上一次心跳比，什麼變了？趨勢向上還是向下？
+   - 社群觸手是否活著？（上次孢子幾天前？哪個平台 click-through 更高？）
 
 5. **🛰️ 探測器（外部熱點雷達）**（2026-04-08 新增）
    - **前置檢查**：先看 `reports/probe/` 有沒有當天的報告（`YYYY-MM-DD.md`）。**有 → 跳過探測器，直接讀該報告的結論進入下一步。** 同一天不重複掃描
@@ -238,13 +249,14 @@ grep -B1 -A3 "未解\|下次\|未完成\|TODO\|pending" docs/semiont/memory/*.md
 
 從 Beat 1 的診斷結果推導，不需要問觀察者：
 
-| 優先序 | 條件                                    | 行為                            |
-| ------ | --------------------------------------- | ------------------------------- |
-| 🔴 P0  | 器官 < 30，或 build 壞了                | 立即修復，先行動再報告          |
-| 🟠 P1  | 診斷發現的系統性問題（Beat 2 造橋鋪路） | 造工具 / 改 Pipeline / 升級 DNA |
-| 🟡 P2  | 內容品質修復（重寫、加腳註、格式修正）  | 按 REWRITE-PIPELINE 跑          |
-| 🟢 P3  | 社群維護（PR review、Issue 回應）       | 按 MAINTAINER-PIPELINE 跑       |
-| 🔵 P4  | 進化模式（新主題、新功能、擴展）        | 按 EVOLVE-PIPELINE 跑           |
+| 優先序  | 條件                                    | 行為                                                             |
+| ------- | --------------------------------------- | ---------------------------------------------------------------- |
+| 🔴 P0   | 器官 < 30，或 build 壞了                | 立即修復，先行動再報告                                           |
+| 🟠 P1   | 診斷發現的系統性問題（Beat 2 造橋鋪路） | 造工具 / 改 Pipeline / 升級 DNA                                  |
+| 🟡 P2   | 內容品質修復（重寫、加腳註、格式修正）  | 按 REWRITE-PIPELINE 跑                                           |
+| 🟢 P3   | 社群維護（PR review、Issue 回應）       | 按 MAINTAINER-PIPELINE 跑                                        |
+| 🔵 P4   | 進化模式（新主題、新功能、擴展）        | 按 EVOLVE-PIPELINE 跑                                            |
+| 📡 P3.5 | 社群觸手沉默（Beat 1 §3b 警報）         | 走 SPORE-PIPELINE 發一則孢子（優先選 GA 熱門但沒發過孢子的文章） |
 
 ### 強制讀取規則（鐵律）
 
