@@ -774,22 +774,32 @@ function formatSelectedPathDiagnostics({
   ignoredNonMarkdownPaths,
   unmatchedPaths,
 }) {
+  const maxDisplayedPaths = 3;
+  const summarizePaths = (paths) => {
+    if (paths.length <= maxDisplayedPaths) {
+      return paths.join(', ');
+    }
+
+    const displayedPaths = paths.slice(0, maxDisplayedPaths).join(', ');
+    const omittedCount = paths.length - maxDisplayedPaths;
+    return `${displayedPaths}, ... (+${omittedCount} more)`;
+  };
   const details = [];
 
   if (ignoredNonMarkdownPaths.length > 0) {
     details.push(
-      `ignored existing non-markdown path(s): ${ignoredNonMarkdownPaths.join(', ')}`,
+      `ignored existing non-markdown path(s): ${summarizePaths(ignoredNonMarkdownPaths)}`,
     );
   }
 
   if (ignoredMarkdownPaths.length > 0) {
     details.push(
-      `ignored existing markdown path(s) outside tracked docs: ${ignoredMarkdownPaths.join(', ')}`,
+      `ignored existing markdown path(s) outside tracked docs: ${summarizePaths(ignoredMarkdownPaths)}`,
     );
   }
 
   if (unmatchedPaths.length > 0) {
-    details.push(`unmatched path(s): ${unmatchedPaths.join(', ')}`);
+    details.push(`unmatched path(s): ${summarizePaths(unmatchedPaths)}`);
   }
 
   return details.length > 0 ? `${details.join('; ')}.` : null;

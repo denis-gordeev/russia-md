@@ -99,6 +99,13 @@ async function main() {
   });
 
   await runCase('valid-minimal', {
+    args: ['--paths', 'docs,notes/todo.txt,missing.txt'],
+    expectSuccess: true,
+    expectedText:
+      /Additional --paths selection details: ignored existing non-markdown path\(s\): notes\/todo\.txt; unmatched path\(s\): missing\.txt\.[\s\S]*No changed skill folders detected; validating changed repository markdown links only\.[\s\S]*Validated 0 skill example contract\(s\) and changed repository markdown links\./,
+  });
+
+  await runCase('valid-minimal', {
     args: ['--paths', 'notes/todo.txt'],
     expectSuccess: true,
     expectedText:
@@ -124,6 +131,16 @@ async function main() {
     expectSuccess: true,
     expectedText:
       /Additional --paths selection details: ignored existing non-markdown path\(s\): notes\/todo\.txt\.[\s\S]*No changed skill folders detected; validating changed repository markdown links only\.[\s\S]*Validated 0 skill example contract\(s\) and changed repository markdown links\./,
+  });
+
+  await runCase('valid-minimal', {
+    args: [
+      '--paths',
+      'missing-1.txt,missing-2.txt,missing-3.txt,missing-4.txt,missing-5.txt',
+    ],
+    expectSuccess: true,
+    expectedText:
+      /No skill folders or repository markdown docs matched the selected --paths input; nothing to validate \(unmatched path\(s\): missing-1\.txt, missing-2\.txt, missing-3\.txt, \.\.\. \(\+2 more\)\.\)/,
   });
 
   await runCase('invalid-icon-path', {
