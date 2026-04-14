@@ -1,4 +1,5 @@
 import type { Lang } from '../types';
+import { LANGUAGE_DISPLAY_NAMES, DEFAULT_LANGUAGE } from '../config/languages';
 
 export type Locale = Lang;
 import { homeUI } from './home';
@@ -13,14 +14,10 @@ import { dashboardUI } from './dashboard';
 import { notFoundUI } from './notfound';
 import { taiwanShapeUI } from './taiwanShape';
 
-export const languages: Record<Lang, string> = {
-  en: 'English',
-  'zh-TW': '中文',
-  ja: '日本語',
-  ko: '한국어',
-};
+// Single source of truth: src/config/languages.ts
+export const languages = LANGUAGE_DISPLAY_NAMES as Record<Lang, string>;
 
-export const defaultLang: Lang = 'zh-TW';
+export const defaultLang = DEFAULT_LANGUAGE.code as Lang;
 export const showDefaultLang = false;
 
 export const ui = {

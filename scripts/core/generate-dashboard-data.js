@@ -10,6 +10,7 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { execSync } from 'child_process';
+import { LANGUAGES } from '../../src/config/languages.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -48,8 +49,11 @@ const CATEGORIES = [
   'Technology',
 ];
 
-// Translation language directories
-const TRANSLATION_LANGS = ['en', 'es', 'ja', 'ko'];
+// Translation language directories — sourced from registry so adding a
+// language only requires editing src/config/languages.json.
+const TRANSLATION_LANGS = LANGUAGES.filter((l) => !l.isDefault).map(
+  (l) => l.code,
+);
 
 // Ensure output directory exists
 if (!fs.existsSync(OUTPUT_DIR)) {

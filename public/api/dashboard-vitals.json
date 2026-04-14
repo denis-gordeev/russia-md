@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-04-14T03:25:44.576Z",
+  "lastUpdated": "2026-04-14T03:45:17.938Z",
   "totalArticles": 472,
   "contributors": 55,
   "articlesLast7Days": 74,
@@ -10,8 +10,9 @@
   "languageCoverage": {
     "zh-TW": 472,
     "en": 395,
-    "es": 36,
     "ja": 256,
-    "ko": 321
+    "ko": 321,
+    "es": 36,
+    "fr": 0
   }
 }

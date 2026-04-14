@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-04-14T03:25:44.576Z",
+  "lastUpdated": "2026-04-14T03:45:17.938Z",
   "organs": [
     {
       "id": "heart",
@@ -100,9 +100,10 @@
         "languageCoverage": {
           "zh-TW": 472,
           "en": 395,
-          "es": 36,
           "ja": 256,
-          "ko": 321
+          "ko": 321,
+          "es": 36,
+          "fr": 0
         },
         "translationPct": 72,
         "langHealthDetails": {
@@ -125,26 +126,6 @@
               "pct": 84
             },
             "score": 94
-          },
-          "es": {
-            "ui": {
-              "pct": 0
-            },
-            "pages": {
-              "filled": 0,
-              "total": 8,
-              "pct": 0
-            },
-            "hubs": {
-              "filled": 12,
-              "total": 12,
-              "pct": 100
-            },
-            "articles": {
-              "count": 36,
-              "pct": 8
-            },
-            "score": 23
           },
           "ja": {
             "ui": {
@@ -185,6 +166,46 @@
               "pct": 68
             },
             "score": 87
+          },
+          "es": {
+            "ui": {
+              "pct": 0
+            },
+            "pages": {
+              "filled": 0,
+              "total": 8,
+              "pct": 0
+            },
+            "hubs": {
+              "filled": 12,
+              "total": 12,
+              "pct": 100
+            },
+            "articles": {
+              "count": 36,
+              "pct": 8
+            },
+            "score": 23
+          },
+          "fr": {
+            "ui": {
+              "pct": 0
+            },
+            "pages": {
+              "filled": 0,
+              "total": 8,
+              "pct": 0
+            },
+            "hubs": {
+              "filled": 0,
+              "total": 12,
+              "pct": 0
+            },
+            "articles": {
+              "count": 0,
+              "pct": 0
+            },
+            "score": 0
           }
         }
       }
