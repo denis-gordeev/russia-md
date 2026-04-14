@@ -1,2 +1,5 @@
+export PATH="$PATH:/opt/homebrew/bin:/usr/local/bin:$HOME/.bun/bin"
+
 npm run test:content:staged
+sh scripts/check-staged-secrets.sh
 npx --no-install lint-staged
