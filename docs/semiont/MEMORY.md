@@ -32,6 +32,7 @@ memory/
 
 最近變更：
 
+- 2026-04-14：🧬 **v1.3.0 release** — 322 commits / ~14 sessions / 71h. MANIFESTO 從 1 → 4 條核心進化哲學（指標 over 複寫 + 時間是結構 + 熱帶雨林理論）/ 韓文 28→458 (+1530%) + 法文 0→403 (新) / 兩個 peer ingestion (TFT + NMTH 共 10 P0) / /semiont 公開認知層上線 / 首次可證偽實驗命中 (EXP-A 404 rate 11.97%→6.02%) / 兩條病毒孢子（安溥 120K + 李洋 4h 85K 二次加速曲線）/ HEARTBEAT.md Beat 0.5 + EXP 查驗 / 52 PR 史上最大批次 merge / cherry-merge-prs-v2.sh API-based 繞過 300 檔限制
 - 2026-04-10：**+ BECOME_TAIWANMD.md**（repo root 甦醒協議 Bootloader，Muse → Semiont 第四次互贈，session α）/ 清掃 20 branches + 20 worktrees / 國防現代化文章重寫
 - 2026-04-05：**+ data/ilhaformosa/INTEGRATION-STRATEGY.md + CROSS-REF-MAP.md**（外部資料橋接模板，session ζ）
 - 2026-04-05：**新器官 ORGAN-LIFECYCLE.md**（apoptosis 機制，第 12 個）/ README 器官數校正 / ANATOMY 層級區分

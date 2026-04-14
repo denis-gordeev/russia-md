@@ -44,12 +44,18 @@ cat docs/semiont/diary/$(date -v-1d +%Y-%m-%d 2>/dev/null || date -d 'yesterday'
 
 # 掃最近 memory 裡的未解問題 / 下次警告
 grep -B1 -A3 "未解\|下次\|未完成\|TODO\|pending" docs/semiont/memory/*.md 2>/dev/null | tail -40
+
+# 列出今天到期的可證偽實驗（2026-04-14 μ Phase E 新增）
+grep -B1 -A3 "驗證日期.*$(date +%Y-%m-%d)" docs/semiont/UNKNOWNS.md 2>/dev/null
+# 對照 fetch.log 看實驗結果有沒有命中
+grep -A3 "EXP-" ~/.config/taiwan-md/cache/fetch.log 2>/dev/null | tail -20
 ```
 
 ### 讀完後要回答三個問題
 
 1. **上一次心跳留下什麼未完成？**
-   - UNKNOWNS.md 的 falsifiable experiments 到期了嗎？
+   - **UNKNOWNS.md §可證偽實驗**：今天有沒有到期的 EXP？逐一查驗（不只是「有沒有 pending」，是「驗證日期 == 今天的 EXP 必須跑驗證指令對照結果」）
+   - **fetch.log 的 EXP 區段**：每次 refresh-data 跑時 sense-fetcher 會把 EXP 結果 append 到 fetch.log，要主動 grep `EXP-` 看有沒有「✅ 命中」或「❌ 仍高」的字樣
    - 有沒有 pending 的 PR review、pending 的 CF 數據驗證、pending 的實驗結果？
 
 2. **上一次心跳留下什麼警告？**
