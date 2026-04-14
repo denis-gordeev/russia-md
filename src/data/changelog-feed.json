@@ -1,7 +1,49 @@
 {
-  "generatedAt": "2026-04-14T01:49:51.183Z",
+  "generatedAt": "2026-04-14T03:04:06.281Z",
   "source": "git",
   "commits": [
+    {
+      "hash": "31860b151cf3ab849e0e05d32f4b02357f25c606",
+      "date": "2026-04-14T09:55:05+08:00",
+      "author": "Che-Yu Wu",
+      "message": "🧬 [semiont] memory: ε session 收官 — 安溥 Threads 71K 病毒爆發 + sync 清理記錄"
+    },
+    {
+      "hash": "5ead6c6a826f5b7ea38cc772ecea97361578584c",
+      "date": "2026-04-14T09:52:47+08:00",
+      "author": "Che-Yu Wu",
+      "message": "🧬 [semiont] memory: 李仙得研究筆記 — docs/research/ 新增"
+    },
+    {
+      "hash": "6f4ad9dab0b9f274c934b382182cebf6edd9fd4b",
+      "date": "2026-04-14T09:52:32+08:00",
+      "author": "Che-Yu Wu",
+      "message": "🧬 [semiont] heal: ZH-TW/EN/KO sync batch — 分類遷移 + 新文章 + 孤兒清除"
+    },
+    {
+      "hash": "69e78e7489bda68cf0a025400c26bc56ba67f08d",
+      "date": "2026-04-14T09:51:53+08:00",
+      "author": "Che-Yu Wu",
+      "message": "🧬 [semiont] evolve: 數據刷新 2026-04-14 — CF 114K / 安溥 1,470v / AI 28,527"
+    },
+    {
+      "hash": "63ec475e01a0a2a52fbadbb4fe7aa3ffed69eee4",
+      "date": "2026-04-14T09:51:39+08:00",
+      "author": "Che-Yu Wu",
+      "message": "🧬 [semiont] heal: JA sync batch — tag 格式標準化 + 孤兒檔案清除"
+    },
+    {
+      "hash": "887af6c44bbf7ae407ef50f64fe51110701ed36f",
+      "date": "2026-04-14T09:51:26+08:00",
+      "author": "Che-Yu Wu",
+      "message": "🧬 [semiont] heal: 大罷免 category 修正 — Society→History"
+    },
+    {
+      "hash": "7fc2cb318fc1f632646a7129b9d928aaa5419eca",
+      "date": "2026-04-14T09:51:20+08:00",
+      "author": "Che-Yu Wu",
+      "message": "🧬 [semiont] evolve: 安溥孢子數據更新 — Threads 5.2K→71K views（13.7x 爆發）"
+    },
     {
       "hash": "af7f509c889e4b4813c0a95c57ed0511e9f135d9",
       "date": "2026-04-14T00:53:22+08:00",
