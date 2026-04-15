@@ -2554,8 +2554,11 @@ const t = useTranslations(lang);
     width: 100%;
     max-width: 160px;
     text-decoration: none;
+    /* 蓋掉 global.css main a:not(...) 加的 border-bottom + padding-bottom */
+    border-bottom: none !important;
+    padding-bottom: 0 !important;
   }
-  /* 蓋掉全域 a[target=_blank]::after 的 ↗ + 底線 — logo 不需要外連符號 */
+  /* 蓋掉全域 a[target=_blank]::after 的 ↗ — logo 不需要外連符號 */
   .sponsor-card-logo a::after {
     content: none !important;
   }
@@ -2754,7 +2757,7 @@ const t = useTranslations(lang);
       flex: 0 0 auto;
       width: 160px;
       max-width: 160px;
-      align-self: flex-start;
+      align-self: center;
     }
     .sponsor-contact {
       flex-direction: column;
