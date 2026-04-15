@@ -346,13 +346,11 @@ export const aboutUI = {
       'Whether through corporate products, professional services, or individual support, we welcome all forms of collaboration.<br />Sponsorship packages are customized based on contribution content, not defined by monetary amounts.',
     'about.sponsors.cta.contact': '📧 Contact Us About Sponsorship',
     'about.sponsors.cta.github': '💖 GitHub Sponsors',
-    'about.sponsors.eth.label':
-      'You can also support project operations via ETH donation:',
-    'about.sponsors.eth.address': 'taiwanmd.eth',
-    'about.sponsors.eth.copy': 'Copy',
-    'about.sponsors.eth.copied': 'Copied!',
-    'about.sponsors.eth.note':
-      'Donations fund article collection, website operations, and server costs',
+    'about.sponsors.portaly.label':
+      'Want to help write the record this island leaves behind? You can join us with a one-time or monthly contribution.',
+    'about.sponsors.portaly.cta': 'Sponsor on Portaly',
+    'about.sponsors.portaly.note':
+      'A hundred years from now, someone will want to know what Taiwanese cared about in 2026. Your support becomes part of that answer — directly funding the research, writing, and translation of the next article into four languages.',
     // FAQ Section
     'about.faq.title': 'FAQ',
     'about.faq.subtitle': 'Things you might want to know about Taiwan.md',
@@ -744,13 +742,11 @@ export const aboutUI = {
       '企業製品、専門サービス、個人サポートなど、あらゆる形のコラボレーションを歓迎します。<br />スポンサーパッケージは貢献内容に基づいてカスタマイズされ、金額では定義しません。',
     'about.sponsors.cta.contact': '📧 スポンサーシップについてお問い合わせ',
     'about.sponsors.cta.github': '💖 GitHub Sponsors',
-    'about.sponsors.eth.label':
-      'ETH 寄付でもプロジェクト運営をサポートできます：',
-    'about.sponsors.eth.address': 'taiwanmd.eth',
-    'about.sponsors.eth.copy': 'コピー',
-    'about.sponsors.eth.copied': 'コピーしました！',
-    'about.sponsors.eth.note':
-      '寄付金は記事収集、ウェブサイト運営、サーバー費用に使用されます',
+    'about.sponsors.portaly.label':
+      'この島の記録を一緒に残しませんか？単発でも、月額でも参加できます。',
+    'about.sponsors.portaly.cta': 'Portaly で支援する',
+    'about.sponsors.portaly.note':
+      '100 年後、誰かが 2026 年の台湾人が何を大事にしていたかを知りたくなる。あなたの支援は、その答えの一部になります——次の記事のリサーチ、執筆、4 言語への翻訳を直接支えます。',
     // FAQ Section
     'about.faq.title': 'よくある質問',
     'about.faq.subtitle': 'Taiwan.md について知りたいこと',
@@ -1135,13 +1131,11 @@ export const aboutUI = {
       '기업 제품이든, 전문 서비스든, 개인 지원이든, 모든 형태의 협업을 환영합니다.<br />후원 패키지는 기여 내용에 맞춰 맞춤 설계되며, 금액으로 가치를 정의하지 않습니다.',
     'about.sponsors.cta.contact': '📧 후원 관련 문의하기',
     'about.sponsors.cta.github': '💖 GitHub Sponsors',
-    'about.sponsors.eth.label':
-      'ETH 기부로도 프로젝트 운영을 지원할 수 있습니다:',
-    'about.sponsors.eth.address': 'taiwanmd.eth',
-    'about.sponsors.eth.copy': '복사',
-    'about.sponsors.eth.copied': '복사됨!',
-    'about.sponsors.eth.note':
-      '기부금은 문서 수집, 웹사이트 운영 및 서버 비용에 사용됩니다',
+    'about.sponsors.portaly.label':
+      '이 섬이 남길 기록을 함께 만들어가시겠어요? 일회성 또는 정기 후원 모두 환영합니다.',
+    'about.sponsors.portaly.cta': 'Portaly에서 후원하기',
+    'about.sponsors.portaly.note':
+      '100년 후, 누군가는 2026년 대만 사람들이 무엇을 소중히 여겼는지 알고 싶어할 것입니다. 당신의 후원은 그 답의 일부가 됩니다——다음 글의 리서치, 집필, 그리고 4개 언어 번역 비용을 직접 지원합니다.',
     // FAQ Section
     'about.faq.title': '자주 묻는 질문',
     'about.faq.subtitle': 'Taiwan.md에 대해 궁금할 수 있는 것들',
@@ -1514,11 +1508,11 @@ export const aboutUI = {
       '不論是企業產品、專業服務、還是個人支持，我們歡迎任何形式的合作。<br />贊助方案依貢獻內容客製，不以金額定義價值。',
     'about.sponsors.cta.contact': '📧 聯繫我們洽談贊助',
     'about.sponsors.cta.github': '💖 GitHub Sponsors',
-    'about.sponsors.eth.label': '也可以透過 ETH 捐款支持專案營運：',
-    'about.sponsors.eth.address': 'taiwanmd.eth',
-    'about.sponsors.eth.copy': '複製',
-    'about.sponsors.eth.copied': '已複製！',
-    'about.sponsors.eth.note': '捐款將用於文章蒐集、網站營運及伺服器費用',
+    'about.sponsors.portaly.label':
+      '想一起替這座島留下一份檔案？也歡迎用單筆或定期定額的方式參與。',
+    'about.sponsors.portaly.cta': '到 Portaly 贊助',
+    'about.sponsors.portaly.note':
+      '一百年後，有人想知道 2026 年的台灣人在乎什麼。你的贊助會變成那個答案的一部分——直接支持下一篇文章的研究、寫作、與翻譯到四種語言的成本。',
     // FAQ Section
     'about.faq.title': '常見問題',
     'about.faq.subtitle': '關於 Taiwan.md 你可能想知道的事',

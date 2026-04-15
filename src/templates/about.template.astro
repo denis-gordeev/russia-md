@@ -1230,46 +1230,19 @@ const t = useTranslations(lang);
               {t('about.sponsors.cta.github')}
             </a>
           </div>
-          <div class="eth-donate">
-            <p class="eth-label">{t('about.sponsors.eth.label')}</p>
-            <div class="eth-address-box">
-              <span class="eth-icon">
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 256 417"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M127.961 0l-2.795 9.5v275.668l2.795 2.79 127.962-75.638z"
-                    fill="#343434"></path>
-                  <path
-                    d="M127.962 0L0 212.32l127.962 75.639V154.158z"
-                    fill="#8C8C8C"></path>
-                  <path
-                    d="M127.961 312.187l-1.575 1.92v98.199l1.575 4.6L256 236.587z"
-                    fill="#3C3C3B"></path>
-                  <path d="M127.962 416.905v-104.72L0 236.585z" fill="#8C8C8C"
-                  ></path>
-                  <path
-                    d="M127.961 287.958l127.96-75.637-127.96-58.162z"
-                    fill="#141414"></path>
-                  <path d="M0 212.32l127.96 75.638V154.159z" fill="#393939"
-                  ></path>
-                </svg>
-              </span>
-              <code class="eth-address" id="eth-address"
-                >{t('about.sponsors.eth.address')}</code
-              >
-              <button
-                class="eth-copy-btn"
-                onclick={`navigator.clipboard.writeText('${t('about.sponsors.eth.address')}').then(()=>{this.textContent='${t('about.sponsors.eth.copied')}';setTimeout(()=>{this.textContent='${t('about.sponsors.eth.copy')}'},1500)})`}
-                title={t('about.sponsors.eth.copy')}
-                >{t('about.sponsors.eth.copy')}</button
-              >
-            </div>
-            <p class="eth-note">{t('about.sponsors.eth.note')}</p>
+          <div class="portaly-donate">
+            <p class="portaly-label">
+              {t('about.sponsors.portaly.label')}
+            </p>
+            <a
+              href="https://portaly.cc/taiwanmd/support"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="portaly-link"
+            >
+              {t('about.sponsors.portaly.cta')} →
+            </a>
+            <p class="portaly-note">{t('about.sponsors.portaly.note')}</p>
           </div>
           <p
             class="sponsor-note"
@@ -2632,56 +2605,43 @@ const t = useTranslations(lang);
     text-decoration: underline;
   }
 
-  .eth-donate {
+  .portaly-donate {
     margin-top: 1.5rem;
     padding-top: 1.5rem;
     border-top: 1px dashed #e2e8f0;
   }
-  .eth-label {
-    font-size: 0.9rem;
+  .portaly-label {
+    font-size: 0.95rem;
     color: #475569;
-    margin-bottom: 0.75rem;
+    margin-bottom: 0.85rem;
+    line-height: 1.6;
   }
-  .eth-address-box {
+  .portaly-link {
     display: inline-flex;
     align-items: center;
-    gap: 0.6rem;
-    background: #f8fafc;
-    border: 1px solid #e2e8f0;
-    border-radius: 10px;
-    padding: 0.6rem 1rem;
-    margin-bottom: 0.5rem;
-  }
-  .eth-icon {
-    display: flex;
-    align-items: center;
-    opacity: 0.7;
-  }
-  .eth-address {
-    font-family: 'SF Mono', 'Fira Code', monospace;
-    font-size: 0.95rem;
-    font-weight: 600;
-    color: #1a1a2e;
-    letter-spacing: 0.01em;
-  }
-  .eth-copy-btn {
-    background: #3b82f6;
+    gap: 0.4rem;
+    background: linear-gradient(135deg, #15803d 0%, #166534 100%);
     color: white;
-    border: none;
-    border-radius: 6px;
-    padding: 0.3rem 0.7rem;
-    font-size: 0.78rem;
+    text-decoration: none;
+    padding: 0.7rem 1.3rem;
+    border-radius: 10px;
+    font-size: 0.92rem;
     font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s;
+    letter-spacing: 0.01em;
+    box-shadow: 0 2px 8px rgba(21, 128, 61, 0.18);
+    transition: all 0.2s ease;
   }
-  .eth-copy-btn:hover {
-    background: #2563eb;
+  .portaly-link:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px rgba(21, 128, 61, 0.28);
+    background: linear-gradient(135deg, #166534 0%, #14532d 100%);
   }
-  .eth-note {
-    font-size: 0.8rem;
-    color: #94a3b8;
-    margin-top: 0.5rem;
+  .portaly-note {
+    font-size: 0.82rem;
+    color: #64748b;
+    margin-top: 0.85rem;
+    line-height: 1.65;
+    max-width: 30em;
   }
   .supporter-link {
     display: inline-block;
