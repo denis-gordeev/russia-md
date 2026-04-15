@@ -874,9 +874,15 @@ async function main() {
     };
   }
 
-  // Overall translation score: weighted average across all active languages
+  // Overall translation score: weighted average across enabled languages only.
+  // Preview languages (enabled:false in src/config/languages.ts) have content
+  // but no UI/routes, so they'd drag the score down artificially. Bug fix
+  // 2026-04-15: fr landing 403 preview articles dropped score 78→67 overnight.
+  const enabledCodes = new Set(
+    LANGUAGES.filter((l) => l.enabled && !l.isDefault).map((l) => l.code),
+  );
   const activeLangs = TRANSLATION_LANGS.filter(
-    (l) => (languageCoverage[l] || 0) > 0,
+    (l) => enabledCodes.has(l) && (languageCoverage[l] || 0) > 0,
   );
   const translationScore =
     activeLangs.length > 0
