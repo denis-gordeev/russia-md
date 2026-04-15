@@ -46,9 +46,6 @@ cloudflare-token*
 # Obsidian workspace metadata
 .obsidian/
 
-# Workflow skills kept only on the author's machine (~/.claude/skills/ or ~/.cursor/skills/)
-.claude/skills/taiwanmd-korea-people/
-
 # jetbrains setting folder
 .idea/
 public/api/random.json
