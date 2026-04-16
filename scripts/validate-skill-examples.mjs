@@ -296,8 +296,18 @@ function countLines(value) {
   return value.split(/\r?\n/).length;
 }
 
-function getMarkdownBodyInfo(markdownRaw) {
-  const parsed = matter(markdownRaw);
+function getMarkdownBodyInfo(markdownRaw, markdownPath) {
+  let parsed;
+
+  try {
+    parsed = matter(markdownRaw);
+  } catch (error) {
+    const pathLabel = markdownPath
+      ? path.relative(root, markdownPath)
+      : 'markdown document';
+    fail(`${pathLabel}: invalid YAML front matter (${error.message})`);
+  }
+
   const contentStartIndex = markdownRaw.indexOf(parsed.content);
   const bodyStartLine =
     contentStartIndex === -1
@@ -408,7 +418,7 @@ async function getMarkdownAnchors(markdownPath) {
   }
 
   const markdownRaw = await readFile(markdownPath, 'utf8');
-  const { content } = getMarkdownBodyInfo(markdownRaw);
+  const { content } = getMarkdownBodyInfo(markdownRaw, markdownPath);
   const anchors = new Set();
   const slugCounts = new Map();
   const lines = content.split(/\r?\n/);
@@ -458,7 +468,10 @@ async function getMarkdownAnchors(markdownPath) {
 
 async function validateMarkdownLinks(markdownPath) {
   const markdownRaw = await readFile(markdownPath, 'utf8');
-  const { content, bodyStartLine } = getMarkdownBodyInfo(markdownRaw);
+  const { content, bodyStartLine } = getMarkdownBodyInfo(
+    markdownRaw,
+    markdownPath,
+  );
   const matches = [...content.matchAll(markdownLinkPattern)];
   const errors = [];
 
@@ -774,32 +787,32 @@ function formatSelectedPathDiagnostics({
   ignoredNonMarkdownPaths,
   unmatchedPaths,
 }) {
-  const maxDisplayedPaths = 3;
-  const summarizePaths = (paths) => {
-    if (paths.length <= maxDisplayedPaths) {
+  const formatPathList = (paths) => {
+    const maxVisiblePaths = 5;
+
+    if (paths.length <= maxVisiblePaths) {
       return paths.join(', ');
     }
 
-    const displayedPaths = paths.slice(0, maxDisplayedPaths).join(', ');
-    const omittedCount = paths.length - maxDisplayedPaths;
-    return `${displayedPaths}, ... (+${omittedCount} more)`;
+    const remainingCount = paths.length - maxVisiblePaths;
+    return `${paths.slice(0, maxVisiblePaths).join(', ')}, ... (+${remainingCount} more)`;
   };
   const details = [];
 
   if (ignoredNonMarkdownPaths.length > 0) {
     details.push(
-      `ignored existing non-markdown path(s): ${summarizePaths(ignoredNonMarkdownPaths)}`,
+      `ignored existing non-markdown path(s): ${formatPathList(ignoredNonMarkdownPaths)}`,
     );
   }
 
   if (ignoredMarkdownPaths.length > 0) {
     details.push(
-      `ignored existing markdown path(s) outside tracked docs: ${summarizePaths(ignoredMarkdownPaths)}`,
+      `ignored existing markdown path(s) outside tracked docs: ${formatPathList(ignoredMarkdownPaths)}`,
     );
   }
 
   if (unmatchedPaths.length > 0) {
-    details.push(`unmatched path(s): ${summarizePaths(unmatchedPaths)}`);
+    details.push(`unmatched path(s): ${formatPathList(unmatchedPaths)}`);
   }
 
   return details.length > 0 ? `${details.join('; ')}.` : null;

@@ -72,7 +72,7 @@ This is still a foundation fork, not a finished editorial product. The active si
 - [x] Add fixture coverage for missing bundle files and shared-schema regression cases
 - [x] Run `check:skills:changed` in CI for pull requests alongside the full validation pass
 - [ ] Add diff-aware markdown validation that can re-check inbound links when shared docs or anchors change
-- [ ] Add fixture coverage for malformed front matter and invalid markdown link syntax edge cases
+- [x] Add fixture coverage for malformed front matter and invalid markdown link syntax edge cases
 - [x] Teach the validator to report all markdown-link failures in one pass instead of failing on the first error
 - [x] Add line-aware markdown diagnostics so broken links report the source line number
 - [x] Extend incremental validation to repository docs outside `skills/` when only shared references or `README.md` change
@@ -97,6 +97,8 @@ This is still a foundation fork, not a finished editorial product. The active si
 - [ ] Add fixture coverage for anchor-suggestion fallbacks when no close heading exists
 - [ ] Add fixture coverage for direct skill-folder `--paths` selections and nested subpaths
 - [ ] Add capped/truncated diagnostics when a markdown validation run surfaces many broken links at once
+- [ ] Add validator diagnostics for malformed YAML in `agents/openai.yaml` with file-local context, similar to markdown front matter errors
+- [ ] Add fixture coverage for truncated `--paths` diagnostics when ignored markdown and unmatched inputs are mixed in one run
 
 ## Development
 
@@ -115,7 +117,7 @@ npm run build
 
 `npm run check:skills:staged` applies the same incremental logic to the staged git index, which is useful before commits. For ad hoc path-scoped runs outside git-status heuristics, use `npm run check:skills -- --paths README.md,skills/esia/SKILL.md`; path-scoped runs now validate only the selected repo docs plus any directly targeted skill folders, can expand tracked markdown directories such as `docs` and `skills/shared/references`, return an explicit no-op message when the selected paths do not match any skill bundle or tracked markdown document, explain whether a `--paths` miss came from an unmatched path or an existing file that was ignored because it is outside the validator scope, and truncate long ignored/unmatched path lists so diagnostics stay readable.
 
-`npm run check:skills:fixtures` runs a small fixture suite for the validator itself, including front-matter-aware markdown regression coverage plus negative cases for broken markdown anchors with nearest-anchor suggestions, aggregated markdown-link failures with line-aware diagnostics, missing shared metadata schema files, invalid `interface.icon` metadata, path-scoped no-op output when `--paths` selects only ignored or unmatched files, truncated no-op diagnostics for oversized `--paths` selections, and directory-scoped `--paths` coverage for tracked repository markdown trees including mixed tracked-doc plus ignored-path inputs.
+`npm run check:skills:fixtures` runs a small fixture suite for the validator itself, including front-matter-aware markdown regression coverage plus negative cases for broken markdown anchors with nearest-anchor suggestions, malformed YAML front matter, malformed markdown-link syntax that should be ignored safely, aggregated markdown-link failures with line-aware diagnostics, missing shared metadata schema files, invalid `interface.icon` metadata, path-scoped no-op output when `--paths` selects only ignored or unmatched files, truncated diagnostics for large ignored/unmatched `--paths` selections, and directory-scoped `--paths` coverage for tracked repository markdown trees.
 
 ## Key Paths
 

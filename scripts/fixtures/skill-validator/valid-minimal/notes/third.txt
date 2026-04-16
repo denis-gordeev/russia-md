@@ -1,0 +1,1 @@
+Third ignored non-markdown fixture file.

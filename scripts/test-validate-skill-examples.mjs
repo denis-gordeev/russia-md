@@ -136,11 +136,32 @@ async function main() {
   await runCase('valid-minimal', {
     args: [
       '--paths',
-      'missing-1.txt,missing-2.txt,missing-3.txt,missing-4.txt,missing-5.txt',
+      'missing-1.md,missing-2.md,missing-3.md,missing-4.md,missing-5.md,missing-6.md,missing-7.md',
     ],
     expectSuccess: true,
     expectedText:
-      /No skill folders or repository markdown docs matched the selected --paths input; nothing to validate \(unmatched path\(s\): missing-1\.txt, missing-2\.txt, missing-3\.txt, \.\.\. \(\+2 more\)\.\)/,
+      /No skill folders or repository markdown docs matched the selected --paths input; nothing to validate \(unmatched path\(s\): missing-1\.md, missing-2\.md, missing-3\.md, missing-4\.md, missing-5\.md, \.\.\. \(\+2 more\)\.\)/,
+  });
+
+  await runCase('valid-minimal', {
+    args: [
+      '--paths',
+      'notes/todo.txt,notes/another.txt,notes/third.txt,notes/fourth.txt,notes/fifth.txt,notes/sixth.txt',
+    ],
+    expectSuccess: true,
+    expectedText:
+      /No skill folders or repository markdown docs matched the selected --paths input; nothing to validate \(ignored existing non-markdown path\(s\): notes\/another\.txt, notes\/fifth\.txt, notes\/fourth\.txt, notes\/sixth\.txt, notes\/third\.txt, \.\.\. \(\+1 more\)\.\)/,
+  });
+
+  await runCase('invalid-markdown-syntax', {
+    expectSuccess: true,
+    expectedText:
+      /Validated 1 skill example contract\(s\) and repository markdown links\./,
+  });
+
+  await runCase('malformed-frontmatter', {
+    expectSuccess: false,
+    expectedText: /README\.md: invalid YAML front matter/,
   });
 
   await runCase('invalid-icon-path', {

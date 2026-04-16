@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Fixture agent metadata",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["name", "interface", "policy"],
+  "properties": {
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "interface": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "display_name",
+        "short_description",
+        "brand_color",
+        "default_prompt"
+      ],
+      "properties": {
+        "display_name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 40
+        },
+        "short_description": {
+          "type": "string",
+          "minLength": 10,
+          "maxLength": 120
+        },
+        "brand_color": {
+          "type": "string",
+          "pattern": "^#[0-9A-Fa-f]{6}$"
+        },
+        "default_prompt": {
+          "type": "string",
+          "minLength": 20,
+          "maxLength": 240
+        },
+        "icon": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["allow_implicit_invocation"],
+      "properties": {
+        "allow_implicit_invocation": {
+          "type": "boolean"
+        }
+      }
+    }
+  }
+}
