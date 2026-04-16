@@ -24,7 +24,7 @@ function buildGitCache(): Map<
   try {
     // Use -z for NUL-delimited output to handle Unicode filenames
     const logOutput = execSync(
-      `git -c core.quotePath=false log --name-only --format="COMMIT_BY:%an" -- "russia-knowledge/"`,
+      `git -c core.quotePath=false log --full-history --name-only --format="COMMIT_BY:%an" -- "russia-knowledge/"`,
       { encoding: 'utf-8', maxBuffer: 10 * 1024 * 1024 },
     );
     let currentAuthor = '';
@@ -44,7 +44,7 @@ function buildGitCache(): Map<
       }
     }
     const dateOutput = execSync(
-      `git -c core.quotePath=false log --format="COMMIT_DATE:%aI" --name-only -- "russia-knowledge/"`,
+      `git -c core.quotePath=false log --full-history --format="COMMIT_DATE:%aI" --name-only -- "russia-knowledge/"`,
       { encoding: 'utf-8', maxBuffer: 10 * 1024 * 1024 },
     );
     let currentDate = '';
