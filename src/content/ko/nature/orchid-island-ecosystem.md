@@ -17,7 +17,6 @@ tags:
     '생물지리학',
   ]
 subcategory: '생태와 보전'
-category: 'Nature'
 author: 'Taiwan.md Translation Team'
 readingTime: 7
 featured: false
