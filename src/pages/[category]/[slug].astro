@@ -1,7 +1,6 @@
 ---
 import { readdir, readFile } from 'fs/promises';
 import { resolve, join, basename } from 'path';
-import { execSync } from 'child_process';
 import matter from 'gray-matter';
 import Layout from '../../layouts/Layout.astro';
 import { marked } from 'marked';
@@ -10,70 +9,22 @@ import {
   getCategoryConfig,
   type CategoryKey,
 } from '../../utils/categoryConfig';
+import {
+  buildGitInfoCache,
+  emptyGitInfo,
+  type Contributor,
+  type GitInfo,
+} from '../../utils/contributors';
 
-let _gitCache: Map<
-  string,
-  { contributors: string[]; lastModified: string }
-> | null = null;
-function buildGitCache(): Map<
-  string,
-  { contributors: string[]; lastModified: string }
-> {
+let _gitCache: Map<string, GitInfo> | null = null;
+function buildGitCache() {
   if (_gitCache) return _gitCache;
-  _gitCache = new Map();
-  try {
-    // Use -z for NUL-delimited output to handle Unicode filenames
-    const logOutput = execSync(
-      `git -c core.quotePath=false log --full-history --name-only --format="COMMIT_BY:%an" -- "russia-knowledge/"`,
-      { encoding: 'utf-8', maxBuffer: 10 * 1024 * 1024 },
-    );
-    let currentAuthor = '';
-    for (const line of logOutput.split('\n')) {
-      if (line.startsWith('COMMIT_BY:')) {
-        currentAuthor = line.slice(10);
-      } else if (line.startsWith('russia-knowledge/') && line.endsWith('.md')) {
-        const key = resolve(process.cwd(), line);
-        const entry = _gitCache.get(key) || {
-          contributors: [],
-          lastModified: '',
-        };
-        if (!entry.contributors.includes(currentAuthor)) {
-          entry.contributors.push(currentAuthor);
-        }
-        _gitCache.set(key, entry);
-      }
-    }
-    const dateOutput = execSync(
-      `git -c core.quotePath=false log --full-history --format="COMMIT_DATE:%aI" --name-only -- "russia-knowledge/"`,
-      { encoding: 'utf-8', maxBuffer: 10 * 1024 * 1024 },
-    );
-    let currentDate = '';
-    const seenFiles = new Set<string>();
-    for (const line of dateOutput.split('\n')) {
-      if (line.startsWith('COMMIT_DATE:')) {
-        currentDate = line.slice(12);
-      } else if (line.startsWith('russia-knowledge/') && line.endsWith('.md')) {
-        const key = resolve(process.cwd(), line);
-        if (!seenFiles.has(key)) {
-          seenFiles.add(key);
-          const entry = _gitCache.get(key) || {
-            contributors: [],
-            lastModified: '',
-          };
-          entry.lastModified = currentDate;
-          _gitCache.set(key, entry);
-        }
-      }
-    }
-  } catch (e) {
-    console.error('Git cache error:', (e as Error).message);
-  }
+  _gitCache = buildGitInfoCache('russia-knowledge/');
   return _gitCache;
 }
 
 function getGitInfo(filePath: string) {
-  const cache = buildGitCache();
-  return cache.get(filePath) || { contributors: [], lastModified: '' };
+  return buildGitCache().get(filePath) || emptyGitInfo();
 }
 
 export async function getStaticPaths() {
@@ -121,7 +72,7 @@ export async function getStaticPaths() {
           const { data: frontmatter, content } = safeMatter(fileContent);
           const slug = basename(file, '.md');
 
-          let gitInfo = { contributors: [] as string[], lastModified: '' };
+          let gitInfo = emptyGitInfo();
           try {
             gitInfo = getGitInfo(filePath);
           } catch {}
@@ -171,6 +122,12 @@ const {
   lastModified = '',
 } = Astro.props;
 const { category, slug } = Astro.params;
+const normalizedContributors = contributors.map(
+  (contributor: string | Contributor) =>
+    typeof contributor === 'string'
+      ? { name: contributor, login: contributor }
+      : contributor,
+);
 
 const categoryInfo = getCategoryConfig(category);
 if (!categoryInfo) {
@@ -403,18 +360,18 @@ const processedContent = marked.parse(resolvedContent, {
         {
           (contributors.length > 0 || lastModified) && (
             <div class="article-contributors">
-              {contributors.length > 0 && (
+              {normalizedContributors.length > 0 && (
                 <div class="contributors-list">
                   <span class="contributors-label">✏️ Contributors</span>
                   <div class="contributors-names">
-                    {contributors.map((name: string) => (
+                    {normalizedContributors.map((contributor) => (
                       <a
-                        href={`https://github.com/${name}`}
+                        href={`https://github.com/${contributor.login}`}
                         target="_blank"
                         rel="noopener noreferrer"
                         class="contributor-chip"
                       >
-                        {name}
+                        {contributor.name}
                       </a>
                     ))}
                   </div>
