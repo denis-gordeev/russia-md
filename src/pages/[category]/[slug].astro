@@ -15,6 +15,7 @@ import {
   type Contributor,
   type GitInfo,
 } from '../../utils/contributors';
+import { formatArticleDate, getArticleUi } from '../../utils/articleUi';
 
 let _gitCache: Map<string, GitInfo> | null = null;
 function buildGitCache() {
@@ -122,6 +123,7 @@ const {
   lastModified = '',
 } = Astro.props;
 const { category, slug } = Astro.params;
+const ui = getArticleUi('en');
 const normalizedContributors = contributors.map(
   (contributor: string | Contributor) =>
     typeof contributor === 'string'
@@ -317,7 +319,9 @@ const processedContent = marked.parse(resolvedContent, {
               frontmatter.readingTime && (
                 <div class="meta-item">
                   <span class="meta-icon">📖</span>
-                  <span>{frontmatter.readingTime} min read</span>
+                  <span>
+                    {ui.minRead.replace('{n}', String(frontmatter.readingTime))}
+                  </span>
                 </div>
               )
             }
@@ -326,9 +330,7 @@ const processedContent = marked.parse(resolvedContent, {
               frontmatter.date && (
                 <div class="meta-item">
                   <span class="meta-icon">📅</span>
-                  <span>
-                    {new Date(frontmatter.date).toLocaleDateString('en-US')}
-                  </span>
+                  <span>{formatArticleDate(frontmatter.date)}</span>
                 </div>
               )
             }
@@ -351,7 +353,7 @@ const processedContent = marked.parse(resolvedContent, {
             lang && (
               <div class="lang-badge">
                 <span class="meta-icon">🌐</span>
-                <span>English</span>
+                <span>{ui.english}</span>
               </div>
             )
           }
@@ -362,7 +364,7 @@ const processedContent = marked.parse(resolvedContent, {
             <div class="article-contributors">
               {normalizedContributors.length > 0 && (
                 <div class="contributors-list">
-                  <span class="contributors-label">✏️ Contributors</span>
+                  <span class="contributors-label">✏️ {ui.contributors}</span>
                   <div class="contributors-names">
                     {normalizedContributors.map((contributor) => (
                       <a
@@ -379,13 +381,9 @@ const processedContent = marked.parse(resolvedContent, {
               )}
               {lastModified && (
                 <div class="last-modified">
-                  <span class="modified-label">🔄 Last updated</span>
+                  <span class="modified-label">🔄 {ui.lastUpdated}</span>
                   <span class="modified-date">
-                    {new Date(lastModified).toLocaleDateString('en-US', {
-                      year: 'numeric',
-                      month: 'long',
-                      day: 'numeric',
-                    })}
+                    {formatArticleDate(lastModified)}
                   </span>
                 </div>
               )}
@@ -399,7 +397,7 @@ const processedContent = marked.parse(resolvedContent, {
         {
           frontmatter.source && (
             <div class="sources">
-              <h3>Sources</h3>
+              <h3>{ui.sources}</h3>
               <ul>
                 {frontmatter.source.map((url: string) => (
                   <li>
@@ -433,7 +431,7 @@ const processedContent = marked.parse(resolvedContent, {
           </div>
 
           <div class="share-section">
-            <span class="share-label">Share this article:</span>
+            <span class="share-label">{ui.shareThisArticle}</span>
             <div class="share-buttons">
               <a
                 href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(`https://russia-md.ru/${category}/${slug}`)}`}
@@ -450,7 +448,7 @@ const processedContent = marked.parse(resolvedContent, {
                     d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"
                   ></path>
                 </svg>
-                Twitter
+                {ui.shareOnX}
               </a>
               <a
                 href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(`https://russia-md.ru/${category}/${slug}`)}`}
@@ -467,7 +465,7 @@ const processedContent = marked.parse(resolvedContent, {
                     d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"
                   ></path>
                 </svg>
-                Facebook
+                {ui.shareOnFacebook}
               </a>
             </div>
           </div>
@@ -477,7 +475,7 @@ const processedContent = marked.parse(resolvedContent, {
         {
           relatedArticles.length > 0 && (
             <div class="related-articles">
-              <h3 class="related-title">Related reading</h3>
+              <h3 class="related-title">{ui.relatedReading}</h3>
               <div class="related-grid">
                 {relatedArticles.map((article) => (
                   <a
@@ -518,7 +516,7 @@ const processedContent = marked.parse(resolvedContent, {
                 onclick="goRandomArticle()"
                 type="button"
               >
-                🎲 Open a random article
+                🎲 {ui.openRandomArticle}
               </button>
             </div>
           )
@@ -526,7 +524,7 @@ const processedContent = marked.parse(resolvedContent, {
 
         <!-- More Articles -->
         <div class="more-articles">
-          <h3 class="more-title">Explore more of Russia</h3>
+          <h3 class="more-title">{ui.exploreMore}</h3>
           <div class="more-grid">
             {
               otherCategories.map((cat) => (
@@ -558,7 +556,7 @@ const processedContent = marked.parse(resolvedContent, {
           {
             relatedArticles.length > 0 && (
               <div class="recommended-reading">
-                <h3 class="footer-section-title">You may also like</h3>
+                <h3 class="footer-section-title">{ui.youMayAlsoLike}</h3>
                 <div class="recommended-grid">
                   {relatedArticles.slice(0, 2).map((article) => (
                     <a
@@ -584,7 +582,7 @@ const processedContent = marked.parse(resolvedContent, {
 
           <!-- Edit on GitHub (Contribution Funnel) -->
           <div class="contribute-section">
-            <h3 class="footer-section-title">Help improve this page</h3>
+            <h3 class="footer-section-title">{ui.helpImprove}</h3>
             <p class="contribute-note">
               This fork of taiwan-md is still in an early editorial stage. If
               you find gaps, weak wording, or better sources, open a PR or file
@@ -598,7 +596,7 @@ const processedContent = marked.parse(resolvedContent, {
                 rel="noopener"
               >
                 <span class="contribute-icon">📝</span>
-                <span>Edit on GitHub</span>
+                <span>{ui.editOnGitHub}</span>
               </a>
               <a
                 href={`https://github.com/denis-gordeev/russia-md/issues/new?title=${encodeURIComponent(`Feedback: ${title}`)}`}
@@ -607,7 +605,7 @@ const processedContent = marked.parse(resolvedContent, {
                 rel="noopener"
               >
                 <span class="contribute-icon">💬</span>
-                <span>Open an issue</span>
+                <span>{ui.openIssue}</span>
               </a>
             </div>
           </div>
@@ -616,7 +614,7 @@ const processedContent = marked.parse(resolvedContent, {
 
           <!-- 社交分享 (Sharing Loop) -->
           <div class="social-sharing">
-            <h3 class="footer-section-title">Share it</h3>
+            <h3 class="footer-section-title">{ui.shareIt}</h3>
             <div class="sharing-buttons">
               <a
                 href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(`https://russia-md.ru/${category}/${slug}`)}`}
@@ -625,7 +623,7 @@ const processedContent = marked.parse(resolvedContent, {
                 rel="noopener"
               >
                 <span class="share-icon">𝕏</span>
-                <span>Share to X</span>
+                <span>{ui.shareToX}</span>
               </a>
               <a
                 href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(`https://russia-md.ru/${category}/${slug}`)}`}
@@ -634,7 +632,7 @@ const processedContent = marked.parse(resolvedContent, {
                 rel="noopener"
               >
                 <span class="share-icon">f</span>
-                <span>Share to Facebook</span>
+                <span>{ui.shareToFacebook}</span>
               </a>
               <button
                 class="share-button copy-btn"
@@ -642,7 +640,7 @@ const processedContent = marked.parse(resolvedContent, {
                 type="button"
               >
                 <span class="share-icon">📋</span>
-                <span>Copy link</span>
+                <span>{ui.copyLink}</span>
               </button>
             </div>
           </div>
@@ -656,15 +654,15 @@ const processedContent = marked.parse(resolvedContent, {
           class="nav-btn back-btn"
           style={`background: ${categoryInfo.color};`}
         >
-          ← Back to {categoryInfo.name}
+          ← {ui.backToCategory.replace('{category}', categoryInfo.name)}
         </a>
-        <a href="/" class="nav-btn home-btn"> Back home </a>
+        <a href="/" class="nav-btn home-btn"> {ui.backHome} </a>
       </div>
     </div>
   </main>
 </Layout>
 
-<script>
+<script define:vars={{ copiedLabel: ui.copied }}>
   // Reading progress bar
   function updateReadingProgress() {
     const article = document.querySelector('.content');
@@ -697,7 +695,8 @@ const processedContent = marked.parse(resolvedContent, {
       .then(() => {
         const btn = document.querySelector('.copy-btn');
         const originalText = btn.innerHTML;
-        btn.innerHTML = '<span class="share-icon">✅</span><span>Copied</span>';
+        btn.innerHTML =
+          '<span class="share-icon">✅</span><span>' + copiedLabel + '</span>';
         btn.style.background = '#10b981';
         btn.style.color = 'white';
 
@@ -718,7 +717,8 @@ const processedContent = marked.parse(resolvedContent, {
 
         const btn = document.querySelector('.copy-btn');
         const originalText = btn.innerHTML;
-        btn.innerHTML = '<span class="share-icon">✅</span><span>Copied</span>';
+        btn.innerHTML =
+          '<span class="share-icon">✅</span><span>' + copiedLabel + '</span>';
         setTimeout(() => {
           btn.innerHTML = originalText;
         }, 2000);
