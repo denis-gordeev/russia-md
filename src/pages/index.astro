@@ -12,14 +12,23 @@ import CategoryGrid from '../components/CategoryGrid.astro';
       <p class="eyebrow">Russia.md</p>
       <h1>Russia, in structured notes instead of stereotypes.</h1>
       <p class="lede">
-        This project builds a Russia-focused atlas:
-        broad geography, layered history, regional culture, public institutions,
-        technology, everyday life, and practical reference links for humans and LLM agents.
+        This project builds a Russia-focused atlas: broad geography, layered
+        history, regional culture, public institutions, technology, everyday
+        life, and practical reference links for humans and LLM agents.
       </p>
       <p class="fork-note">
-        This site is an explicit fork of <a href="https://github.com/frank890417/taiwan-md" target="_blank" rel="noopener">taiwan-md</a>,
-        rebuilt around a Russia-specific corpus and deployed from
-        <a href="https://github.com/denis-gordeev/russia-md" target="_blank" rel="noopener"> denis-gordeev/russia-md</a>.
+        This site is an explicit fork of <a
+          href="https://github.com/frank890417/taiwan-md"
+          target="_blank"
+          rel="noopener">taiwan-md</a
+        >, rebuilt around a Russia-specific corpus and deployed from
+        <a
+          href="https://github.com/denis-gordeev/russia-md"
+          target="_blank"
+          rel="noopener"
+        >
+          denis-gordeev/russia-md</a
+        >.
       </p>
       <div class="hero-actions">
         <a href="#categories" class="primary">Browse categories</a>
@@ -37,20 +46,26 @@ import CategoryGrid from '../components/CategoryGrid.astro';
     <div class="intro-inner">
       <h2>What this fork is for</h2>
       <p>
-        The goal is not to flatten Russia into a tourist brochure or a political slogan.
-        It is to provide a reusable starting structure for a country knowledge base that
-        can support reading, linking, search, and future agent workflows.
+        The goal is not to flatten Russia into a tourist brochure or a political
+        slogan. It is to provide a reusable starting structure for a country
+        knowledge base that can support reading, linking, search, and future
+        agent workflows.
       </p>
       <p>
-        The current version is intentionally narrow and clean: the upstream `taiwan-md` shell and category logic,
-        a Russia-first content map, starter articles, and a separate <a href="https://github.com/denis-gordeev/russia-md/blob/main/SKILLS.md">`SKILLS.md`</a>
-        brief for LLM-agent integrations such as Gosuslugi, VK, Yandex, DaData, and official data sources.
+        The current version is intentionally narrow and clean: the upstream
+        `taiwan-md` shell and category logic, a Russia-first content map,
+        starter articles, and a separate <a
+          href="https://github.com/denis-gordeev/russia-md/blob/main/SKILLS.md"
+          >`SKILLS.md`</a
+        >
+        brief for LLM-agent integrations such as Gosuslugi, VK, Yandex, DaData, and
+        official data sources.
       </p>
     </div>
   </section>
 
-  <section id="categories" class="categories">
-    <div class="section-head">
+  <section class="categories">
+    <div id="categories" class="section-head">
       <p class="eyebrow">Explore</p>
       <h2>Twelve ways into the country</h2>
     </div>
@@ -62,8 +77,16 @@ import CategoryGrid from '../components/CategoryGrid.astro';
   .hero {
     padding: 5rem 1.5rem 3rem;
     background:
-      radial-gradient(circle at top left, rgba(191, 219, 254, 0.7), transparent 35%),
-      radial-gradient(circle at top right, rgba(252, 211, 77, 0.35), transparent 30%),
+      radial-gradient(
+        circle at top left,
+        rgba(191, 219, 254, 0.7),
+        transparent 35%
+      ),
+      radial-gradient(
+        circle at top right,
+        rgba(252, 211, 77, 0.35),
+        transparent 30%
+      ),
       linear-gradient(180deg, #f8fafc 0%, #eef2ff 100%);
   }
 
@@ -72,6 +95,10 @@ import CategoryGrid from '../components/CategoryGrid.astro';
   .section-head {
     max-width: 960px;
     margin: 0 auto;
+  }
+
+  .section-head[id] {
+    scroll-margin-top: 5.5rem;
   }
 
   .eyebrow {
