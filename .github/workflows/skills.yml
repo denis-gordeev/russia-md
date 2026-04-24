@@ -28,6 +28,10 @@ on:
       - ".github/workflows/skills.yml"
   workflow_dispatch:
 
+concurrency:
+  group: skills-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 jobs:
   validate-changed:
     if: github.event_name == 'pull_request'
@@ -39,8 +43,9 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 24
+          cache: npm
       - name: Install dependencies
-        run: npm install
+        run: npm ci
       - name: Validate changed skills and repository markdown links
         run: npm run check:skills:changed
 
@@ -55,8 +60,9 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 24
+          cache: npm
       - name: Install dependencies
-        run: npm install
+        run: npm ci
       - name: Validate skills and markdown links
         run: npm run check:skills
 
@@ -71,7 +77,8 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 24
+          cache: npm
       - name: Install dependencies
-        run: npm install
+        run: npm ci
       - name: Validate skill fixtures
         run: npm run check:skills:fixtures

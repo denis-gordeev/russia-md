@@ -1,5 +1,7 @@
 import { execFile as execFileCallback } from 'child_process';
 import assert from 'assert/strict';
+import { mkdtemp, cp, readFile, writeFile } from 'fs/promises';
+import os from 'os';
 import path from 'path';
 import { promisify } from 'util';
 
@@ -55,6 +57,46 @@ async function runCase(caseName, { args = [], expectSuccess, expectedText }) {
     );
     assert.match(combinedOutput, expectedText);
   }
+}
+
+async function initFixtureGitRepo(caseName) {
+  const fixtureRoot = path.join(fixturesRoot, caseName);
+  const tempRoot = await mkdtemp(
+    path.join(os.tmpdir(), `skill-validator-${caseName}-`),
+  );
+
+  await cp(fixtureRoot, tempRoot, { recursive: true });
+  await execFile('git', ['init'], { cwd: tempRoot });
+  await execFile('git', ['config', 'user.name', 'Codex Test'], {
+    cwd: tempRoot,
+  });
+  await execFile('git', ['config', 'user.email', 'codex@example.com'], {
+    cwd: tempRoot,
+  });
+  await execFile('git', ['add', '.'], { cwd: tempRoot });
+  await execFile('git', ['commit', '-m', 'Initial fixture state'], {
+    cwd: tempRoot,
+  });
+
+  return tempRoot;
+}
+
+async function runGitCase({ caseName, args = [], mutate, expectedText }) {
+  const fixtureRoot = await initFixtureGitRepo(caseName);
+
+  if (mutate) {
+    await mutate(fixtureRoot);
+  }
+
+  const { stdout, stderr } = await execFile('node', [validatorPath, ...args], {
+    cwd: repoRoot,
+    env: {
+      ...process.env,
+      SKILL_VALIDATOR_ROOT: fixtureRoot,
+    },
+  });
+
+  assert.match(`${stdout}\n${stderr}`, expectedText);
 }
 
 async function main() {
@@ -165,6 +207,32 @@ async function main() {
     expectSuccess: true,
     expectedText:
       /No skill folders or repository markdown docs matched the selected --paths input; nothing to validate \(ignored existing non-markdown path\(s\): notes\/another\.txt, notes\/fifth\.txt, notes\/fourth\.txt, notes\/sixth\.txt, notes\/third\.txt, \.\.\. \(\+1 more\)\.\)/,
+  });
+
+  await runGitCase({
+    caseName: 'valid-minimal',
+    args: ['--changed'],
+    mutate: async (fixtureRoot) => {
+      await writeFile(
+        path.join(fixtureRoot, 'notes', 'todo.txt'),
+        'updated outside tracked docs\n',
+      );
+    },
+    expectedText:
+      /No changed skill folders or tracked repository markdown docs detected; nothing to validate\./,
+  });
+
+  await runGitCase({
+    caseName: 'valid-minimal',
+    args: ['--staged'],
+    mutate: async (fixtureRoot) => {
+      const notesPath = path.join(fixtureRoot, 'notes', 'todo.txt');
+      const current = await readFile(notesPath, 'utf8');
+      await writeFile(notesPath, `${current}staged update\n`);
+      await execFile('git', ['add', 'notes/todo.txt'], { cwd: fixtureRoot });
+    },
+    expectedText:
+      /No changed skill folders or tracked repository markdown docs detected; nothing to validate\./,
   });
 
   await runCase('invalid-markdown-syntax', {
