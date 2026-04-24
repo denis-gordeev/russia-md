@@ -78,6 +78,20 @@ async function main() {
   });
 
   await runCase('valid-minimal', {
+    args: ['--paths', 'skills/test-skill'],
+    expectSuccess: true,
+    expectedText:
+      /Validated 1 skill example contract\(s\) and changed repository markdown links\./,
+  });
+
+  await runCase('valid-minimal', {
+    args: ['--paths', 'skills/test-skill/references'],
+    expectSuccess: true,
+    expectedText:
+      /Validated 1 skill example contract\(s\) and changed repository markdown links\./,
+  });
+
+  await runCase('valid-minimal', {
     args: ['--paths', 'README.md'],
     expectSuccess: true,
     expectedText:
@@ -162,6 +176,12 @@ async function main() {
   await runCase('malformed-frontmatter', {
     expectSuccess: false,
     expectedText: /README\.md: invalid YAML front matter/,
+  });
+
+  await runCase('malformed-agent-metadata', {
+    expectSuccess: false,
+    expectedText:
+      /skills\/test-skill\/agents\/openai\.yaml:10:1: invalid YAML \(Flow sequence in block collection must be sufficiently indented and end with a \]/,
   });
 
   await runCase('invalid-icon-path', {

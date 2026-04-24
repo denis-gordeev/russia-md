@@ -1,1 +1,2 @@
 *.yml
+scripts/fixtures/skill-validator/malformed-agent-metadata/skills/test-skill/agents/openai.yaml

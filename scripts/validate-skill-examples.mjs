@@ -110,6 +110,31 @@ function fail(message) {
   throw new Error(message);
 }
 
+function formatYamlErrorLocation(error) {
+  if (!Array.isArray(error?.linePos) || error.linePos.length === 0) {
+    return '';
+  }
+
+  const [{ line, col }] = error.linePos;
+
+  if (typeof line !== 'number' || typeof col !== 'number') {
+    return '';
+  }
+
+  return `:${line}:${col}`;
+}
+
+function parseYamlDocument(yamlRaw, yamlPath) {
+  try {
+    return YAML.parse(yamlRaw);
+  } catch (error) {
+    const location = formatYamlErrorLocation(error);
+    fail(
+      `${path.relative(root, yamlPath)}${location}: invalid YAML (${error.message})`,
+    );
+  }
+}
+
 function validateValue(value, schema, currentPath) {
   const allowedTypes = Array.isArray(schema.type)
     ? schema.type
@@ -1025,7 +1050,7 @@ async function validateSkillDir(skillDir) {
   const schema = JSON.parse(schemaRaw);
   const example = JSON.parse(exampleRaw);
   const agentMetadataSchema = JSON.parse(agentMetadataSchemaRaw);
-  const agentMetadata = YAML.parse(agentMetadataRaw);
+  const agentMetadata = parseYamlDocument(agentMetadataRaw, agentMetadataPath);
 
   validateValue(example, schema, `${skillName}.output`);
   validateValue(agentMetadata, agentMetadataSchema, `${skillName}.agent`);

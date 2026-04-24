@@ -1,0 +1,44 @@
+{
+  "type": "object",
+  "required": ["name", "interface", "policy"],
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "interface": {
+      "type": "object",
+      "required": [
+        "display_name",
+        "short_description",
+        "brand_color",
+        "default_prompt"
+      ],
+      "properties": {
+        "display_name": {
+          "type": "string"
+        },
+        "short_description": {
+          "type": "string"
+        },
+        "brand_color": {
+          "type": "string"
+        },
+        "default_prompt": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "policy": {
+      "type": "object",
+      "required": ["allow_implicit_invocation"],
+      "properties": {
+        "allow_implicit_invocation": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}
