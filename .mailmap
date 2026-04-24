@@ -1,0 +1,23 @@
+# Consolidate known contributor aliases without rewriting history.
+#
+# Format:
+#   Canonical Name <canonical@email> Commit Name <commit@email>
+#   Canonical Name <canonical@email> <commit@email>
+
+# Upstream maintainer aliases carried into this fork's history.
+Che-Yu Wu <cheyu.wu@monoame.com> Wu Che Yu <frank890417@gmail.com>
+Che-Yu Wu <cheyu.wu@monoame.com> frank890417 <cheyu.wu@monoame.com>
+
+# Local fork maintainer aliases.
+Denis Gordeev <degordeev@ecom.tech> <dnsgrdv@gmail.com>
+
+# Other repeated contributor identities visible in project history.
+Terry <88765055+Link1515@users.noreply.github.com> Link1515 <terrylin1515@gmail.com>
+ceruleanstring <ceruleanstring@gmail.com> 柒藍 <chilan@qilandeMac-mini.local>
+ceruleanstring <ceruleanstring@gmail.com> 柒藍 <ceruleanstring@gmail.com>
+ceruleanstring <ceruleanstring@gmail.com> ceruleanstring <>
+tboydar-agent <tboydar+agent@gmail.com> Dar <tboydar@gmail.com>
+EryetChen <48248414+eryet@users.noreply.github.com> EryetChen <eryet201314kanna@gmail.com>
+bugnimusic <sunnieqqqq17@gmail.com> Bugn!i! <sunnieqqqq17@gmail.com>
+bugnimusic <sunnieqqqq17@gmail.com> bugnimusic <sunnieqqq17@gmail.com>
+Zaious <zaious.design@gmail.com> Zaious (@ChronicleCore) <zaious.design@gmail.com>

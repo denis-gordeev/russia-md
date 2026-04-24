@@ -85,7 +85,7 @@ export function buildGitInfoCache(pathPrefix: string) {
 
   try {
     const logOutput = execSync(
-      `git -c core.quotePath=false log --full-history -z --name-only --format="COMMIT|%aI|%an|%ae" -- "${pathPrefix}"`,
+      `git -c core.quotePath=false log --use-mailmap --full-history -z --name-only --format="COMMIT|%aI|%aN|%aE" -- "${pathPrefix}"`,
       { encoding: 'utf-8', maxBuffer: 10 * 1024 * 1024 },
     );
     let currentDate = '';
