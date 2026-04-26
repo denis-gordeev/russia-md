@@ -23,6 +23,7 @@ const fullSkillValidationTriggers = [
   'package.json',
   'scripts/validate-skill-examples.mjs',
 ];
+const maxReportedMarkdownErrors = 10;
 const documentPaths = [
   path.join(root, 'README.md'),
   path.join(skillsDir, 'shared', 'references'),
@@ -843,6 +844,18 @@ function formatSelectedPathDiagnostics({
   return details.length > 0 ? `${details.join('; ')}.` : null;
 }
 
+function formatMarkdownErrors(errors) {
+  if (errors.length <= maxReportedMarkdownErrors) {
+    return errors.join('\n');
+  }
+
+  const remainingCount = errors.length - maxReportedMarkdownErrors;
+  return [
+    ...errors.slice(0, maxReportedMarkdownErrors),
+    `... truncated ${remainingCount} additional markdown validation error(s).`,
+  ].join('\n');
+}
+
 async function resolveValidationTargets(allSkillDirs, cliOptions) {
   const changedRepoPaths = await getValidationInputPaths(cliOptions);
 
@@ -1123,7 +1136,7 @@ async function main() {
   );
 
   if (markdownErrors.length > 0) {
-    fail(markdownErrors.join('\n'));
+    fail(formatMarkdownErrors(markdownErrors));
   }
 
   const markdownScopeLabel = repositoryMarkdownPaths

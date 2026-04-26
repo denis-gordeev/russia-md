@@ -264,10 +264,22 @@ async function main() {
       /skills\/test-skill\/SKILL\.md:4: broken local anchor .*nearest anchor: #guide/,
   });
 
+  await runCase('broken-anchor-no-suggestion', {
+    expectSuccess: false,
+    expectedText:
+      /skills\/test-skill\/SKILL\.md:4: broken local anchor "references\/integration-notes\.md#totally-missing-anchor" \(missing #totally-missing-anchor\)(?![\s\S]*nearest anchor)/,
+  });
+
   await runCase('multiple-markdown-errors', {
     expectSuccess: false,
     expectedText:
       /README\.md:4: broken local anchor .*missing #missing-anchor[\s\S]*docs\/guide\.md:4: broken local link "\.\.\/missing\.md"/,
+  });
+
+  await runCase('truncated-markdown-errors', {
+    expectSuccess: false,
+    expectedText:
+      /skills\/test-skill\/SKILL\.md:5: broken local anchor "references\/integration-notes\.md#missing-epsilon"[\s\S]*README\.md:4: broken local anchor "skills\/shared\/references\/overview\.md#missing-alpha"[\s\S]*docs\/guide\.md:5: broken local anchor "\.\.\/skills\/shared\/references\/overview\.md#missing-delta"[\s\S]*\.\.\. truncated 2 additional markdown validation error\(s\)\./,
   });
 
   await runCase('missing-shared-schema', {
