@@ -544,6 +544,9 @@ const navConfig = [
 <style is:global>
   html {
     font-size: 118%;
+    /* Keep hash targets below the sticky header and avoid jumpy anchor nav. */
+    scroll-padding-top: 92px;
+    scroll-behavior: smooth;
   }
   :root {
     --container-wide: 1380px;
@@ -582,6 +585,12 @@ const navConfig = [
     box-sizing: border-box;
     margin: 0;
     padding: 0;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
   }
 
   /* Focus styles for keyboard accessibility */
