@@ -396,6 +396,21 @@ const navConfig = [
               }, 100);
             }
           }
+          // Keep `/` available as a quick-open shortcut when focus is not in an editor.
+          if (
+            e.key === '/' &&
+            !modal.classList.contains('open') &&
+            !['INPUT', 'TEXTAREA', 'SELECT'].includes(
+              (document.activeElement || document.body).tagName,
+            ) &&
+            !(document.activeElement || document.body).isContentEditable
+          ) {
+            e.preventDefault();
+            modal.classList.add('open');
+            setTimeout(function () {
+              input.focus();
+            }, 100);
+          }
         });
       }
 
