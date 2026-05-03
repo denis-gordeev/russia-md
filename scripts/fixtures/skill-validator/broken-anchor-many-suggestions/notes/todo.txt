@@ -1,0 +1,1 @@
+This file exists to exercise ignored non-markdown path diagnostics.

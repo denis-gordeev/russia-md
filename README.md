@@ -93,7 +93,7 @@ This is still a foundation fork, not a finished editorial product. The active si
 - [x] Add capped/truncated `--paths` diagnostics for large ignored or unmatched path sets
 - [x] Add directory-aware `--paths` expansion for direct skill-folder selections
 - [x] Add fixture coverage for mixed directory-scoped `--paths` selections that combine tracked docs with ignored paths
-- [ ] Add capped/truncated anchor-suggestion output when headings generate many similar slugs
+- [x] Add capped/truncated anchor-suggestion output when headings generate many similar slugs
 - [x] Add fixture coverage for anchor-suggestion fallbacks when no close heading exists
 - [x] Add fixture coverage for direct skill-folder `--paths` selections and nested subpaths
 - [x] Add capped/truncated diagnostics when a markdown validation run surfaces many broken links at once
@@ -106,6 +106,7 @@ This is still a foundation fork, not a finished editorial product. The active si
 - [ ] Make markdown-error truncation configurable for local debugging while keeping CI output capped by default
 - [ ] Group repeated markdown validation failures by source file before applying global truncation
 - [ ] Add fixture coverage for truncated markdown diagnostics during path-scoped `--paths` runs
+- [ ] Rank nearest-anchor suggestions by slug family before generic edit distance so repeated heading variants stay grouped
 
 ## Development
 

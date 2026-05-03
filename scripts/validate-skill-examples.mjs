@@ -24,6 +24,7 @@ const fullSkillValidationTriggers = [
   'scripts/validate-skill-examples.mjs',
 ];
 const maxReportedMarkdownErrors = 10;
+const maxSuggestedAnchors = 5;
 const documentPaths = [
   path.join(root, 'README.md'),
   path.join(skillsDir, 'shared', 'references'),
@@ -410,30 +411,50 @@ function computeLevenshteinDistance(left, right) {
   return previousRow[right.length];
 }
 
-function getNearestAnchorSuggestion(fragment, anchors) {
+function getNearestAnchorSuggestions(fragment, anchors) {
   if (!fragment || anchors.size === 0) {
-    return null;
+    return [];
   }
 
-  let bestMatch = null;
-  let bestDistance = Number.POSITIVE_INFINITY;
+  const similarityThreshold = Math.max(2, Math.ceil(fragment.length * 0.4));
+  const matches = [];
 
   for (const anchor of anchors) {
     const distance = computeLevenshteinDistance(fragment, anchor);
 
-    if (distance < bestDistance) {
-      bestDistance = distance;
-      bestMatch = anchor;
+    if (distance <= similarityThreshold) {
+      matches.push({ anchor, distance });
     }
   }
 
-  const similarityThreshold = Math.max(2, Math.ceil(fragment.length * 0.4));
+  matches.sort((left, right) => {
+    if (left.distance !== right.distance) {
+      return left.distance - right.distance;
+    }
 
-  if (bestMatch && bestDistance <= similarityThreshold) {
-    return bestMatch;
+    return left.anchor.localeCompare(right.anchor);
+  });
+
+  return matches.map(({ anchor }) => anchor);
+}
+
+function formatNearestAnchorSuggestions(suggestions) {
+  if (suggestions.length === 0) {
+    return '';
   }
 
-  return null;
+  if (suggestions.length === 1) {
+    return `; nearest anchor: #${suggestions[0]}`;
+  }
+
+  const visibleSuggestions = suggestions.slice(0, maxSuggestedAnchors);
+  const remainingCount = suggestions.length - visibleSuggestions.length;
+  const truncatedSuffix =
+    remainingCount > 0 ? `, ... (+${remainingCount} more)` : '';
+
+  return `; nearest anchors: ${visibleSuggestions
+    .map((suggestion) => `#${suggestion}`)
+    .join(', ')}${truncatedSuffix}`;
 }
 
 async function getMarkdownAnchors(markdownPath) {
@@ -540,13 +561,11 @@ async function validateMarkdownLinks(markdownPath) {
     const anchors = await getMarkdownAnchors(resolvedTarget);
 
     if (!anchors.has(decodedFragment)) {
-      const suggestedAnchor = getNearestAnchorSuggestion(
+      const suggestedAnchors = getNearestAnchorSuggestions(
         decodedFragment,
         anchors,
       );
-      const suggestionSuffix = suggestedAnchor
-        ? `; nearest anchor: #${suggestedAnchor}`
-        : '';
+      const suggestionSuffix = formatNearestAnchorSuggestions(suggestedAnchors);
 
       errors.push(
         `${path.relative(root, markdownPath)}:${lineNumber}: broken local anchor ${JSON.stringify(rawTarget)} (missing #${decodedFragment}${suggestionSuffix})`,

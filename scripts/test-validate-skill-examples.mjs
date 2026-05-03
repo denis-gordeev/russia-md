@@ -264,6 +264,12 @@ async function main() {
       /skills\/test-skill\/SKILL\.md:4: broken local anchor .*nearest anchor: #guide/,
   });
 
+  await runCase('broken-anchor-many-suggestions', {
+    expectSuccess: false,
+    expectedText:
+      /skills\/test-skill\/SKILL\.md:4: broken local anchor .*missing #guidee; nearest anchors: #guide, #guides, #guide-1, #guide-2, #guide-3, \.\.\. \(\+2 more\)/,
+  });
+
   await runCase('broken-anchor-no-suggestion', {
     expectSuccess: false,
     expectedText:
