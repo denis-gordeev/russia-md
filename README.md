@@ -110,6 +110,7 @@ This is still a foundation fork, not a finished editorial product. The active si
 ## Development
 
 ```bash
+nvm use
 npm install
 npm run check:skills
 npm run check:skills:changed
@@ -117,6 +118,8 @@ npm run check:skills:staged
 npm run check:skills:fixtures
 npm run build
 ```
+
+The repo now includes `.nvmrc` pinned to Node 24 so local shells match the CI/runtime baseline used by the GitHub Actions workflows.
 
 `npm run check:skills` now validates that every repo-local skill ships its core bundle together: `SKILL.md`, `agents/openai.yaml`, `references/integration-notes.md`, `examples/output.json`, and `schemas/output.schema.json`. It also validates `agents/openai.yaml` against a shared metadata schema, rejects unknown UI keys, checks that each default prompt explicitly mentions the matching `$skill-name`, verifies local markdown links across `README.md`, `skills/**/SKILL.md`, and docs/reference pages, ignores YAML front matter while scanning markdown bodies, validates local markdown `#fragment` anchors against headings and explicit `id=""` anchors, reports broken markdown references with source line numbers, suggests the nearest matching anchor when a markdown fragment misses by a small typo, and lints local `interface.icon` asset paths when icons are present.
 

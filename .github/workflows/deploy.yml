@@ -17,6 +17,9 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    # Selective upstream sync: keep a hard ceiling on deploy builds so a stuck
+    # install/build step fails fast instead of burning the default 6-hour limit.
+    timeout-minutes: 60
     steps:
       - name: Checkout
         uses: actions/checkout@v4
