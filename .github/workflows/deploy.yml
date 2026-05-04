@@ -16,10 +16,12 @@ concurrency:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04-arm
     # Selective upstream sync: keep a hard ceiling on deploy builds so a stuck
     # install/build step fails fast instead of burning the default 6-hour limit.
     timeout-minutes: 60
+    env:
+      NODE_OPTIONS: --max-old-space-size=12288
     steps:
       - name: Checkout
         uses: actions/checkout@v4

@@ -13,10 +13,33 @@ export default defineConfig({
       customPages: ['https://russia-md.ru/?changefreq=daily&priority=1.0'],
     }),
   ],
+  build: {
+    concurrency: 4,
+  },
   markdown: {
     shikiConfig: {
       theme: 'github-light',
       wrap: true,
+      langs: [
+        'ts',
+        'tsx',
+        'js',
+        'jsx',
+        'astro',
+        'bash',
+        'sh',
+        'md',
+        'json',
+        'yaml',
+        'html',
+        'css',
+        'python',
+        'go',
+        'rust',
+        'sql',
+        'diff',
+        'plaintext',
+      ],
     },
     rehypePlugins: [
       [
