@@ -481,7 +481,9 @@ const navConfig = [
             <a href="/about">{i18n.footer.about}</a>
             <a href="/resources">Resources</a>
             <a href="/contribute">{i18n.footer.contribute}</a>
-            <a href="/README.md" target="_blank">README</a>
+            <a href={`${repoUrl}/blob/main/README.md`} target="_blank">
+              README
+            </a>
           </div>
           <div class="footer-col">
             <h4>{i18n.footer.contact}</h4>
