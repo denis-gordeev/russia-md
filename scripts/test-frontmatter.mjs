@@ -24,6 +24,7 @@ const categoryFolders = [
 
 const ciMode = process.argv.includes('--ci');
 const stagedMode = process.argv.includes('--staged');
+const ciDiffBase = process.env.CONTENT_DIFF_BASE?.trim();
 
 function isValidDate(value) {
   if (typeof value !== 'string' && !(value instanceof Date)) {
@@ -46,6 +47,12 @@ async function getSelectedPaths() {
   }
 
   try {
+    const resolvedCiBase =
+      ciMode &&
+      ciDiffBase &&
+      ciDiffBase !== '0000000000000000000000000000000000000000'
+        ? ciDiffBase
+        : 'HEAD~1';
     const args = stagedMode
       ? [
           'diff',
@@ -59,7 +66,8 @@ async function getSelectedPaths() {
           'diff',
           '--name-only',
           '--diff-filter=ACMR',
-          'HEAD~1',
+          resolvedCiBase,
+          'HEAD',
           '--',
           'russia-knowledge',
         ];

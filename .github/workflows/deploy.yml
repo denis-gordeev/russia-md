@@ -33,12 +33,14 @@ jobs:
           node-version: 24
           cache: npm
       - name: Install dependencies
-        run: npm ci
+        run: npm ci --prefer-offline --no-audit
       - name: Validate skills and markdown links
         run: npm run check:skills
       - name: Validate skill fixtures
         run: npm run check:skills:fixtures
       - name: Validate content frontmatter
+        env:
+          CONTENT_DIFF_BASE: ${{ github.event.before }}
         run: npm run test:content:ci
       - name: Build
         run: npm run build
