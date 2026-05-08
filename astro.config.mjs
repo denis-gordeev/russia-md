@@ -15,6 +15,7 @@ export default defineConfig({
   ],
   build: {
     concurrency: 4,
+    inlineStylesheets: 'auto',
   },
   markdown: {
     shikiConfig: {
@@ -47,5 +48,29 @@ export default defineConfig({
         { target: '_blank', rel: ['noopener', 'noreferrer'] },
       ],
     ],
+  },
+  vite: {
+    build: {
+      target: 'es2022',
+      minify: 'esbuild',
+      cssCodeSplit: true,
+      chunkSizeWarningLimit: 10000,
+      rollupOptions: {
+        output: {
+          // Match the upstream large-SSG tuning: avoid spending extra time on
+          // chunk splitting when most routes ship tiny page-specific bundles.
+          manualChunks: undefined,
+        },
+      },
+    },
+    esbuild: {
+      target: 'es2022',
+      minifyIdentifiers: false,
+      minifySyntax: true,
+      minifyWhitespace: true,
+    },
+    optimizeDeps: {
+      force: false,
+    },
   },
 });
