@@ -21,6 +21,7 @@
     "check:skills:staged": "node scripts/validate-skill-examples.mjs --staged",
     "check:skills:fixtures": "node scripts/test-validate-skill-examples.mjs",
     "check-images": "node scripts/check-images.mjs",
+    "check:contributors": "node scripts/verify-contributors.mjs",
     "astro": "astro",
     "format::check": "prettier --check .",
     "format::write": "prettier --write .",
