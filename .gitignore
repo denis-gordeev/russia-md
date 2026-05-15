@@ -43,3 +43,6 @@ cloudflare-token*
 
 # jetbrains setting folder
 .idea/
+
+# Local assistant worktrees should not pollute the main repo status.
+.claude/worktrees/

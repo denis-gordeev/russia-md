@@ -115,6 +115,7 @@ This is still a foundation fork, not a finished editorial product. The active si
 ```bash
 nvm use
 npm install
+npm run check:contributors
 npm run check:skills
 npm run check:skills:changed
 npm run check:skills:staged
@@ -132,6 +133,8 @@ The repo now includes `.nvmrc` pinned to Node 24 so local shells match the CI/ru
 
 `npm run check:skills:fixtures` runs a small fixture suite for the validator itself, including front-matter-aware markdown regression coverage plus negative cases for broken markdown anchors with nearest-anchor suggestions and no-suggestion fallbacks, malformed YAML front matter, malformed `agents/openai.yaml` files with file-local line/column diagnostics, malformed markdown-link syntax that should be ignored safely, aggregated markdown-link failures with line-aware diagnostics, capped/truncated markdown error output when one run surfaces many broken links, dedicated regression coverage for correct broken-link line numbers in front-matter-heavy markdown files, missing shared metadata schema files, invalid `interface.icon` metadata, path-scoped no-op output when `--paths` selects only ignored or unmatched files, no-op coverage for `--changed` and `--staged` runs that touch only out-of-scope files, truncated diagnostics for large ignored/unmatched `--paths` selections, and directory-scoped `--paths` coverage for tracked repository markdown trees as well as direct skill-folder selections.
 
+`npm run check:contributors` verifies that active-corpus git authors resolve cleanly through `.mailmap` and `.all-contributorsrc`, so contributor cards do not silently fall back to raw author names or broken profile links. Maintenance notes for this layer live in `docs/contributors-maintenance.md`.
+
 ## Key Paths
 
 - `src/` site shell and Astro pages
@@ -147,7 +150,9 @@ The repo now includes `.nvmrc` pinned to Node 24 so local shells match the CI/ru
 - `skills/*/schemas/` per-skill JSON schema definitions for output contracts
 - `scripts/validate-skill-examples.mjs` local and CI validator for skill bundle completeness, metadata schema checks, markdown-link and anchor validation with nearest-match suggestions, capped aggregate markdown diagnostics, optional icon asset path linting, changed-skill filtering, and directory-aware `--paths` expansion for tracked markdown trees
 - `scripts/test-validate-skill-examples.mjs` validator fixture runner covering valid and negative bundle cases, including anchor-suggestion and no-suggestion fallbacks, malformed-agent-metadata diagnostics, front-matter line-number regressions, aggregate-error truncation, and directory-scoped `--paths` regressions
+- `scripts/verify-contributors.mjs` warning-only contributor metadata check for the active corpus
 - `scripts/fixtures/skill-validator/` minimal fixture repositories for validator regression checks
+- `docs/contributors-maintenance.md` maintainer guide for `.mailmap` and `.all-contributorsrc`
 - GitHub Actions skill validation and deploy workflows now run on Node 24 with `npm ci` and built-in npm dependency caching
 - `.github/workflows/skills.yml` standalone CI workflow for incremental PR validation plus full skill and fixture validation
 - `.github/CODEOWNERS`, issue templates, and `pull_request_template.md` define review routing and contribution intake
