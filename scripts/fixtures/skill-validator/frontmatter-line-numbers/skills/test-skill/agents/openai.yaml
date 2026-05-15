@@ -1,0 +1,8 @@
+name: test-skill
+interface:
+  display_name: Test Skill
+  short_description: Fixture skill bundle used for line-number coverage.
+  brand_color: '#0055AA'
+  default_prompt: Use $test-skill for fixture line-number validation coverage.
+policy:
+  allow_implicit_invocation: true

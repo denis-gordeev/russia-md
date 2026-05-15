@@ -349,7 +349,8 @@ function getMarkdownBodyInfo(markdownRaw, markdownPath) {
 
 function getLineNumberForIndex(content, index, bodyStartLine) {
   const prefix = content.slice(0, index);
-  return bodyStartLine + countLines(prefix);
+  const newlineCount = prefix.length === 0 ? 0 : countLines(prefix) - 1;
+  return bodyStartLine + newlineCount;
 }
 
 function extractLinkFragment(rawTarget) {
