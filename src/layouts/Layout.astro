@@ -396,6 +396,20 @@ const navConfig = [
               }, 100);
             }
           }
+          if (
+            e.key === '/' &&
+            !modal.classList.contains('open') &&
+            !['INPUT', 'TEXTAREA', 'SELECT'].includes(
+              (document.activeElement || document.body).tagName,
+            ) &&
+            !(document.activeElement || document.body).isContentEditable
+          ) {
+            e.preventDefault();
+            modal.classList.add('open');
+            setTimeout(function () {
+              input.focus();
+            }, 100);
+          }
         });
       }
 
@@ -544,6 +558,8 @@ const navConfig = [
 <style is:global>
   html {
     font-size: 118%;
+    scroll-padding-top: 92px;
+    scroll-behavior: smooth;
   }
   :root {
     --container-wide: 1380px;
@@ -595,6 +611,11 @@ const navConfig = [
   input:focus-visible {
     outline: 2px solid #3b82f6;
     outline-offset: 2px;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
   }
   .lang-banner {
     display: flex;
