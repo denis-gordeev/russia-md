@@ -1,0 +1,39 @@
+name: Broken link
+description: Report a 404, dead internal route, or stale external reference
+title: "[Link] "
+labels: ["bug", "broken-link"]
+body:
+  - type: input
+    id: url
+    attributes:
+      label: Broken URL
+      description: The exact URL that failed.
+      placeholder: "https://russia-md.ru/..."
+    validations:
+      required: true
+  - type: input
+    id: referrer
+    attributes:
+      label: Referrer
+      description: Where did you click this link from?
+      placeholder: "https://russia-md.ru/history/..."
+    validations:
+      required: false
+  - type: dropdown
+    id: link_type
+    attributes:
+      label: Link type
+      options:
+        - Internal page on Russia.md
+        - External source or citation
+        - Download or asset
+        - Not sure
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Extra context
+      description: Screenshots, expected destination, or any details that help reproduce the problem.
+    validations:
+      required: false

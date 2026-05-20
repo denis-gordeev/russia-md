@@ -41,6 +41,49 @@ function isStringArray(value) {
   );
 }
 
+function extractFrontmatterBlock(rawContent) {
+  if (!rawContent.startsWith('---\n')) {
+    return null;
+  }
+
+  const closingFenceIndex = rawContent.indexOf('\n---', 4);
+  if (closingFenceIndex === -1) {
+    return null;
+  }
+
+  return rawContent.slice(4, closingFenceIndex);
+}
+
+function collectPreflightFrontmatterErrors(frontmatterBlock, relativePath) {
+  if (!frontmatterBlock) {
+    return [];
+  }
+
+  const preflightErrors = [];
+
+  if (/^readingTime:\s*['"]?#\s*design_rationale/m.test(frontmatterBlock)) {
+    preflightErrors.push(
+      `${relativePath}: "readingTime" absorbed commented YAML metadata; restore it to a numeric value`,
+    );
+  }
+
+  if (/^tags:\s*['"]\[/m.test(frontmatterBlock)) {
+    preflightErrors.push(
+      `${relativePath}: "tags" is serialized as a quoted string; use a YAML array instead`,
+    );
+  }
+
+  if (
+    /^(featured|lastHumanReview):\s*(true|false)---$/m.test(frontmatterBlock)
+  ) {
+    preflightErrors.push(
+      `${relativePath}: boolean frontmatter value is glued to the closing fence; restore the missing newline before ---`,
+    );
+  }
+
+  return preflightErrors;
+}
+
 async function getSelectedPaths() {
   if (!stagedMode && !ciMode) {
     return null;
@@ -139,9 +182,15 @@ for (const category of categoryFolders) {
 
     scannedFiles += 1;
 
+    const rawContent = await readFile(absolutePath, 'utf-8');
+    const frontmatterBlock = extractFrontmatterBlock(rawContent);
+    errors.push(
+      ...collectPreflightFrontmatterErrors(frontmatterBlock, relativePath),
+    );
+
     let parsed;
     try {
-      parsed = matter(await readFile(absolutePath, 'utf-8'));
+      parsed = matter(rawContent);
     } catch (error) {
       errors.push(
         `${relativePath}: YAML parse error: ${error.message.split('\n')[0]}`,
