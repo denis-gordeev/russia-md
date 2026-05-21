@@ -1,0 +1,42 @@
+name: Content PR Check
+
+on:
+  pull_request:
+    paths:
+      - 'russia-knowledge/**'
+      - 'scripts/test-frontmatter.mjs'
+      - 'scripts/check-internal-references.mjs'
+      - 'package.json'
+      - 'package-lock.json'
+      - '.github/workflows/content-check.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: content-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate-content:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci --prefer-offline --no-audit
+
+      - name: Validate changed content frontmatter and internal references
+        env:
+          CONTENT_DIFF_BASE: ${{ github.event.pull_request.base.sha }}
+        run: npm run test:content:ci
+
+      - name: Verify contributor metadata for active corpus
+        run: npm run check:contributors
