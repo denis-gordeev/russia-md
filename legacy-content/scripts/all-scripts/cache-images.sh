@@ -6,6 +6,7 @@ cd "$(dirname "$0")/.."
 
 IMG_DIR="public/images/wiki"
 mkdir -p "$IMG_DIR"
+FETCHER="scripts/all-scripts/wiki-fetch.py"
 
 echo "🖼️  Wikimedia 圖片快取工具"
 echo "================================================="
@@ -38,18 +39,28 @@ for URL in $URLS; do
   fi
   
   echo -n "  ⬇️  [$COUNT/$TOTAL] 下載中... "
-  
-  # 下載（加 User-Agent 避免被擋）
-  HTTP_CODE=$(curl -s -o "$LOCAL_FILE" -w "%{http_code}" \
-    -H "User-Agent: TaiwanMD/1.0 (https://taiwan.md; educational open-source project)" \
-    -L --max-time 15 "$URL" 2>/dev/null)
-  
-  if [ "$HTTP_CODE" = "200" ] && [ -s "$LOCAL_FILE" ]; then
+
+  if [ -f "$FETCHER" ]; then
+    if python3 "$FETCHER" "$URL" "$LOCAL_FILE" >/tmp/wiki-fetch.log 2>&1; then
+      cat /tmp/wiki-fetch.log
+      HTTP_OK=1
+    else
+      cat /tmp/wiki-fetch.log
+      HTTP_OK=0
+    fi
+  else
+    HTTP_CODE=$(curl -s -o "$LOCAL_FILE" -w "%{http_code}" \
+      -H "User-Agent: TaiwanMD/1.0 (https://taiwan.md; educational open-source project)" \
+      -L --max-time 15 "$URL" 2>/dev/null)
+    [ "$HTTP_CODE" = "200" ] && HTTP_OK=1 || HTTP_OK=0
+  fi
+
+  if [ "$HTTP_OK" = "1" ] && [ -s "$LOCAL_FILE" ]; then
     SIZE=$(wc -c < "$LOCAL_FILE" | tr -d ' ')
     echo "✅ ${HASH}${EXT} (${SIZE} bytes)"
     CACHED=$((CACHED + 1))
   else
-    echo "❌ HTTP $HTTP_CODE"
+    echo "❌ download failed"
     rm -f "$LOCAL_FILE"
     FAILED=$((FAILED + 1))
   fi

@@ -5,6 +5,7 @@ cd "$(dirname "$0")/.."
 
 IMG_DIR="public/images/wiki"
 mkdir -p "$IMG_DIR"
+FETCHER="scripts/all-scripts/wiki-fetch.py"
 
 # 提取所有 URL，清理尾巴的 ' 和 )
 grep -roh "https://upload.wikimedia.org/[^\"')* ]*" knowledge/ src/pages/ src/components/ 2>/dev/null \
@@ -30,12 +31,23 @@ while IFS= read -r URL; do
     continue
   fi
   
-  # 下載
-  curl -sL -o "$LOCAL" \
-    -H "User-Agent: TaiwanMD/1.0 (https://taiwan.md; educational project)" \
-    --max-time 15 "$URL" 2>/dev/null
-  
-  if [ -s "$LOCAL" ]; then
+  # 優先走 rate-limit-aware fetcher，舊 curl 作 fallback
+  if [ -f "$FETCHER" ]; then
+    if python3 "$FETCHER" "$URL" "$LOCAL" >/tmp/wiki-fetch.log 2>&1; then
+      cat /tmp/wiki-fetch.log
+      FETCH_OK=1
+    else
+      cat /tmp/wiki-fetch.log
+      FETCH_OK=0
+    fi
+  else
+    curl -sL -o "$LOCAL" \
+      -H "User-Agent: TaiwanMD/1.0 (https://taiwan.md; educational project)" \
+      --max-time 15 "$URL" 2>/dev/null
+    [ -s "$LOCAL" ] && FETCH_OK=1 || FETCH_OK=0
+  fi
+
+  if [ "$FETCH_OK" = "1" ] && [ -s "$LOCAL" ]; then
     DONE=$((DONE + 1))
     echo "  ✅ ${HASH}${EXT}"
   else
