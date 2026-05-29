@@ -6,6 +6,7 @@ import Layout from '../../layouts/Layout.astro';
 import { marked } from 'marked';
 import {
   categoryConfig,
+  categoryFolderMapping,
   getCategoryConfig,
   type CategoryKey,
 } from '../../utils/categoryConfig';
@@ -21,25 +22,10 @@ export async function getStaticPaths() {
     }
   };
 
-  const categoryMapping: Record<string, string> = {
-    history: 'History',
-    geography: 'Geography',
-    culture: 'Culture',
-    food: 'Food',
-    art: 'Art',
-    music: 'Music',
-    technology: 'Technology',
-    nature: 'Nature',
-    people: 'People',
-    society: 'Society',
-    economy: 'Economy',
-    lifestyle: 'Lifestyle',
-  };
-
   const paths = [];
 
   for (const category of categories) {
-    const folderName = categoryMapping[category];
+    const folderName = categoryFolderMapping[category as CategoryKey];
     const articles = [];
 
     try {

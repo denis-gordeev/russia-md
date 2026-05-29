@@ -2,21 +2,7 @@ import type { APIRoute } from 'astro';
 import { readdir, readFile } from 'fs/promises';
 import { basename, join, resolve } from 'path';
 import matter from 'gray-matter';
-
-const categoryMapping: Record<string, string> = {
-  history: 'History',
-  geography: 'Geography',
-  culture: 'Culture',
-  food: 'Food',
-  art: 'Art',
-  music: 'Music',
-  technology: 'Technology',
-  nature: 'Nature',
-  people: 'People',
-  society: 'Society',
-  economy: 'Economy',
-  lifestyle: 'Lifestyle',
-};
+import { categoryFolderMapping } from '../../utils/categoryConfig';
 
 type SearchItem = {
   t: string;
@@ -33,7 +19,7 @@ async function readCategoryIndex(
 ): Promise<SearchItem[]> {
   const items: SearchItem[] = [];
 
-  for (const [slug, folder] of Object.entries(categoryMapping)) {
+  for (const [slug, folder] of Object.entries(categoryFolderMapping)) {
     try {
       const dirPath = resolve(process.cwd(), baseDir, folder);
       const files = await readdir(dirPath);

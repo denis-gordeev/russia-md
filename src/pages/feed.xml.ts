@@ -1,22 +1,9 @@
 import { readdir, readFile } from 'fs/promises';
 import { resolve, join, basename } from 'path';
 import matter from 'gray-matter';
+import { categoryFolderMapping } from '../utils/categoryConfig';
 
 const siteUrl = 'https://russia-md.ru';
-const categoryMapping: Record<string, string> = {
-  history: 'History',
-  geography: 'Geography',
-  culture: 'Culture',
-  food: 'Food',
-  art: 'Art',
-  music: 'Music',
-  technology: 'Technology',
-  nature: 'Nature',
-  people: 'People',
-  society: 'Society',
-  economy: 'Economy',
-  lifestyle: 'Lifestyle',
-};
 
 function escapeXml(value: string) {
   return value
@@ -36,7 +23,9 @@ export async function GET() {
     category: string;
   }> = [];
 
-  for (const [categorySlug, folderName] of Object.entries(categoryMapping)) {
+  for (const [categorySlug, folderName] of Object.entries(
+    categoryFolderMapping,
+  )) {
     try {
       const folderPath = resolve(process.cwd(), 'russia-knowledge', folderName);
       const files = await readdir(folderPath);

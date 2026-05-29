@@ -6,6 +6,7 @@ import Layout from '../../layouts/Layout.astro';
 import { marked } from 'marked';
 import {
   categoryConfig,
+  categoryFolderMapping,
   getCategoryConfig,
   type CategoryKey,
 } from '../../utils/categoryConfig';
@@ -39,22 +40,9 @@ export async function getStaticPaths() {
     }
   };
 
-  const categoryMapping: Record<string, string> = {
-    history: 'History',
-    geography: 'Geography',
-    culture: 'Culture',
-    food: 'Food',
-    art: 'Art',
-    music: 'Music',
-    technology: 'Technology',
-    nature: 'Nature',
-    people: 'People',
-    society: 'Society',
-    economy: 'Economy',
-    lifestyle: 'Lifestyle',
-  };
-
-  for (const [categorySlug, folderName] of Object.entries(categoryMapping)) {
+  for (const [categorySlug, folderName] of Object.entries(
+    categoryFolderMapping,
+  )) {
     try {
       const zhFolderPath = resolve(
         process.cwd(),
@@ -135,6 +123,7 @@ const categoryInfo = getCategoryConfig(category);
 if (!categoryInfo) {
   throw new Error(`Unknown category: ${category}`);
 }
+const categoryFolderName = categoryFolderMapping[category as CategoryKey];
 
 // 推薦文章 (簡化版，取同分類的其他文章)
 const otherCategories = Object.keys(categoryConfig)
@@ -145,29 +134,13 @@ const otherCategories = Object.keys(categoryConfig)
     ...categoryConfig[cat as CategoryKey],
   }));
 
-const categoryMapping: Record<string, string> = {
-  history: 'History',
-  geography: 'Geography',
-  culture: 'Culture',
-  food: 'Food',
-  art: 'Art',
-  music: 'Music',
-  technology: 'Technology',
-  nature: 'Nature',
-  people: 'People',
-  society: 'Society',
-  economy: 'Economy',
-  lifestyle: 'Lifestyle',
-};
-
 let relatedArticles: any[] = [];
 try {
-  const folderName = categoryMapping[category as string];
-  if (folderName) {
+  if (categoryFolderName) {
     const categoryFolderPath = resolve(
       process.cwd(),
       'russia-knowledge',
-      folderName,
+      categoryFolderName,
     );
     const files = await readdir(categoryFolderPath);
     const markdownFiles = files.filter(
@@ -199,7 +172,7 @@ try {
 // 隨機探索：建立所有文章清單（排除當前文章）
 let allArticles: Array<{ title: string; slug: string; category: string }> = [];
 try {
-  for (const [catSlug, folderName] of Object.entries(categoryMapping)) {
+  for (const [catSlug, folderName] of Object.entries(categoryFolderMapping)) {
     if (catSlug === category) continue;
     try {
       const catPath = resolve(process.cwd(), 'russia-knowledge', folderName);
@@ -590,7 +563,7 @@ const processedContent = marked.parse(resolvedContent, {
             </p>
             <div class="contribute-actions">
               <a
-                href={`https://github.com/denis-gordeev/russia-md/edit/main/russia-knowledge/${categoryMapping[category as string]}/${slug}.md`}
+                href={`https://github.com/denis-gordeev/russia-md/edit/main/russia-knowledge/${categoryFolderName}/${slug}.md`}
                 target="_blank"
                 class="contribute-btn edit-btn"
                 rel="noopener"
