@@ -291,7 +291,21 @@ async function main() {
   await runCase('truncated-markdown-errors', {
     expectSuccess: false,
     expectedText:
-      /skills\/test-skill\/SKILL\.md:4: broken local anchor "references\/integration-notes\.md#missing-epsilon"[\s\S]*README\.md:3: broken local anchor "skills\/shared\/references\/overview\.md#missing-alpha"[\s\S]*docs\/guide\.md:4: broken local anchor "\.\.\/skills\/shared\/references\/overview\.md#missing-delta"[\s\S]*\.\.\. truncated 2 additional markdown validation error\(s\)\./,
+      /skills\/test-skill\/SKILL\.md:4: broken local anchor "references\/integration-notes\.md#missing-epsilon"[\s\S]*README\.md:3: broken local anchor "skills\/shared\/references\/overview\.md#missing-alpha"[\s\S]*README\.md:6: broken local link "missing-readme-doc-2\.md"[\s\S]*\.\.\. truncated 4 additional markdown validation error\(s\)\./,
+  });
+
+  await runCase('truncated-markdown-errors', {
+    args: ['--markdown-error-limit', '0'],
+    expectSuccess: false,
+    expectedText:
+      /skills\/test-skill\/SKILL\.md:4: broken local anchor "references\/integration-notes\.md#missing-epsilon"[\s\S]*docs\/guide\.md:6: broken local link "\.\.\/missing-docs-2\.md"(?![\s\S]*truncated)/,
+  });
+
+  await runCase('truncated-markdown-errors', {
+    args: ['--markdown-error-limit', '2'],
+    expectSuccess: false,
+    expectedText:
+      /skills\/test-skill\/SKILL\.md:4: broken local anchor "references\/integration-notes\.md#missing-epsilon"[\s\S]*skills\/test-skill\/SKILL\.md:5: broken local anchor "references\/integration-notes\.md#missing-zeta"[\s\S]*\.\.\. truncated 10 additional markdown validation error\(s\)\./,
   });
 
   await runCase('missing-shared-schema', {

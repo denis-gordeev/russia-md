@@ -23,7 +23,7 @@ const fullSkillValidationTriggers = [
   'package.json',
   'scripts/validate-skill-examples.mjs',
 ];
-const maxReportedMarkdownErrors = 10;
+const defaultMaxReportedMarkdownErrors = 10;
 const maxSuggestedAnchors = 5;
 const documentPaths = [
   path.join(root, 'README.md'),
@@ -35,6 +35,7 @@ const execFile = promisify(execFileCallback);
 function parseCliArgs(argv) {
   const options = {
     changed: false,
+    markdownErrorLimit: null,
     staged: false,
     paths: [],
   };
@@ -69,6 +70,21 @@ function parseCliArgs(argv) {
       continue;
     }
 
+    if (arg === '--markdown-error-limit') {
+      const value = argv[index + 1];
+
+      if (!value || value.startsWith('--')) {
+        fail('Expected a non-negative integer after --markdown-error-limit');
+      }
+
+      options.markdownErrorLimit = parseMarkdownErrorLimit(
+        value,
+        '--markdown-error-limit',
+      );
+      index += 1;
+      continue;
+    }
+
     fail(`Unknown argument: ${arg}`);
   }
 
@@ -81,6 +97,31 @@ function parseCliArgs(argv) {
   }
 
   return options;
+}
+
+function parseMarkdownErrorLimit(value, sourceLabel) {
+  if (value === undefined || value === null || value === '') {
+    return null;
+  }
+
+  if (!/^\d+$/.test(value)) {
+    fail(`${sourceLabel} must be a non-negative integer`);
+  }
+
+  return Number(value);
+}
+
+function resolveMarkdownErrorLimit(cliLimit) {
+  if (cliLimit !== null) {
+    return cliLimit;
+  }
+
+  const envLimit = parseMarkdownErrorLimit(
+    process.env.SKILL_VALIDATOR_MAX_MARKDOWN_ERRORS,
+    'SKILL_VALIDATOR_MAX_MARKDOWN_ERRORS',
+  );
+
+  return envLimit ?? defaultMaxReportedMarkdownErrors;
 }
 
 async function listSkillDirs(dir) {
@@ -864,14 +905,59 @@ function formatSelectedPathDiagnostics({
   return details.length > 0 ? `${details.join('; ')}.` : null;
 }
 
-function formatMarkdownErrors(errors) {
-  if (errors.length <= maxReportedMarkdownErrors) {
+function groupMarkdownErrorsBySource(errors) {
+  const groupedErrors = [];
+  const groupBySource = new Map();
+
+  for (const error of errors) {
+    const separatorIndex = error.indexOf(':');
+    const sourcePath =
+      separatorIndex === -1 ? '' : error.slice(0, separatorIndex);
+    const existingGroup = groupBySource.get(sourcePath);
+
+    if (existingGroup) {
+      existingGroup.push(error);
+      continue;
+    }
+
+    const newGroup = [error];
+    groupBySource.set(sourcePath, newGroup);
+    groupedErrors.push(newGroup);
+  }
+
+  return groupedErrors;
+}
+
+function formatMarkdownErrors(errors, maxReportedMarkdownErrors) {
+  if (
+    maxReportedMarkdownErrors === 0 ||
+    errors.length <= maxReportedMarkdownErrors
+  ) {
     return errors.join('\n');
   }
 
-  const remainingCount = errors.length - maxReportedMarkdownErrors;
+  const visibleErrors = [];
+  const groupedErrors = groupMarkdownErrorsBySource(errors);
+
+  for (const group of groupedErrors) {
+    if (
+      visibleErrors.length === 0 &&
+      group.length > maxReportedMarkdownErrors
+    ) {
+      visibleErrors.push(...group.slice(0, maxReportedMarkdownErrors));
+      break;
+    }
+
+    if (visibleErrors.length + group.length > maxReportedMarkdownErrors) {
+      break;
+    }
+
+    visibleErrors.push(...group);
+  }
+
+  const remainingCount = errors.length - visibleErrors.length;
   return [
-    ...errors.slice(0, maxReportedMarkdownErrors),
+    ...visibleErrors,
     `... truncated ${remainingCount} additional markdown validation error(s).`,
   ].join('\n');
 }
@@ -1133,6 +1219,9 @@ async function validateSkillDir(skillDir) {
 async function main() {
   const cliOptions = parseCliArgs(process.argv.slice(2));
   const skillDirs = await listSkillDirs(skillsDir);
+  const markdownErrorLimit = resolveMarkdownErrorLimit(
+    cliOptions.markdownErrorLimit,
+  );
   const markdownErrors = [];
 
   if (skillDirs.length === 0) {
@@ -1156,7 +1245,7 @@ async function main() {
   );
 
   if (markdownErrors.length > 0) {
-    fail(formatMarkdownErrors(markdownErrors));
+    fail(formatMarkdownErrors(markdownErrors, markdownErrorLimit));
   }
 
   const markdownScopeLabel = repositoryMarkdownPaths
