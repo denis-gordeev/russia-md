@@ -1,4 +1,6 @@
 ---
+import { categoryConfig } from '../utils/categoryConfig';
+
 interface Props {
   title: string;
   description?: string;
@@ -32,6 +34,9 @@ const {
 const fullTitle = `${title} | Russia.md`;
 const siteUrl = 'https://russia-md.ru';
 const fullImageUrl = new URL(image, siteUrl).href;
+const currentPath = new URL(url).pathname;
+const normalizedPath = currentPath.replace(/\/+$/, '') || '/';
+const isHomepage = normalizedPath === '/';
 
 // Generate AI-friendly summary from description or content
 const aiSummary =
@@ -116,18 +121,77 @@ const generateJSONLD = () => {
 
 const jsonLD = generateJSONLD();
 
+const topicalDomains = Object.values(categoryConfig).map(({ name_en }) => {
+  const lower = name_en.toLowerCase();
+  if (lower === 'people') return 'notable people in Russia';
+  if (lower === 'nature') return 'nature in Russia';
+  return `${lower} in Russia`;
+});
+
 const organizationLD = {
   '@context': 'https://schema.org',
   '@type': 'Organization',
   name: 'Russia.md',
+  alternateName: ['Russia Knowledge Base', 'russia-md'],
   url: siteUrl,
   logo: `${siteUrl}/favicon.png`,
-  description: 'Open-source, AI-friendly knowledge base about Russia.',
+  description:
+    'Open-source, AI-friendly knowledge base about Russia, curated as a reusable country reference for readers and LLM agents.',
+  slogan: 'Structured notes about Russia instead of stereotypes',
+  foundingDate: '2026-03-17',
+  knowsAbout: topicalDomains,
   sameAs: [
     'https://github.com/denis-gordeev/russia-md',
     'https://github.com/frank890417/taiwan-md',
   ],
 };
+
+const websiteLD = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: 'Russia.md',
+  url: siteUrl,
+  inLanguage: lang,
+  publisher: {
+    '@type': 'Organization',
+    name: 'Russia.md',
+    url: siteUrl,
+  },
+};
+
+const homepageCollectionLD = isHomepage
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'CollectionPage',
+      '@id': url,
+      url: url,
+      name: title,
+      description: description,
+      inLanguage: lang,
+      isPartOf: {
+        '@type': 'WebSite',
+        '@id': siteUrl,
+        name: 'Russia.md',
+      },
+      mainEntity: {
+        '@type': 'ItemList',
+        name: 'Russia.md category hubs',
+        numberOfItems: Object.keys(categoryConfig).length,
+        itemListElement: Object.entries(categoryConfig).map(
+          ([slug, category], index) => ({
+            '@type': 'ListItem',
+            position: index + 1,
+            item: {
+              '@type': 'CollectionPage',
+              '@id': `${siteUrl}/${slug}`,
+              url: `${siteUrl}/${slug}`,
+              name: category.name,
+            },
+          }),
+        ),
+      },
+    }
+  : null;
 
 // Dynamic keywords
 const baseKeywords =
@@ -138,7 +202,7 @@ const dynamicKeywords = [
   ...(tags && tags.length > 0 ? tags : []),
 ].join(', ');
 
-const pathParts = new URL(url).pathname.split('/').filter(Boolean);
+const pathParts = currentPath.split('/').filter(Boolean);
 const resolvedCategoryPath = categoryPath || pathParts[0] || null;
 const breadcrumbLD =
   pathParts.length === 0
@@ -207,8 +271,8 @@ const breadcrumbLD =
 />
 
 <!-- Language Tags -->
-<link rel="alternate" hreflang="en" href={siteUrl} />
-<link rel="alternate" hreflang="x-default" href={siteUrl} />
+<link rel="alternate" hreflang="en" href={url} />
+<link rel="alternate" hreflang="x-default" href={url} />
 
 <!-- Open Graph / Facebook -->
 <meta property="og:type" content={type} />
@@ -252,6 +316,18 @@ const breadcrumbLD =
   type="application/ld+json"
   set:html={JSON.stringify(organizationLD, null, 2)}
 />
+<script
+  type="application/ld+json"
+  set:html={JSON.stringify(websiteLD, null, 2)}
+/>
+{
+  homepageCollectionLD && (
+    <script
+      type="application/ld+json"
+      set:html={JSON.stringify(homepageCollectionLD, null, 2)}
+    />
+  )
+}
 {
   breadcrumbLD && (
     <script
