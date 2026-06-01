@@ -5,6 +5,7 @@ import { execSync } from 'child_process';
 export type Contributor = {
   name: string;
   login: string;
+  href?: string;
 };
 
 export type GitInfo = {
@@ -15,12 +16,35 @@ export type GitInfo = {
 type ContributorProfile = {
   name: string;
   login: string;
+  profile?: string;
 };
 
 let contributorProfiles: Map<string, ContributorProfile> | null = null;
 
 function contributorKey(value: string) {
   return value.toLowerCase().replace(/[\s._-]+/g, '');
+}
+
+function githubProfileHref(login: string) {
+  const normalized = login.trim();
+  if (!/^[A-Za-z0-9](?:[A-Za-z0-9-]{0,38})$/.test(normalized)) {
+    return undefined;
+  }
+
+  return `https://github.com/${normalized}`;
+}
+
+function profileHref(profile: string | undefined) {
+  if (!profile) return undefined;
+
+  try {
+    const url = new URL(profile);
+    if (url.hostname === 'github.com' || url.hostname === 'www.github.com') {
+      return url.toString();
+    }
+  } catch {}
+
+  return undefined;
 }
 
 function getContributorProfiles() {
@@ -37,6 +61,7 @@ function getContributorProfiles() {
       const profile = {
         name: contributor.name,
         login: contributor.login,
+        profile: contributor.profile,
       };
 
       contributorProfiles.set(contributorKey(contributor.name), profile);
@@ -61,6 +86,9 @@ export function resolveContributor(
     getContributorProfiles().get(contributorKey(githubLogin || '')) ||
     getContributorProfiles().get(contributorKey(authorName));
   const login = githubLogin || profile?.login || authorName;
+  const href =
+    profileHref(profile?.profile) ||
+    githubProfileHref(githubLogin || profile?.login || '');
   const displayName =
     authorName &&
     contributorKey(authorName) !== contributorKey(profile?.login || '')
@@ -70,6 +98,7 @@ export function resolveContributor(
   return {
     name: displayName,
     login,
+    href,
   };
 }
 

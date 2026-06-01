@@ -339,16 +339,22 @@ const processedContent = marked.parse(resolvedContent, {
                 <div class="contributors-list">
                   <span class="contributors-label">✏️ {ui.contributors}</span>
                   <div class="contributors-names">
-                    {normalizedContributors.map((contributor) => (
-                      <a
-                        href={`https://github.com/${contributor.login}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        class="contributor-chip"
-                      >
-                        {contributor.name}
-                      </a>
-                    ))}
+                    {normalizedContributors.map((contributor) =>
+                      contributor.href ? (
+                        <a
+                          href={contributor.href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          class="contributor-chip"
+                        >
+                          {contributor.name}
+                        </a>
+                      ) : (
+                        <span class="contributor-chip contributor-chip-static">
+                          {contributor.name}
+                        </span>
+                      ),
+                    )}
                   </div>
                 </div>
               )}
@@ -929,6 +935,15 @@ const processedContent = marked.parse(resolvedContent, {
     background: #2d5016;
     color: #fff;
     border-color: #2d5016;
+  }
+  .contributor-chip-static {
+    color: #475569;
+    cursor: default;
+  }
+  .contributor-chip-static:hover {
+    background: #fff;
+    color: #475569;
+    border-color: #d5dbe3;
   }
   .last-modified {
     display: flex;
