@@ -15,6 +15,7 @@ import {
   emptyGitInfo,
   type Contributor,
   type GitInfo,
+  resolveContributor,
 } from '../../utils/contributors';
 import { formatArticleDate, getArticleUi } from '../../utils/articleUi';
 
@@ -115,7 +116,7 @@ const ui = getArticleUi('en');
 const normalizedContributors = contributors.map(
   (contributor: string | Contributor) =>
     typeof contributor === 'string'
-      ? { name: contributor, login: contributor }
+      ? resolveContributor(contributor, '')
       : contributor,
 );
 
