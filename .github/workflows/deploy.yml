@@ -30,7 +30,9 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 24
+          # Selective upstream sync: upstream pinned CI back to Node 22 to
+          # avoid GitHub Actions breakage on the latest Node line.
+          node-version: 22
           cache: npm
       - name: Install dependencies
         run: npm ci --prefer-offline --no-audit
