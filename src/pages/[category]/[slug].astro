@@ -170,35 +170,6 @@ try {
   }
 } catch {}
 
-// 隨機探索：建立所有文章清單（排除當前文章）
-let allArticles: Array<{ title: string; slug: string; category: string }> = [];
-try {
-  for (const [catSlug, folderName] of Object.entries(categoryFolderMapping)) {
-    if (catSlug === category) continue;
-    try {
-      const catPath = resolve(process.cwd(), 'russia-knowledge', folderName);
-      const catFiles = await readdir(catPath);
-      for (const file of catFiles.filter(
-        (f) => f.endsWith('.md') && !f.startsWith('_'),
-      )) {
-        try {
-          const articleSlug = basename(file, '.md');
-          const { data: fm } = matter(
-            await readFile(join(catPath, file), 'utf-8'),
-          );
-          allArticles.push({
-            title: fm.title || articleSlug,
-            slug: articleSlug,
-            category: catSlug,
-          });
-        } catch {}
-      }
-    } catch {}
-  }
-} catch (err) {
-  console.log('Error building allArticles:', err.message);
-}
-
 function resolveWikilinks(markdownContent: string) {
   if (!markdownContent) return markdownContent;
   return markdownContent.replace(
@@ -488,19 +459,16 @@ const processedContent = marked.parse(resolvedContent, {
         }
 
         <!-- 隨機探索另一篇 -->
-        {
-          allArticles.length > 0 && (
-            <div class="random-explore">
-              <button
-                class="random-btn"
-                onclick="goRandomArticle()"
-                type="button"
-              >
-                🎲 {ui.openRandomArticle}
-              </button>
-            </div>
-          )
-        }
+        <div class="random-explore">
+          <button
+            class="random-btn"
+            data-current-category={category}
+            onclick="goRandomArticle(this)"
+            type="button"
+          >
+            🎲 {ui.openRandomArticle}
+          </button>
+        </div>
 
         <!-- More Articles -->
         <div class="more-articles">
@@ -710,12 +678,60 @@ const processedContent = marked.parse(resolvedContent, {
   updateReadingProgress();
 </script>
 
-<script define:vars={{ allArticles }}>
-  function goRandomArticle() {
-    if (!allArticles || allArticles.length === 0) return;
-    const pick = allArticles[Math.floor(Math.random() * allArticles.length)];
-    window.location.href = '/' + pick.category + '/' + pick.slug;
+<script>
+  let randomIndexPromise;
+
+  async function loadRandomIndex() {
+    if (!randomIndexPromise) {
+      randomIndexPromise = fetch('/api/random-index.json')
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error('Failed to load random index');
+          }
+          return response.json();
+        })
+        .catch((error) => {
+          randomIndexPromise = null;
+          throw error;
+        });
+    }
+
+    return randomIndexPromise;
   }
+
+  async function goRandomArticle(button) {
+    try {
+      const currentCategory =
+        button?.dataset?.currentCategory ||
+        document.querySelector('.random-btn')?.dataset?.currentCategory ||
+        '';
+      const randomIndex = await loadRandomIndex();
+      const entries = Object.entries(randomIndex?.byCat || {})
+        .filter(([category]) => category !== currentCategory)
+        .flatMap(([, hrefs]) => hrefs);
+
+      if (!entries.length) return;
+
+      const pick = entries[Math.floor(Math.random() * entries.length)];
+      if (typeof pick === 'string' && pick.length > 0) {
+        window.location.href = pick;
+      }
+    } catch (error) {
+      console.error('Random article navigation failed:', error);
+    }
+  }
+
+  const warmRandomIndex = () => {
+    loadRandomIndex().catch(() => {});
+  };
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const button = document.querySelector('.random-btn');
+    if (!button) return;
+    button.addEventListener('mouseenter', warmRandomIndex, { once: true });
+    button.addEventListener('focus', warmRandomIndex, { once: true });
+    button.addEventListener('touchstart', warmRandomIndex, { once: true });
+  });
 </script>
 
 <style
