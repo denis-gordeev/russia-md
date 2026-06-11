@@ -214,6 +214,7 @@ const processedContent = marked.parse(resolvedContent, {
   type="article"
   datePublished={frontmatter.date || new Date().toISOString()}
   dateModified={frontmatter.modified ||
+    lastModified ||
     frontmatter.date ||
     new Date().toISOString()}
   content={content}

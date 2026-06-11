@@ -1,7 +1,30 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 import sitemap from '@astrojs/sitemap';
 import rehypeExternalLinks from 'rehype-external-links';
+
+function loadContentDates() {
+  try {
+    const filePath = resolve(process.cwd(), 'src/data/content-dates.json');
+    return JSON.parse(readFileSync(filePath, 'utf-8'));
+  } catch {
+    return {};
+  }
+}
+
+const contentDates = loadContentDates();
+
+function getLastmodForUrl(url) {
+  try {
+    const pathname = new URL(url).pathname.replace(/\/+$/, '') || '/';
+    const isoDate = contentDates[pathname];
+    return isoDate ? new Date(isoDate) : undefined;
+  } catch {
+    return undefined;
+  }
+}
 
 export default defineConfig({
   site: 'https://russia-md.ru',
@@ -9,8 +32,11 @@ export default defineConfig({
     sitemap({
       changefreq: 'weekly',
       priority: 0.7,
-      lastmod: new Date(),
       customPages: ['https://russia-md.ru/?changefreq=daily&priority=1.0'],
+      serialize(item) {
+        const lastmod = getLastmodForUrl(item.url);
+        return lastmod ? { ...item, lastmod } : item;
+      },
     }),
   ],
   build: {
