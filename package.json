@@ -7,7 +7,8 @@
   },
   "scripts": {
     "dev": "astro dev",
-    "prebuild": "node scripts/build-content-dates.mjs",
+    "predev": "npm run prebuild",
+    "prebuild": "node scripts/build-content-dates.mjs && node scripts/build-search-index.mjs && node scripts/build-git-info.mjs",
     "build": "astro build",
     "test:content": "node scripts/test-frontmatter.mjs && node scripts/check-internal-references.mjs",
     "test:content:ci": "node scripts/test-frontmatter.mjs --ci && node scripts/check-internal-references.mjs --ci",

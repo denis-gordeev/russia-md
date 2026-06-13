@@ -1,6 +1,5 @@
 import { readFileSync } from 'fs';
 import { resolve } from 'path';
-import { execSync } from 'child_process';
 
 export type Contributor = {
   name: string;
@@ -109,53 +108,36 @@ export function emptyGitInfo(): GitInfo {
   };
 }
 
+function loadGitInfoFiles(): Record<string, GitInfo> {
+  try {
+    const raw = readFileSync(
+      resolve(process.cwd(), 'src/data/git-info.json'),
+      'utf-8',
+    );
+    return (JSON.parse(raw) as { files?: Record<string, GitInfo> }).files || {};
+  } catch {
+    return {};
+  }
+}
+
+const gitInfoFiles = loadGitInfoFiles();
+const gitInfoCacheByPrefix = new Map<string, Map<string, GitInfo>>();
+
 export function buildGitInfoCache(pathPrefix: string) {
+  const cached = gitInfoCacheByPrefix.get(pathPrefix);
+  if (cached) return cached;
+
+  const normalizedPrefix = pathPrefix.endsWith('/')
+    ? pathPrefix
+    : `${pathPrefix}/`;
   const cache = new Map<string, GitInfo>();
 
-  try {
-    const logOutput = execSync(
-      `git -c core.quotePath=false log --use-mailmap --full-history -z --name-only --format="COMMIT|%aI|%aN|%aE" -- "${pathPrefix}"`,
-      { encoding: 'utf-8', maxBuffer: 10 * 1024 * 1024 },
-    );
-    let currentDate = '';
-    let currentContributor: Contributor | null = null;
-
-    for (let token of logOutput.split('\0')) {
-      token = token.replace(/^\n+/, '').trim();
-      if (!token) continue;
-
-      if (token.startsWith('COMMIT|')) {
-        const parts = token.split('|');
-        currentDate = parts[1] || '';
-        currentContributor = resolveContributor(parts[2] || '', parts[3] || '');
-        continue;
-      }
-
-      if (!token.startsWith(pathPrefix) || !token.endsWith('.md')) continue;
-
-      const key = resolve(process.cwd(), token).normalize('NFC');
-      let entry = cache.get(key);
-
-      if (!entry) {
-        entry = {
-          contributors: [],
-          lastModified: currentDate,
-        };
-        cache.set(key, entry);
-      }
-
-      if (
-        currentContributor &&
-        !entry.contributors.some(
-          (contributor) => contributor.login === currentContributor?.login,
-        )
-      ) {
-        entry.contributors.push(currentContributor);
-      }
-    }
-  } catch (error) {
-    console.error('Git cache error:', (error as Error).message);
+  for (const [relPath, gitInfo] of Object.entries(gitInfoFiles)) {
+    if (!relPath.startsWith(normalizedPrefix)) continue;
+    const key = resolve(process.cwd(), relPath).normalize('NFC');
+    cache.set(key, gitInfo);
   }
 
+  gitInfoCacheByPrefix.set(pathPrefix, cache);
   return cache;
 }
