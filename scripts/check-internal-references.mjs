@@ -208,7 +208,7 @@ for (const folderName of categoryFolders) {
     allArticles.push({
       relativePath,
       body: parsed.content,
-      slug: path.basename(entry.name, '.md'),
+      slug: path.basename(entry.name, '.md').normalize('NFC'),
       title: parsed.data.title,
       category: folderToRouteCategory.get(folderName),
     });

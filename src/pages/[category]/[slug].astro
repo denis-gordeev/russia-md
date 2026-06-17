@@ -60,7 +60,7 @@ export async function getStaticPaths() {
           const filePath = join(zhFolderPath, file);
           const fileContent = await readFile(filePath, 'utf-8');
           const { data: frontmatter, content } = safeMatter(fileContent);
-          const slug = basename(file, '.md');
+          const slug = basename(file, '.md').normalize('NFC');
 
           let gitInfo = emptyGitInfo();
           try {
@@ -149,7 +149,7 @@ try {
     );
 
     for (const file of markdownFiles) {
-      const articleSlug = basename(file, '.md');
+      const articleSlug = basename(file, '.md').normalize('NFC');
       if (articleSlug !== slug) {
         try {
           const filePath = join(categoryFolderPath, file);

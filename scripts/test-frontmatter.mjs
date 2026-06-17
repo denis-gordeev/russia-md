@@ -198,7 +198,7 @@ for (const category of categoryFolders) {
       continue;
     }
 
-    const slug = path.basename(entry.name, '.md');
+    const slug = path.basename(entry.name, '.md').normalize('NFC');
     const frontmatter = parsed.data;
 
     if (slugs.has(slug)) {

@@ -38,7 +38,7 @@ export async function GET() {
           const filePath = join(folderPath, file);
           const fileContent = await readFile(filePath, 'utf-8');
           const { data: frontmatter, content } = matter(fileContent);
-          const slug = basename(file, '.md');
+          const slug = basename(file, '.md').normalize('NFC');
           const description =
             frontmatter.description ||
             content
@@ -50,7 +50,7 @@ export async function GET() {
           articles.push({
             title: frontmatter.title || slug,
             description,
-            link: `${siteUrl}/${categorySlug}/${slug}`,
+            link: `${siteUrl}/${categorySlug}/${encodeURIComponent(slug)}`,
             pubDate: new Date(frontmatter.date || Date.now()).toUTCString(),
             category: categorySlug,
           });

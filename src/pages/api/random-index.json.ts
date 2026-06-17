@@ -18,7 +18,8 @@ export const GET: APIRoute = async () => {
       byCat[slug] = files
         .filter((entry) => entry.endsWith('.md') && !entry.startsWith('_'))
         .map(
-          (entry) => `/${slug}/${encodeURIComponent(basename(entry, '.md'))}`,
+          (entry) =>
+            `/${slug}/${encodeURIComponent(basename(entry, '.md').normalize('NFC'))}`,
         );
     } catch {
       byCat[slug] = [];
