@@ -1,0 +1,19 @@
+export PATH="$PATH:/opt/homebrew/bin:/usr/local/bin:$HOME/.bun/bin"
+
+# Mirror the content integrity checks from CI before pushing so cross-file
+# regressions fail locally instead of after the deploy workflow starts.
+if [ "${RUSSIA_MD_SKIP_PREPUSH_SWEEP:-0}" = "1" ]; then
+  echo "russia-md pre-push: skipping full content sweep (RUSSIA_MD_SKIP_PREPUSH_SWEEP=1)"
+  exit 0
+fi
+
+echo "russia-md pre-push: running full content validation"
+if ! npm run test:content; then
+  echo ""
+  echo "russia-md pre-push: content validation failed; fix the repository state before push"
+  echo "  bypass: RUSSIA_MD_SKIP_PREPUSH_SWEEP=1 git push"
+  exit 1
+fi
+
+echo "russia-md pre-push: checking contributor metadata"
+npm run check:contributors
