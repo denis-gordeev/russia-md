@@ -19,7 +19,10 @@ const fixturesRoot = path.join(
   'skill-validator',
 );
 
-async function runCase(caseName, { args = [], expectSuccess, expectedText }) {
+async function runCase(
+  caseName,
+  { args = [], env = {}, expectSuccess, expectedText },
+) {
   const fixtureRoot = path.join(fixturesRoot, caseName);
 
   try {
@@ -30,6 +33,7 @@ async function runCase(caseName, { args = [], expectSuccess, expectedText }) {
         cwd: repoRoot,
         env: {
           ...process.env,
+          ...env,
           SKILL_VALIDATOR_ROOT: fixtureRoot,
         },
       },
@@ -291,7 +295,7 @@ async function main() {
   await runCase('truncated-markdown-errors', {
     expectSuccess: false,
     expectedText:
-      /skills\/test-skill\/SKILL\.md:4: broken local anchor "references\/integration-notes\.md#missing-epsilon"[\s\S]*README\.md:3: broken local anchor "skills\/shared\/references\/overview\.md#missing-alpha"[\s\S]*README\.md:6: broken local link "missing-readme-doc-2\.md"[\s\S]*\.\.\. truncated 4 additional markdown validation error\(s\)\./,
+      /skills\/test-skill\/SKILL\.md:4: broken local anchor "references\/integration-notes\.md#missing-epsilon"[\s\S]*README\.md:3: broken local anchor "skills\/shared\/references\/overview\.md#missing-alpha"[\s\S]*README\.md:6: broken local link "missing-readme-doc-2\.md"[\s\S]*\.\.\. truncated 4 additional markdown validation error\(s\)\.[\s\S]*\.\.\. hidden markdown validation errors by file: docs\/guide\.md \(\+4\)\./,
   });
 
   await runCase('truncated-markdown-errors', {
@@ -305,7 +309,43 @@ async function main() {
     args: ['--markdown-error-limit', '2'],
     expectSuccess: false,
     expectedText:
-      /skills\/test-skill\/SKILL\.md:4: broken local anchor "references\/integration-notes\.md#missing-epsilon"[\s\S]*skills\/test-skill\/SKILL\.md:5: broken local anchor "references\/integration-notes\.md#missing-zeta"[\s\S]*\.\.\. truncated 10 additional markdown validation error\(s\)\./,
+      /skills\/test-skill\/SKILL\.md:4: broken local anchor "references\/integration-notes\.md#missing-epsilon"[\s\S]*skills\/test-skill\/SKILL\.md:5: broken local anchor "references\/integration-notes\.md#missing-zeta"[\s\S]*\.\.\. truncated 10 additional markdown validation error\(s\)\.[\s\S]*\.\.\. hidden markdown validation errors by file: skills\/test-skill\/SKILL\.md \(\+2\), README\.md \(\+4\), docs\/guide\.md \(\+4\)\./,
+  });
+
+  await runCase('truncated-markdown-errors', {
+    args: [
+      '--paths',
+      'README.md,docs,skills/test-skill',
+      '--markdown-error-limit',
+      '3',
+    ],
+    expectSuccess: false,
+    expectedText:
+      /skills\/test-skill\/SKILL\.md:4: broken local anchor "references\/integration-notes\.md#missing-epsilon"[\s\S]*skills\/test-skill\/SKILL\.md:6: broken local link "\.\.\/\.\.\/missing-skill-doc-1\.md"[\s\S]*\.\.\. truncated 9 additional markdown validation error\(s\)\.[\s\S]*\.\.\. hidden markdown validation errors by file: skills\/test-skill\/SKILL\.md \(\+1\), README\.md \(\+4\), docs\/guide\.md \(\+4\)\./,
+  });
+
+  await runCase('valid-minimal', {
+    args: ['--markdown-error-limit', 'abc'],
+    expectSuccess: false,
+    expectedText: /--markdown-error-limit must be a non-negative integer/,
+  });
+
+  await runCase('valid-minimal', {
+    env: {
+      SKILL_VALIDATOR_MAX_MARKDOWN_ERRORS: 'abc',
+    },
+    expectSuccess: false,
+    expectedText:
+      /SKILL_VALIDATOR_MAX_MARKDOWN_ERRORS must be a non-negative integer/,
+  });
+
+  await runCase('truncated-markdown-errors', {
+    env: {
+      SKILL_VALIDATOR_MAX_MARKDOWN_ERRORS: '3',
+    },
+    expectSuccess: false,
+    expectedText:
+      /skills\/test-skill\/SKILL\.md:4: broken local anchor "references\/integration-notes\.md#missing-epsilon"[\s\S]*skills\/test-skill\/SKILL\.md:6: broken local link "\.\.\/\.\.\/missing-skill-doc-1\.md"[\s\S]*\.\.\. truncated 9 additional markdown validation error\(s\)\.[\s\S]*\.\.\. hidden markdown validation errors by file: skills\/test-skill\/SKILL\.md \(\+1\), README\.md \(\+4\), docs\/guide\.md \(\+4\)\./,
   });
 
   await runCase('missing-shared-schema', {

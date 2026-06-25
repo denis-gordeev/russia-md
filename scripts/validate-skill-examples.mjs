@@ -928,6 +928,26 @@ function groupMarkdownErrorsBySource(errors) {
   return groupedErrors;
 }
 
+function formatTruncatedMarkdownGroupSummaries(hiddenErrorsBySource) {
+  if (hiddenErrorsBySource.length === 0) {
+    return null;
+  }
+
+  const maxVisibleSources = 5;
+  const visibleSources = hiddenErrorsBySource.slice(0, maxVisibleSources);
+  const remainingSourceCount =
+    hiddenErrorsBySource.length - visibleSources.length;
+  const sourceSummary = visibleSources
+    .map(({ sourcePath, count }) => `${sourcePath || '<unknown>'} (+${count})`)
+    .join(', ');
+  const truncatedSuffix =
+    remainingSourceCount > 0
+      ? `, ... (+${remainingSourceCount} more file(s))`
+      : '';
+
+  return `... hidden markdown validation errors by file: ${sourceSummary}${truncatedSuffix}.`;
+}
+
 function formatMarkdownErrors(errors, maxReportedMarkdownErrors) {
   if (
     maxReportedMarkdownErrors === 0 ||
@@ -956,9 +976,24 @@ function formatMarkdownErrors(errors, maxReportedMarkdownErrors) {
   }
 
   const remainingCount = errors.length - visibleErrors.length;
+  const hiddenErrorsBySource = groupedErrors
+    .map((group) => {
+      const hiddenCount = group.filter(
+        (error) => !visibleErrors.includes(error),
+      ).length;
+      return {
+        count: hiddenCount,
+        sourcePath: group[0]?.split(':', 1)[0] ?? '',
+      };
+    })
+    .filter(({ count }) => count > 0);
+  const hiddenGroupSummary =
+    formatTruncatedMarkdownGroupSummaries(hiddenErrorsBySource);
+
   return [
     ...visibleErrors,
     `... truncated ${remainingCount} additional markdown validation error(s).`,
+    ...(hiddenGroupSummary ? [hiddenGroupSummary] : []),
   ].join('\n');
 }
 
