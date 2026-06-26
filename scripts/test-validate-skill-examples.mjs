@@ -193,6 +193,13 @@ async function main() {
   });
 
   await runCase('valid-minimal', {
+    args: ['--paths', 'notes/extra.md,missing.txt'],
+    expectSuccess: true,
+    expectedText:
+      /No skill folders or repository markdown docs matched the selected --paths input; nothing to validate \(ignored existing markdown path\(s\) outside tracked docs: notes\/extra\.md; unmatched path\(s\): missing\.txt\.\)/,
+  });
+
+  await runCase('valid-minimal', {
     args: ['--paths', 'README.md,notes/todo.txt'],
     expectSuccess: true,
     expectedText:
@@ -348,10 +355,46 @@ async function main() {
       /skills\/test-skill\/SKILL\.md:4: broken local anchor "references\/integration-notes\.md#missing-epsilon"[\s\S]*skills\/test-skill\/SKILL\.md:6: broken local link "\.\.\/\.\.\/missing-skill-doc-1\.md"[\s\S]*\.\.\. truncated 9 additional markdown validation error\(s\)\.[\s\S]*\.\.\. hidden markdown validation errors by file: skills\/test-skill\/SKILL\.md \(\+1\), README\.md \(\+4\), docs\/guide\.md \(\+4\)\./,
   });
 
+  await runCase('truncated-markdown-many-files', {
+    args: ['--markdown-error-limit', '1'],
+    expectSuccess: false,
+    expectedText:
+      /README\.md:3: broken local link "missing-readme-doc\.md"[\s\S]*\.\.\. truncated 6 additional markdown validation error\(s\)\.[\s\S]*\.\.\. hidden markdown validation errors by file: docs\/alpha\.md \(\+1\), docs\/bravo\.md \(\+1\), docs\/charlie\.md \(\+1\), docs\/delta\.md \(\+1\), docs\/echo\.md \(\+1\), \.\.\. \(\+1 more file\(s\)\)\./,
+  });
+
+  await runCase('truncated-markdown-many-files', {
+    args: ['--markdown-error-limit', '1', '--markdown-hidden-file-limit', '2'],
+    expectSuccess: false,
+    expectedText:
+      /README\.md:3: broken local link "missing-readme-doc\.md"[\s\S]*\.\.\. truncated 6 additional markdown validation error\(s\)\.[\s\S]*\.\.\. hidden markdown validation errors by file: docs\/alpha\.md \(\+1\), docs\/bravo\.md \(\+1\), \.\.\. \(\+4 more file\(s\)\)\./,
+  });
+
+  await runCase('truncated-markdown-many-files', {
+    args: ['--markdown-error-limit', '1', '--markdown-hidden-file-limit', '0'],
+    expectSuccess: false,
+    expectedText:
+      /README\.md:3: broken local link "missing-readme-doc\.md"[\s\S]*\.\.\. truncated 6 additional markdown validation error\(s\)\.[\s\S]*\.\.\. hidden markdown validation errors by file: docs\/alpha\.md \(\+1\), docs\/bravo\.md \(\+1\), docs\/charlie\.md \(\+1\), docs\/delta\.md \(\+1\), docs\/echo\.md \(\+1\), docs\/foxtrot\.md \(\+1\)\./,
+  });
+
   await runCase('missing-shared-schema', {
     expectSuccess: false,
     expectedText:
       /Missing required file: skills\/shared\/schemas\/agent-metadata\.schema\.json/,
+  });
+
+  await runCase('valid-minimal', {
+    args: ['--markdown-hidden-file-limit', 'abc'],
+    expectSuccess: false,
+    expectedText: /--markdown-hidden-file-limit must be a non-negative integer/,
+  });
+
+  await runCase('valid-minimal', {
+    env: {
+      SKILL_VALIDATOR_MAX_HIDDEN_MARKDOWN_FILES: 'abc',
+    },
+    expectSuccess: false,
+    expectedText:
+      /SKILL_VALIDATOR_MAX_HIDDEN_MARKDOWN_FILES must be a non-negative integer/,
   });
 
   console.log('Validator fixture checks passed.');

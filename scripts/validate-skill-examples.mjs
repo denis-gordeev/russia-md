@@ -24,6 +24,7 @@ const fullSkillValidationTriggers = [
   'scripts/validate-skill-examples.mjs',
 ];
 const defaultMaxReportedMarkdownErrors = 10;
+const defaultMaxReportedHiddenMarkdownSources = 5;
 const maxSuggestedAnchors = 5;
 const documentPaths = [
   path.join(root, 'README.md'),
@@ -36,6 +37,7 @@ function parseCliArgs(argv) {
   const options = {
     changed: false,
     markdownErrorLimit: null,
+    markdownHiddenFileLimit: null,
     staged: false,
     paths: [],
   };
@@ -85,6 +87,23 @@ function parseCliArgs(argv) {
       continue;
     }
 
+    if (arg === '--markdown-hidden-file-limit') {
+      const value = argv[index + 1];
+
+      if (!value || value.startsWith('--')) {
+        fail(
+          'Expected a non-negative integer after --markdown-hidden-file-limit',
+        );
+      }
+
+      options.markdownHiddenFileLimit = parseMarkdownErrorLimit(
+        value,
+        '--markdown-hidden-file-limit',
+      );
+      index += 1;
+      continue;
+    }
+
     fail(`Unknown argument: ${arg}`);
   }
 
@@ -122,6 +141,19 @@ function resolveMarkdownErrorLimit(cliLimit) {
   );
 
   return envLimit ?? defaultMaxReportedMarkdownErrors;
+}
+
+function resolveHiddenMarkdownFileLimit(cliLimit) {
+  if (cliLimit !== null) {
+    return cliLimit;
+  }
+
+  const envLimit = parseMarkdownErrorLimit(
+    process.env.SKILL_VALIDATOR_MAX_HIDDEN_MARKDOWN_FILES,
+    'SKILL_VALIDATOR_MAX_HIDDEN_MARKDOWN_FILES',
+  );
+
+  return envLimit ?? defaultMaxReportedHiddenMarkdownSources;
 }
 
 async function listSkillDirs(dir) {
@@ -928,13 +960,18 @@ function groupMarkdownErrorsBySource(errors) {
   return groupedErrors;
 }
 
-function formatTruncatedMarkdownGroupSummaries(hiddenErrorsBySource) {
+function formatTruncatedMarkdownGroupSummaries(
+  hiddenErrorsBySource,
+  maxVisibleSources,
+) {
   if (hiddenErrorsBySource.length === 0) {
     return null;
   }
 
-  const maxVisibleSources = 5;
-  const visibleSources = hiddenErrorsBySource.slice(0, maxVisibleSources);
+  const visibleSources =
+    maxVisibleSources === 0
+      ? hiddenErrorsBySource
+      : hiddenErrorsBySource.slice(0, maxVisibleSources);
   const remainingSourceCount =
     hiddenErrorsBySource.length - visibleSources.length;
   const sourceSummary = visibleSources
@@ -948,7 +985,11 @@ function formatTruncatedMarkdownGroupSummaries(hiddenErrorsBySource) {
   return `... hidden markdown validation errors by file: ${sourceSummary}${truncatedSuffix}.`;
 }
 
-function formatMarkdownErrors(errors, maxReportedMarkdownErrors) {
+function formatMarkdownErrors(
+  errors,
+  maxReportedMarkdownErrors,
+  maxReportedHiddenMarkdownSources,
+) {
   if (
     maxReportedMarkdownErrors === 0 ||
     errors.length <= maxReportedMarkdownErrors
@@ -987,8 +1028,10 @@ function formatMarkdownErrors(errors, maxReportedMarkdownErrors) {
       };
     })
     .filter(({ count }) => count > 0);
-  const hiddenGroupSummary =
-    formatTruncatedMarkdownGroupSummaries(hiddenErrorsBySource);
+  const hiddenGroupSummary = formatTruncatedMarkdownGroupSummaries(
+    hiddenErrorsBySource,
+    maxReportedHiddenMarkdownSources,
+  );
 
   return [
     ...visibleErrors,
@@ -1257,6 +1300,9 @@ async function main() {
   const markdownErrorLimit = resolveMarkdownErrorLimit(
     cliOptions.markdownErrorLimit,
   );
+  const hiddenMarkdownFileLimit = resolveHiddenMarkdownFileLimit(
+    cliOptions.markdownHiddenFileLimit,
+  );
   const markdownErrors = [];
 
   if (skillDirs.length === 0) {
@@ -1280,7 +1326,13 @@ async function main() {
   );
 
   if (markdownErrors.length > 0) {
-    fail(formatMarkdownErrors(markdownErrors, markdownErrorLimit));
+    fail(
+      formatMarkdownErrors(
+        markdownErrors,
+        markdownErrorLimit,
+        hiddenMarkdownFileLimit,
+      ),
+    );
   }
 
   const markdownScopeLabel = repositoryMarkdownPaths
