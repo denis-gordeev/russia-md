@@ -142,8 +142,11 @@ const navConfig = [
         </a>
         <button
           class="menu-toggle"
+          type="button"
           aria-label="Toggle navigation"
-          onclick="document.querySelector('.nav-mobile').classList.toggle('open')"
+          aria-expanded="false"
+          aria-controls="primary-mobile-nav"
+          onclick="const n=document.querySelector('.nav-mobile');const o=n.classList.toggle('open');this.textContent=o?'✕':'☰';this.setAttribute('aria-expanded',String(o));"
           >☰</button
         >
         <nav class="nav-desktop" aria-label="Main navigation">
@@ -218,14 +221,18 @@ const navConfig = [
             GitHub
           </a>
         </nav>
-        <nav class="nav-mobile" aria-label="Mobile navigation">
+        <nav
+          id="primary-mobile-nav"
+          class="nav-mobile"
+          aria-label="Mobile navigation"
+        >
           {
             navConfig.map((item) => {
               return (
                 <a
                   href={item.fullPath}
                   class:list={['nav-link', { active: item.active }]}
-                  onclick="document.querySelector('.nav-mobile').classList.remove('open')"
+                  onclick="const n=document.querySelector('.nav-mobile');const t=document.querySelector('.menu-toggle');n.classList.remove('open');if(t){t.textContent='☰';t.setAttribute('aria-expanded','false');}"
                 >
                   {item.label}
                 </a>
@@ -1172,6 +1179,11 @@ const navConfig = [
       border: 1px solid rgba(0, 0, 0, 0.08);
       border-radius: 18px;
       box-shadow: 0 18px 42px rgba(15, 23, 42, 0.14);
+      max-height: calc(100vh - 5rem);
+      max-height: calc(100dvh - 5rem);
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      -webkit-overflow-scrolling: touch;
     }
     .nav-mobile.open {
       display: flex;
@@ -1275,3 +1287,33 @@ const navConfig = [
     }
   }
 </style>
+
+<script is:inline>
+  (() => {
+    const nav = document.querySelector('.nav-mobile');
+    const toggle = document.querySelector('.menu-toggle');
+    if (!nav || !toggle) return;
+
+    const closeNav = () => {
+      if (!nav.classList.contains('open')) return;
+      nav.classList.remove('open');
+      toggle.textContent = '☰';
+      toggle.setAttribute('aria-expanded', 'false');
+    };
+
+    document.addEventListener('click', (event) => {
+      if (!nav.classList.contains('open')) return;
+      const target = event.target;
+      if (!(target instanceof Node)) return;
+      if (!nav.contains(target) && !toggle.contains(target)) {
+        closeNav();
+      }
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') {
+        closeNav();
+      }
+    });
+  })();
+</script>
