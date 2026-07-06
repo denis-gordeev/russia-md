@@ -29,6 +29,7 @@ const folderToRouteCategory = new Map(
 const ciMode = process.argv.includes('--ci');
 const stagedMode = process.argv.includes('--staged');
 const ciDiffBase = process.env.CONTENT_DIFF_BASE?.trim();
+const ciDiffHead = process.env.CONTENT_DIFF_HEAD?.trim();
 
 function lineAndColumn(text, index) {
   const before = text.slice(0, index);
@@ -44,32 +45,56 @@ async function getSelectedPaths() {
   }
 
   try {
-    const resolvedCiBase =
-      ciMode &&
-      ciDiffBase &&
-      ciDiffBase !== '0000000000000000000000000000000000000000'
-        ? ciDiffBase
-        : 'HEAD~1';
-    const args = stagedMode
-      ? [
-          'diff',
-          '--cached',
-          '--name-only',
-          '--diff-filter=ACMR',
-          '--',
-          'russia-knowledge',
-        ]
-      : [
-          'diff',
-          '--name-only',
-          '--diff-filter=ACMR',
-          resolvedCiBase,
-          'HEAD',
-          '--',
-          'russia-knowledge',
-        ];
+    let stdout = '';
 
-    const { stdout } = await execFile('git', args);
+    if (stagedMode) {
+      ({ stdout } = await execFile('git', [
+        'diff',
+        '--cached',
+        '--name-only',
+        '--diff-filter=ACMR',
+        '--',
+        'russia-knowledge',
+      ]));
+    } else {
+      const resolvedCiBase =
+        ciDiffBase && ciDiffBase !== '0000000000000000000000000000000000000000'
+          ? ciDiffBase
+          : null;
+      const candidateDiffs = [];
+
+      if (resolvedCiBase && ciDiffHead) {
+        candidateDiffs.push([resolvedCiBase, ciDiffHead, 'three-dot']);
+      }
+
+      candidateDiffs.push(['HEAD^1', 'HEAD^2', 'three-dot']);
+
+      if (resolvedCiBase) {
+        candidateDiffs.push([resolvedCiBase, 'HEAD', 'three-dot']);
+        candidateDiffs.push([resolvedCiBase, 'HEAD', 'two-dot']);
+      } else {
+        candidateDiffs.push(['HEAD~1', 'HEAD', 'two-dot']);
+      }
+
+      for (const [left, right, mode] of candidateDiffs) {
+        try {
+          const range = mode === 'three-dot' ? `${left}...${right}` : left;
+          const diffArgs = [
+            'diff',
+            '--name-only',
+            '--diff-filter=ACMR',
+            ...(mode === 'three-dot' ? [range] : [left, right]),
+            '--',
+            'russia-knowledge',
+          ];
+          const result = await execFile('git', diffArgs);
+          stdout = result.stdout;
+          break;
+        } catch {
+          continue;
+        }
+      }
+    }
 
     const files = stdout
       .split('\n')

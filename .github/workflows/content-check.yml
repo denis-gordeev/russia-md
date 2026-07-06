@@ -41,6 +41,7 @@ jobs:
       - name: Validate changed content frontmatter and internal references
         env:
           CONTENT_DIFF_BASE: ${{ github.event.pull_request.base.sha }}
+          CONTENT_DIFF_HEAD: ${{ github.event.pull_request.head.sha }}
         run: npm run test:content:ci
 
       - name: Verify contributor metadata for active corpus
