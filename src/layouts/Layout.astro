@@ -79,6 +79,9 @@ const navConfig = [
       : currentPath.startsWith(pathWithoutHash);
   return { ...item, fullPath, active };
 });
+
+const skipLinkLabel =
+  lang === 'en' ? 'Skip to content' : 'Перейти к содержанию';
 ---
 
 <!doctype html>
@@ -128,6 +131,7 @@ const navConfig = [
     </script>
   </head>
   <body>
+    <a href="#main-content" class="skip-link">{skipLinkLabel}</a>
     <header role="banner">
       <div class="header-inner">
         <a href="/" class="logo" aria-label="Russia.md home">
@@ -436,7 +440,7 @@ const navConfig = [
       }
     </script>
 
-    <main role="main">
+    <main id="main-content" role="main">
       <slot />
     </main>
 
@@ -621,6 +625,28 @@ const navConfig = [
   *:focus-visible {
     outline: 2px solid #3b82f6;
     outline-offset: 2px;
+  }
+
+  .skip-link {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 2000;
+    transform: translateY(-120%);
+    padding: 0.7rem 1rem;
+    background: linear-gradient(135deg, #f97316, #ea580c);
+    color: #fff7ed;
+    font-size: 0.95rem;
+    font-weight: 700;
+    text-decoration: none;
+    border-radius: 0 0 12px 0;
+    box-shadow: 0 10px 24px rgba(15, 23, 42, 0.28);
+    transition: transform 0.18s ease;
+  }
+
+  .skip-link:focus,
+  .skip-link:focus-visible {
+    transform: translateY(0);
   }
 
   button:focus-visible,
