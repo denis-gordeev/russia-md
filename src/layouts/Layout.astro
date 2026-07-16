@@ -247,8 +247,11 @@ const skipLinkLabel =
         </nav>
         <button
           class="search-toggle"
+          type="button"
           aria-label="Search"
-          onclick="document.getElementById('search-modal').classList.add('open');setTimeout(()=>document.getElementById('search-input').focus(),100)"
+          aria-controls="search-modal"
+          aria-expanded="false"
+          onclick="window.__rmdOpenSearch && window.__rmdOpenSearch()"
         >
           <svg
             width="16"
@@ -270,10 +273,17 @@ const skipLinkLabel =
     </header>
 
     <!-- Search Modal -->
-    <div id="search-modal" class="search-modal">
+    <div
+      id="search-modal"
+      class="search-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-hidden="true"
+      aria-labelledby="search-input"
+    >
       <div
         class="search-backdrop"
-        onclick="document.getElementById('search-modal').classList.remove('open')"
+        onclick="window.__rmdCloseSearch && window.__rmdCloseSearch()"
       >
       </div>
       <div class="search-panel">
@@ -298,20 +308,49 @@ const skipLinkLabel =
             type="text"
             placeholder="Search articles..."
             autocomplete="off"
+            role="combobox"
+            aria-autocomplete="list"
+            aria-controls="search-results"
+            aria-expanded="false"
           />
           <kbd
             class="search-kbd"
-            onclick="document.getElementById('search-modal').classList.remove('open')"
+            onclick="window.__rmdCloseSearch && window.__rmdCloseSearch()"
             >ESC</kbd
           >
         </div>
-        <div id="search-results" class="search-results">
+        <div id="search-results" class="search-results" role="listbox">
           <div class="search-hint">Type to search across all articles</div>
         </div>
       </div>
     </div>
     <script is:inline>
       var _searchIdx = null;
+      function _setSearchOpen(open) {
+        var modal = document.getElementById('search-modal');
+        var input = document.getElementById('search-input');
+        var toggle = document.querySelector('.search-toggle');
+        if (!modal || !input || !toggle) return;
+
+        modal.classList.toggle('open', open);
+        modal.setAttribute('aria-hidden', open ? 'false' : 'true');
+        input.setAttribute('aria-expanded', open ? 'true' : 'false');
+        toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+        document.body.classList.toggle('search-open', open);
+      }
+
+      window.__rmdOpenSearch = function () {
+        _setSearchOpen(true);
+        setTimeout(function () {
+          var input = document.getElementById('search-input');
+          if (input) input.focus();
+        }, 100);
+      };
+
+      window.__rmdCloseSearch = function () {
+        _setSearchOpen(false);
+      };
+
       async function _loadSearchIndex() {
         if (_searchIdx) return _searchIdx;
         try {
@@ -329,23 +368,119 @@ const skipLinkLabel =
         if (!input) return;
         var results = document.getElementById('search-results');
         var modal = document.getElementById('search-modal');
+        var emptyStateHTML = results.innerHTML;
+        var keyboardIndex = -1;
 
         _loadSearchIndex();
 
+        function _escHtml(s) {
+          return String(s).replace(/[&<>\"']/g, function (c) {
+            return {
+              '&': '&amp;',
+              '<': '&lt;',
+              '>': '&gt;',
+              '"': '&quot;',
+              "'": '&#39;',
+            }[c];
+          });
+        }
+
+        function _hlText(text, q) {
+          var raw = String(text || '');
+          var segs = String(q || '')
+            .toLowerCase()
+            .normalize('NFKC')
+            .trim()
+            .split(/\s+/)
+            .filter(Boolean)
+            .sort(function (a, b) {
+              return b.length - a.length;
+            })
+            .map(function (s) {
+              return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            });
+
+          if (!segs.length) return _escHtml(raw);
+
+          var re = new RegExp('(' + segs.join('|') + ')', 'gi');
+          var out = '';
+          var last = 0;
+          var match;
+          while ((match = re.exec(raw)) !== null) {
+            out +=
+              _escHtml(raw.slice(last, match.index)) +
+              '<mark>' +
+              _escHtml(match[0]) +
+              '</mark>';
+            last = match.index + match[0].length;
+            if (match.index === re.lastIndex) re.lastIndex++;
+          }
+
+          return out + _escHtml(raw.slice(last));
+        }
+
+        function _renderResult(item, idx, q) {
+          var langBadge = 'EN';
+          return (
+            '<a id="search-item-' +
+            idx +
+            '" role="option" class="search-item" href="' +
+            item.u +
+            '">' +
+            '<span class="search-item-lang">' +
+            langBadge +
+            '</span>' +
+            '<div class="search-item-text">' +
+            '<span class="search-item-title">' +
+            _hlText(item.t, q) +
+            '</span>' +
+            (item.d
+              ? '<span class="search-item-desc">' +
+                _hlText(item.d, q) +
+                '</span>'
+              : '') +
+            '</div>' +
+            '</a>'
+          );
+        }
+
+        function _applyKeyboardSelection() {
+          var items = results.querySelectorAll('.search-item');
+          for (var i = 0; i < items.length; i++) {
+            items[i].classList.toggle('kb-active', i === keyboardIndex);
+            items[i].setAttribute(
+              'aria-selected',
+              i === keyboardIndex ? 'true' : 'false',
+            );
+          }
+
+          if (keyboardIndex >= 0 && items[keyboardIndex]) {
+            input.setAttribute(
+              'aria-activedescendant',
+              items[keyboardIndex].id,
+            );
+            items[keyboardIndex].scrollIntoView({ block: 'nearest' });
+          } else {
+            input.removeAttribute('aria-activedescendant');
+          }
+        }
+
         input.addEventListener('input', async function () {
-          var q = this.value.trim().toLowerCase();
+          var q = this.value.trim();
+          var qLower = q.toLowerCase();
+          keyboardIndex = -1;
           if (!q) {
-            results.innerHTML =
-              '<div class="search-hint">Type to search across all articles</div>';
+            results.innerHTML = emptyStateHTML;
+            input.removeAttribute('aria-activedescendant');
             return;
           }
           var idx = await _loadSearchIndex();
           var matches = idx.filter(function (item) {
             return (
-              item.t.toLowerCase().indexOf(q) !== -1 ||
-              item.d.toLowerCase().indexOf(q) !== -1 ||
+              item.t.toLowerCase().indexOf(qLower) !== -1 ||
+              item.d.toLowerCase().indexOf(qLower) !== -1 ||
               item.tags.some(function (tag) {
-                return String(tag).toLowerCase().indexOf(q) !== -1;
+                return String(tag).toLowerCase().indexOf(qLower) !== -1;
               })
             );
           });
@@ -362,25 +497,8 @@ const skipLinkLabel =
           }
           var html = matches
             .slice(0, 12)
-            .map(function (item) {
-              var langBadge = 'EN';
-              return (
-                '<a class="search-item" href="' +
-                item.u +
-                '">' +
-                '<span class="search-item-lang">' +
-                langBadge +
-                '</span>' +
-                '<div class="search-item-text">' +
-                '<span class="search-item-title">' +
-                item.t +
-                '</span>' +
-                (item.d
-                  ? '<span class="search-item-desc">' + item.d + '</span>'
-                  : '') +
-                '</div>' +
-                '</a>'
-              );
+            .map(function (item, idx) {
+              return _renderResult(item, idx, q);
             })
             .join('');
           if (matches.length > 12) {
@@ -392,19 +510,41 @@ const skipLinkLabel =
           results.innerHTML = html;
         });
 
+        input.addEventListener('keydown', function (e) {
+          var items = results.querySelectorAll('.search-item');
+          if (!items.length) return;
+
+          if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            keyboardIndex = (keyboardIndex + 1) % items.length;
+            _applyKeyboardSelection();
+          } else if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            keyboardIndex =
+              keyboardIndex <= 0 ? items.length - 1 : keyboardIndex - 1;
+            _applyKeyboardSelection();
+          } else if (
+            e.key === 'Enter' &&
+            keyboardIndex >= 0 &&
+            items[keyboardIndex]
+          ) {
+            e.preventDefault();
+            items[keyboardIndex].click();
+          }
+        });
+
         // ESC to close
         document.addEventListener('keydown', function (e) {
           if (e.key === 'Escape' && modal.classList.contains('open')) {
-            modal.classList.remove('open');
+            window.__rmdCloseSearch();
           }
           // Cmd/Ctrl+K to open
           if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
             e.preventDefault();
-            modal.classList.toggle('open');
             if (modal.classList.contains('open')) {
-              setTimeout(function () {
-                input.focus();
-              }, 100);
+              window.__rmdCloseSearch();
+            } else {
+              window.__rmdOpenSearch();
             }
           }
           // Keep `/` available as a quick-open shortcut when focus is not in an editor.
@@ -417,10 +557,7 @@ const skipLinkLabel =
             !(document.activeElement || document.body).isContentEditable
           ) {
             e.preventDefault();
-            modal.classList.add('open');
-            setTimeout(function () {
-              input.focus();
-            }, 100);
+            window.__rmdOpenSearch();
           }
         });
       }
@@ -855,6 +992,9 @@ const skipLinkLabel =
   .search-modal.open {
     display: flex;
   }
+  body.search-open {
+    overflow: hidden;
+  }
   .search-backdrop {
     position: fixed;
     top: 0;
@@ -926,6 +1066,9 @@ const skipLinkLabel =
   .search-item:hover {
     background: #f1f5f9;
   }
+  .search-item.kb-active {
+    background: #e2e8f0;
+  }
   .search-item-lang {
     flex-shrink: 0;
     font-size: 0.7rem;
@@ -953,6 +1096,12 @@ const skipLinkLabel =
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+  }
+  .search-item mark {
+    background: rgba(251, 191, 36, 0.34);
+    color: inherit;
+    border-radius: 0.2rem;
+    padding: 0 0.08rem;
   }
 
   .lang-toggle {
