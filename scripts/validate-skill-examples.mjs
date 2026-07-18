@@ -491,17 +491,43 @@ function getNearestAnchorSuggestions(fragment, anchors) {
   }
 
   const similarityThreshold = Math.max(2, Math.ceil(fragment.length * 0.4));
+  const familySizes = new Map();
   const matches = [];
+
+  for (const anchor of anchors) {
+    const family = getAnchorSuggestionFamily(anchor);
+    familySizes.set(family, (familySizes.get(family) ?? 0) + 1);
+  }
 
   for (const anchor of anchors) {
     const distance = computeLevenshteinDistance(fragment, anchor);
 
     if (distance <= similarityThreshold) {
-      matches.push({ anchor, distance });
+      const family = getAnchorSuggestionFamily(anchor);
+      matches.push({
+        anchor,
+        distance,
+        family,
+        familyDistance: computeLevenshteinDistance(fragment, family),
+        familySize: familySizes.get(family) ?? 1,
+        familyVariantRank: getAnchorSuggestionFamilyVariantRank(anchor, family),
+      });
     }
   }
 
   matches.sort((left, right) => {
+    if (left.familyDistance !== right.familyDistance) {
+      return left.familyDistance - right.familyDistance;
+    }
+
+    if (left.familySize !== right.familySize) {
+      return right.familySize - left.familySize;
+    }
+
+    if (left.familyVariantRank !== right.familyVariantRank) {
+      return left.familyVariantRank - right.familyVariantRank;
+    }
+
     if (left.distance !== right.distance) {
       return left.distance - right.distance;
     }
@@ -510,6 +536,29 @@ function getNearestAnchorSuggestions(fragment, anchors) {
   });
 
   return matches.map(({ anchor }) => anchor);
+}
+
+function getAnchorSuggestionFamily(anchor) {
+  return anchor.replace(/-\d+$/, '');
+}
+
+function getAnchorSuggestionFamilyVariantRank(anchor, family) {
+  if (anchor === family) {
+    return 0;
+  }
+
+  const numericSuffixMatch = anchor.match(
+    new RegExp(`^${escapeRegExpForRegex(family)}-(\\d+)$`),
+  );
+  if (numericSuffixMatch) {
+    return Number.parseInt(numericSuffixMatch[1], 10);
+  }
+
+  return Number.MAX_SAFE_INTEGER;
+}
+
+function escapeRegExpForRegex(value) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
 function formatNearestAnchorSuggestions(suggestions) {
