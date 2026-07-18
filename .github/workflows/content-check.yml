@@ -32,7 +32,7 @@ jobs:
         uses: actions/setup-node@v5
         with:
           # Keep content validation on the same CI Node baseline as deploy.
-          node-version: 22
+          node-version: 24
           cache: npm
 
       - name: Install dependencies
