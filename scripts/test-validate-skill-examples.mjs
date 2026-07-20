@@ -302,7 +302,7 @@ async function main() {
   await runCase('truncated-markdown-errors', {
     expectSuccess: false,
     expectedText:
-      /skills\/test-skill\/SKILL\.md:4: broken local anchor "references\/integration-notes\.md#missing-epsilon"[\s\S]*README\.md:3: broken local anchor "skills\/shared\/references\/overview\.md#missing-alpha"[\s\S]*README\.md:6: broken local link "missing-readme-doc-2\.md"[\s\S]*\.\.\. truncated 4 additional markdown validation error\(s\)\.[\s\S]*\.\.\. hidden markdown validation errors by file: docs\/guide\.md \(\+4\)\./,
+      /skills\/test-skill\/SKILL\.md:4: broken local anchor "references\/integration-notes\.md#missing-epsilon"[\s\S]*README\.md:3: broken local anchor "skills\/shared\/references\/overview\.md#missing-alpha"[\s\S]*README\.md:6: broken local link "missing-readme-doc-2\.md"[\s\S]*\.\.\. truncated 4 additional markdown validation error\(s\)\.[\s\S]*\.\.\. hidden markdown validation errors by file \(showing up to 5 hidden source file\(s\)\): docs\/guide\.md \(\+4\)\./,
   });
 
   await runCase('truncated-markdown-errors', {
@@ -316,7 +316,7 @@ async function main() {
     args: ['--markdown-error-limit', '2'],
     expectSuccess: false,
     expectedText:
-      /skills\/test-skill\/SKILL\.md:4: broken local anchor "references\/integration-notes\.md#missing-epsilon"[\s\S]*skills\/test-skill\/SKILL\.md:5: broken local anchor "references\/integration-notes\.md#missing-zeta"[\s\S]*\.\.\. truncated 10 additional markdown validation error\(s\)\.[\s\S]*\.\.\. hidden markdown validation errors by file: skills\/test-skill\/SKILL\.md \(\+2\), README\.md \(\+4\), docs\/guide\.md \(\+4\)\./,
+      /skills\/test-skill\/SKILL\.md:4: broken local anchor "references\/integration-notes\.md#missing-epsilon"[\s\S]*skills\/test-skill\/SKILL\.md:5: broken local anchor "references\/integration-notes\.md#missing-zeta"[\s\S]*\.\.\. truncated 10 additional markdown validation error\(s\)\.[\s\S]*\.\.\. hidden markdown validation errors by file \(showing up to 5 hidden source file\(s\)\): skills\/test-skill\/SKILL\.md \(\+2\), README\.md \(\+4\), docs\/guide\.md \(\+4\)\./,
   });
 
   await runCase('truncated-markdown-errors', {
@@ -328,7 +328,21 @@ async function main() {
     ],
     expectSuccess: false,
     expectedText:
-      /skills\/test-skill\/SKILL\.md:4: broken local anchor "references\/integration-notes\.md#missing-epsilon"[\s\S]*skills\/test-skill\/SKILL\.md:6: broken local link "\.\.\/\.\.\/missing-skill-doc-1\.md"[\s\S]*\.\.\. truncated 9 additional markdown validation error\(s\)\.[\s\S]*\.\.\. hidden markdown validation errors by file: skills\/test-skill\/SKILL\.md \(\+1\), README\.md \(\+4\), docs\/guide\.md \(\+4\)\./,
+      /skills\/test-skill\/SKILL\.md:4: broken local anchor "references\/integration-notes\.md#missing-epsilon"[\s\S]*skills\/test-skill\/SKILL\.md:6: broken local link "\.\.\/\.\.\/missing-skill-doc-1\.md"[\s\S]*\.\.\. truncated 9 additional markdown validation error\(s\)\.[\s\S]*\.\.\. hidden markdown validation errors by file \(showing up to 5 hidden source file\(s\)\): skills\/test-skill\/SKILL\.md \(\+1\), README\.md \(\+4\), docs\/guide\.md \(\+4\)\./,
+  });
+
+  await runCase('truncated-markdown-errors', {
+    args: [
+      '--paths',
+      'README.md,docs,skills/test-skill',
+      '--markdown-error-limit',
+      '1',
+      '--markdown-hidden-file-limit',
+      '2',
+    ],
+    expectSuccess: false,
+    expectedText:
+      /skills\/test-skill\/SKILL\.md:4: broken local anchor "references\/integration-notes\.md#missing-epsilon"[\s\S]*\.\.\. truncated 11 additional markdown validation error\(s\)\.[\s\S]*\.\.\. hidden markdown validation errors by file \(showing up to 2 hidden source file\(s\)\): skills\/test-skill\/SKILL\.md \(\+3\), README\.md \(\+4\), \.\.\. \(\+1 more file\(s\)\)\./,
   });
 
   await runCase('valid-minimal', {
@@ -352,28 +366,28 @@ async function main() {
     },
     expectSuccess: false,
     expectedText:
-      /skills\/test-skill\/SKILL\.md:4: broken local anchor "references\/integration-notes\.md#missing-epsilon"[\s\S]*skills\/test-skill\/SKILL\.md:6: broken local link "\.\.\/\.\.\/missing-skill-doc-1\.md"[\s\S]*\.\.\. truncated 9 additional markdown validation error\(s\)\.[\s\S]*\.\.\. hidden markdown validation errors by file: skills\/test-skill\/SKILL\.md \(\+1\), README\.md \(\+4\), docs\/guide\.md \(\+4\)\./,
+      /skills\/test-skill\/SKILL\.md:4: broken local anchor "references\/integration-notes\.md#missing-epsilon"[\s\S]*skills\/test-skill\/SKILL\.md:6: broken local link "\.\.\/\.\.\/missing-skill-doc-1\.md"[\s\S]*\.\.\. truncated 9 additional markdown validation error\(s\)\.[\s\S]*\.\.\. hidden markdown validation errors by file \(showing up to 5 hidden source file\(s\)\): skills\/test-skill\/SKILL\.md \(\+1\), README\.md \(\+4\), docs\/guide\.md \(\+4\)\./,
   });
 
   await runCase('truncated-markdown-many-files', {
     args: ['--markdown-error-limit', '1'],
     expectSuccess: false,
     expectedText:
-      /README\.md:3: broken local link "missing-readme-doc\.md"[\s\S]*\.\.\. truncated 6 additional markdown validation error\(s\)\.[\s\S]*\.\.\. hidden markdown validation errors by file: docs\/alpha\.md \(\+1\), docs\/bravo\.md \(\+1\), docs\/charlie\.md \(\+1\), docs\/delta\.md \(\+1\), docs\/echo\.md \(\+1\), \.\.\. \(\+1 more file\(s\)\)\./,
+      /README\.md:3: broken local link "missing-readme-doc\.md"[\s\S]*\.\.\. truncated 6 additional markdown validation error\(s\)\.[\s\S]*\.\.\. hidden markdown validation errors by file \(showing up to 5 hidden source file\(s\)\): docs\/alpha\.md \(\+1\), docs\/bravo\.md \(\+1\), docs\/charlie\.md \(\+1\), docs\/delta\.md \(\+1\), docs\/echo\.md \(\+1\), \.\.\. \(\+1 more file\(s\)\)\./,
   });
 
   await runCase('truncated-markdown-many-files', {
     args: ['--markdown-error-limit', '1', '--markdown-hidden-file-limit', '2'],
     expectSuccess: false,
     expectedText:
-      /README\.md:3: broken local link "missing-readme-doc\.md"[\s\S]*\.\.\. truncated 6 additional markdown validation error\(s\)\.[\s\S]*\.\.\. hidden markdown validation errors by file: docs\/alpha\.md \(\+1\), docs\/bravo\.md \(\+1\), \.\.\. \(\+4 more file\(s\)\)\./,
+      /README\.md:3: broken local link "missing-readme-doc\.md"[\s\S]*\.\.\. truncated 6 additional markdown validation error\(s\)\.[\s\S]*\.\.\. hidden markdown validation errors by file \(showing up to 2 hidden source file\(s\)\): docs\/alpha\.md \(\+1\), docs\/bravo\.md \(\+1\), \.\.\. \(\+4 more file\(s\)\)\./,
   });
 
   await runCase('truncated-markdown-many-files', {
     args: ['--markdown-error-limit', '1', '--markdown-hidden-file-limit', '0'],
     expectSuccess: false,
     expectedText:
-      /README\.md:3: broken local link "missing-readme-doc\.md"[\s\S]*\.\.\. truncated 6 additional markdown validation error\(s\)\.[\s\S]*\.\.\. hidden markdown validation errors by file: docs\/alpha\.md \(\+1\), docs\/bravo\.md \(\+1\), docs\/charlie\.md \(\+1\), docs\/delta\.md \(\+1\), docs\/echo\.md \(\+1\), docs\/foxtrot\.md \(\+1\)\./,
+      /README\.md:3: broken local link "missing-readme-doc\.md"[\s\S]*\.\.\. truncated 6 additional markdown validation error\(s\)\.[\s\S]*\.\.\. hidden markdown validation errors by file \(showing all hidden source files\): docs\/alpha\.md \(\+1\), docs\/bravo\.md \(\+1\), docs\/charlie\.md \(\+1\), docs\/delta\.md \(\+1\), docs\/echo\.md \(\+1\), docs\/foxtrot\.md \(\+1\)\./,
   });
 
   await runCase('missing-shared-schema', {

@@ -1030,8 +1030,12 @@ function formatTruncatedMarkdownGroupSummaries(
     remainingSourceCount > 0
       ? `, ... (+${remainingSourceCount} more file(s))`
       : '';
+  const limitLabel =
+    maxVisibleSources === 0
+      ? 'showing all hidden source files'
+      : `showing up to ${maxVisibleSources} hidden source file(s)`;
 
-  return `... hidden markdown validation errors by file: ${sourceSummary}${truncatedSuffix}.`;
+  return `... hidden markdown validation errors by file (${limitLabel}): ${sourceSummary}${truncatedSuffix}.`;
 }
 
 function formatMarkdownErrors(
