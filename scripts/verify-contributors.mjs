@@ -5,7 +5,7 @@ import { resolve } from 'path';
 import { spawnSync } from 'child_process';
 
 const DEFAULT_PATHS = ['russia-knowledge/'];
-const GITHUB_LOGIN_REGEX = /^[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,37}[a-zA-Z0-9])?$/;
+const GITHUB_LOGIN_REGEX = /^[A-Za-z0-9](?:[A-Za-z0-9-]{0,37}[A-Za-z0-9])?$/;
 
 function contributorKey(value) {
   return value.toLowerCase().replace(/[\s._-]+/g, '');
