@@ -47,6 +47,9 @@ cloudflare-token*
 # Local assistant worktrees should not pollute the main repo status.
 .claude/worktrees/
 
+# Local batch scratch space and logs.
+/tmp/
+
 # Generated API/search artifacts and git provenance caches.
 public/api/search-index.json
 src/data/git-info.json
