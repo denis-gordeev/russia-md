@@ -900,6 +900,9 @@ const skipLinkLabel =
     min-width: 160px;
     box-shadow: 0 12px 32px rgba(15, 23, 42, 0.12);
     z-index: 1000;
+    max-height: min(70vh, 520px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
   }
   .nav-dropdown:hover .dropdown-menu {
     display: block;
