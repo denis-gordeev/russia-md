@@ -8,3 +8,5 @@ owner: validator
 
 Overview text.
 Broken [integration notes](references/integration-notes.md#guide-misspelled), [schema](schemas/output.schema.json), and [example](examples/output.json).
+
+Another broken [integration section](references/integration-notes.md#second-missing-guide).

@@ -28,4 +28,6 @@ Repeated guide heading four.
 
 Repeated guide heading five.
 
+<span id="guide-20"></span>
+
 This fixture skill links back to the [shared overview](../../shared/references/overview.md#shared-overview).

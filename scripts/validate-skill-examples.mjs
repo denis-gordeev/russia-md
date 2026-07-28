@@ -1,6 +1,7 @@
 import { execFile as execFileCallback } from 'child_process';
 import { readdir, readFile, stat } from 'fs/promises';
 import { promisify } from 'util';
+import { pathToFileURL } from 'url';
 import path from 'path';
 import matter from 'gray-matter';
 import YAML from 'yaml';
@@ -388,12 +389,8 @@ function normalizeLinkTarget(rawTarget) {
   return targetWithoutHash.replace(/\\/g, '/');
 }
 
-function countLines(value) {
-  if (value.length === 0) {
-    return 0;
-  }
-
-  return value.split(/\r?\n/).length;
+function countNewlines(value) {
+  return (value.match(/\r?\n/g) ?? []).length;
 }
 
 function getMarkdownBodyInfo(markdownRaw, markdownPath) {
@@ -412,7 +409,7 @@ function getMarkdownBodyInfo(markdownRaw, markdownPath) {
   const bodyStartLine =
     contentStartIndex === -1
       ? 1
-      : countLines(markdownRaw.slice(0, contentStartIndex)) + 1;
+      : countNewlines(markdownRaw.slice(0, contentStartIndex)) + 1;
 
   return {
     content: parsed.content,
@@ -422,7 +419,7 @@ function getMarkdownBodyInfo(markdownRaw, markdownPath) {
 
 function getLineNumberForIndex(content, index, bodyStartLine) {
   const prefix = content.slice(0, index);
-  const newlineCount = prefix.length === 0 ? 0 : countLines(prefix) - 1;
+  const newlineCount = countNewlines(prefix);
   return bodyStartLine + newlineCount;
 }
 
@@ -485,7 +482,7 @@ function computeLevenshteinDistance(left, right) {
   return previousRow[right.length];
 }
 
-function getNearestAnchorSuggestions(fragment, anchors) {
+export function getNearestAnchorSuggestions(fragment, anchors) {
   if (!fragment || anchors.size === 0) {
     return [];
   }
@@ -1396,7 +1393,12 @@ async function main() {
   );
 }
 
-main().catch((error) => {
-  console.error(error.message);
-  process.exit(1);
-});
+if (
+  process.argv[1] &&
+  import.meta.url === pathToFileURL(path.resolve(process.argv[1])).href
+) {
+  main().catch((error) => {
+    console.error(error.message);
+    process.exit(1);
+  });
+}

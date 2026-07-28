@@ -4,6 +4,7 @@ import { mkdtemp, cp, readFile, writeFile } from 'fs/promises';
 import os from 'os';
 import path from 'path';
 import { promisify } from 'util';
+import { getNearestAnchorSuggestions } from './validate-skill-examples.mjs';
 
 const execFile = promisify(execFileCallback);
 const repoRoot = process.cwd();
@@ -104,6 +105,14 @@ async function runGitCase({ caseName, args = [], mutate, expectedText }) {
 }
 
 async function main() {
+  assert.deepEqual(
+    getNearestAnchorSuggestions(
+      'guidee',
+      new Set(['guide', 'guides', 'guide-2', 'guide-20', 'guide-1']),
+    ),
+    ['guide', 'guide-1', 'guide-2', 'guide-20', 'guides'],
+  );
+
   await runCase('valid-minimal', {
     expectSuccess: true,
     expectedText:
@@ -119,7 +128,7 @@ async function main() {
   await runCase('frontmatter-line-numbers', {
     expectSuccess: false,
     expectedText:
-      /skills\/test-skill\/SKILL\.md:11: broken local anchor "references\/integration-notes\.md#guide-misspelled"[\s\S]*README\.md:13: broken local anchor "skills\/shared\/references\/overview\.md#missing-shared-anchor"/,
+      /skills\/test-skill\/SKILL\.md:10: broken local anchor "references\/integration-notes\.md#guide-misspelled"[\s\S]*skills\/test-skill\/SKILL\.md:12: broken local anchor "references\/integration-notes\.md#second-missing-guide"[\s\S]*README\.md:12: broken local anchor "skills\/shared\/references\/overview\.md#missing-shared-anchor"/,
   });
 
   await runCase('valid-minimal', {
@@ -284,7 +293,7 @@ async function main() {
   await runCase('broken-anchor-many-suggestions', {
     expectSuccess: false,
     expectedText:
-      /skills\/test-skill\/SKILL\.md:3: broken local anchor .*missing #guidee; nearest anchors: #guide, #guide-1, #guide-2, #guide-3, #guide-4, \.\.\. \(\+2 more\)/,
+      /skills\/test-skill\/SKILL\.md:3: broken local anchor .*missing #guidee; nearest anchors: #guide, #guide-1, #guide-2, #guide-3, #guide-4, \.\.\. \(\+3 more\)/,
   });
 
   await runCase('broken-anchor-no-suggestion', {
