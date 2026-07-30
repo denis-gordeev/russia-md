@@ -22,9 +22,18 @@ const fixturesRoot = path.join(
 
 async function runCase(
   caseName,
-  { args = [], env = {}, expectSuccess, expectedText },
+  { args = [], env = {}, expectSuccess, expectedText, mutate },
 ) {
-  const fixtureRoot = path.join(fixturesRoot, caseName);
+  let fixtureRoot = path.join(fixturesRoot, caseName);
+
+  if (mutate) {
+    const tempRoot = await mkdtemp(
+      path.join(os.tmpdir(), `skill-validator-${caseName}-`),
+    );
+    await cp(fixtureRoot, tempRoot, { recursive: true });
+    await mutate(tempRoot);
+    fixtureRoot = tempRoot;
+  }
 
   try {
     const { stdout, stderr } = await execFile(
@@ -125,10 +134,68 @@ async function main() {
       /Validated 1 skill example contract\(s\) and repository markdown links\./,
   });
 
+  await runCase('valid-frontmatter', {
+    expectSuccess: true,
+    expectedText:
+      /Validated 1 skill example contract\(s\) and repository markdown links\./,
+    mutate: async (fixtureRoot) => {
+      const crlfPaths = [
+        'README.md',
+        'docs/guide.md',
+        'skills/test-skill/SKILL.md',
+        'skills/test-skill/references/integration-notes.md',
+      ];
+
+      for (const relativePath of crlfPaths) {
+        const markdownPath = path.join(fixtureRoot, relativePath);
+        const markdownRaw = await readFile(markdownPath, 'utf8');
+        await writeFile(markdownPath, markdownRaw.replace(/\r?\n/g, '\r\n'));
+      }
+    },
+  });
+
   await runCase('frontmatter-line-numbers', {
     expectSuccess: false,
     expectedText:
       /skills\/test-skill\/SKILL\.md:10: broken local anchor "references\/integration-notes\.md#guide-misspelled"[\s\S]*skills\/test-skill\/SKILL\.md:12: broken local anchor "references\/integration-notes\.md#second-missing-guide"[\s\S]*README\.md:12: broken local anchor "skills\/shared\/references\/overview\.md#missing-shared-anchor"/,
+  });
+
+  await runCase('frontmatter-line-numbers', {
+    expectSuccess: false,
+    expectedText:
+      /skills\/test-skill\/SKILL\.md:10: broken local anchor "references\/integration-notes\.md#guide-misspelled"[\s\S]*skills\/test-skill\/SKILL\.md:12: broken local anchor "references\/integration-notes\.md#second-missing-guide"[\s\S]*README\.md:12: broken local anchor "skills\/shared\/references\/overview\.md#missing-shared-anchor"/,
+    mutate: async (fixtureRoot) => {
+      const crlfPaths = [
+        'README.md',
+        'skills/test-skill/SKILL.md',
+        'skills/test-skill/references/integration-notes.md',
+      ];
+
+      for (const relativePath of crlfPaths) {
+        const markdownPath = path.join(fixtureRoot, relativePath);
+        const markdownRaw = await readFile(markdownPath, 'utf8');
+        await writeFile(markdownPath, markdownRaw.replace(/\r?\n/g, '\r\n'));
+      }
+    },
+  });
+
+  await runCase('valid-frontmatter', {
+    expectSuccess: false,
+    expectedText:
+      /skills\/test-skill\/SKILL\.md:10: malformed percent-encoding in local anchor "references\/integration-notes\.md#%ZZ-invalid" \(fragment #%ZZ-invalid\)[\s\S]*skills\/test-skill\/SKILL\.md:11: broken local anchor "references\/integration-notes\.md#missing-after-malformed"/,
+    mutate: async (fixtureRoot) => {
+      const skillPath = path.join(
+        fixtureRoot,
+        'skills',
+        'test-skill',
+        'SKILL.md',
+      );
+      const skillRaw = await readFile(skillPath, 'utf8');
+      await writeFile(
+        skillPath,
+        `${skillRaw}\nBroken [encoded anchor](references/integration-notes.md#%ZZ-invalid).\nBroken [following anchor](references/integration-notes.md#missing-after-malformed).\n`,
+      );
+    },
   });
 
   await runCase('valid-minimal', {

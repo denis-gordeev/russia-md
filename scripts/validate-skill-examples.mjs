@@ -432,6 +432,14 @@ function extractLinkFragment(rawTarget) {
   return rawTarget.slice(hashIndex + 1).trim();
 }
 
+function decodeLinkFragment(fragment) {
+  try {
+    return decodeURIComponent(fragment);
+  } catch {
+    return null;
+  }
+}
+
 function createMarkdownSlug(value) {
   return value
     .replace(/<[^>]+>/g, '')
@@ -677,7 +685,15 @@ async function validateMarkdownLinks(markdownPath) {
       continue;
     }
 
-    const decodedFragment = decodeURIComponent(fragment);
+    const decodedFragment = decodeLinkFragment(fragment);
+
+    if (decodedFragment === null) {
+      errors.push(
+        `${path.relative(root, markdownPath)}:${lineNumber}: malformed percent-encoding in local anchor ${JSON.stringify(rawTarget)} (fragment #${fragment})`,
+      );
+      continue;
+    }
+
     const anchors = await getMarkdownAnchors(resolvedTarget);
 
     if (!anchors.has(decodedFragment)) {

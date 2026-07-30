@@ -9,3 +9,7 @@ links:
 <span id="manual-checkpoint"></span>
 
 This fixture skill links back to the [shared overview](../../shared/references/overview.md#shared-overview).
+
+## Руководство
+
+Percent-encoded non-ASCII fragments should resolve to this heading.
