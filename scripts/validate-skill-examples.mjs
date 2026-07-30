@@ -16,7 +16,7 @@ const agentMetadataSchemaPath = path.join(
   'agent-metadata.schema.json',
 );
 const markdownLinkPattern = /(?<!!)\[[^\]]+\]\(([^)\s]+)(?:\s+"[^"]*")?\)/g;
-const markdownAnchorCache = new Map();
+const markdownAnchorInfoCache = new Map();
 const fullSkillValidationTriggers = [
   '.github/workflows/deploy.yml',
   '.github/workflows/skills.yml',
@@ -585,21 +585,26 @@ function formatNearestAnchorSuggestions(suggestions) {
     .join(', ')}${truncatedSuffix}`;
 }
 
-async function getMarkdownAnchors(markdownPath) {
-  const cachedAnchors = markdownAnchorCache.get(markdownPath);
+async function getMarkdownAnchorInfo(markdownPath) {
+  const cachedAnchorInfo = markdownAnchorInfoCache.get(markdownPath);
 
-  if (cachedAnchors) {
-    return cachedAnchors;
+  if (cachedAnchorInfo) {
+    return cachedAnchorInfo;
   }
 
   const markdownRaw = await readFile(markdownPath, 'utf8');
-  const { content } = getMarkdownBodyInfo(markdownRaw, markdownPath);
+  const { content, bodyStartLine } = getMarkdownBodyInfo(
+    markdownRaw,
+    markdownPath,
+  );
   const anchors = new Set();
+  const errors = [];
+  const explicitIdLines = new Map();
   const slugCounts = new Map();
   const lines = content.split(/\r?\n/);
   let activeFence = null;
 
-  for (const line of lines) {
+  for (const [lineIndex, line] of lines.entries()) {
     const fenceMatch = line.match(/^(```+|~~~+)/);
 
     if (fenceMatch) {
@@ -633,12 +638,25 @@ async function getMarkdownAnchors(markdownPath) {
     }
 
     for (const idMatch of line.matchAll(/\bid=["']([^"']+)["']/g)) {
-      anchors.add(idMatch[1].trim());
+      const explicitId = idMatch[1].trim();
+      const lineNumber = bodyStartLine + lineIndex;
+      const firstLineNumber = explicitIdLines.get(explicitId);
+
+      if (firstLineNumber !== undefined) {
+        errors.push(
+          `${path.relative(root, markdownPath)}:${lineNumber}: duplicate explicit HTML anchor #${explicitId} (first declared on line ${firstLineNumber})`,
+        );
+      } else {
+        explicitIdLines.set(explicitId, lineNumber);
+      }
+
+      anchors.add(explicitId);
     }
   }
 
-  markdownAnchorCache.set(markdownPath, anchors);
-  return anchors;
+  const anchorInfo = { anchors, errors };
+  markdownAnchorInfoCache.set(markdownPath, anchorInfo);
+  return anchorInfo;
 }
 
 async function validateMarkdownLinks(markdownPath) {
@@ -648,7 +666,8 @@ async function validateMarkdownLinks(markdownPath) {
     markdownPath,
   );
   const matches = [...content.matchAll(markdownLinkPattern)];
-  const errors = [];
+  const { errors: anchorErrors } = await getMarkdownAnchorInfo(markdownPath);
+  const errors = [...anchorErrors];
 
   for (const match of matches) {
     const rawTarget = match[1];
@@ -694,7 +713,7 @@ async function validateMarkdownLinks(markdownPath) {
       continue;
     }
 
-    const anchors = await getMarkdownAnchors(resolvedTarget);
+    const { anchors } = await getMarkdownAnchorInfo(resolvedTarget);
 
     if (!anchors.has(decodedFragment)) {
       const suggestedAnchors = getNearestAnchorSuggestions(
@@ -1317,7 +1336,12 @@ async function validateSkillDir(skillDir) {
 
   validateValue(example, schema, `${skillName}.output`);
   validateValue(agentMetadata, agentMetadataSchema, `${skillName}.agent`);
-  const markdownErrors = await validateMarkdownLinks(skillPath);
+  const markdownErrors = [];
+  const skillMarkdownPaths = await listMarkdownFiles(skillDir);
+
+  for (const markdownPath of skillMarkdownPaths.sort()) {
+    markdownErrors.push(...(await validateMarkdownLinks(markdownPath)));
+  }
 
   if (!skillRaw.includes('schemas/output.schema.json')) {
     fail(

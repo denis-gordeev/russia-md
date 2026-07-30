@@ -135,6 +135,33 @@ async function main() {
   });
 
   await runCase('valid-frontmatter', {
+    expectSuccess: false,
+    expectedText:
+      /skills\/test-skill\/references\/integration-notes\.md:\d+: duplicate explicit HTML anchor #manual-checkpoint \(first declared on line 9\)[\s\S]*skills\/test-skill\/references\/integration-notes\.md:\d+: duplicate explicit HTML anchor #manual-checkpoint \(first declared on line 9\)[\s\S]*docs\/guide\.md:\d+: duplicate explicit HTML anchor #fixture-marker \(first declared on line \d+\)/,
+    mutate: async (fixtureRoot) => {
+      const referencePath = path.join(
+        fixtureRoot,
+        'skills',
+        'test-skill',
+        'references',
+        'integration-notes.md',
+      );
+      const guidePath = path.join(fixtureRoot, 'docs', 'guide.md');
+      const referenceRaw = await readFile(referencePath, 'utf8');
+      const guideRaw = await readFile(guidePath, 'utf8');
+
+      await writeFile(
+        referencePath,
+        `${referenceRaw}\n<span id="manual-checkpoint"></span>\n<span id='manual-checkpoint'></span>\n`,
+      );
+      await writeFile(
+        guidePath,
+        `${guideRaw}\n<div id="fixture-marker"></div>\n<a id="fixture-marker"></a>\n`,
+      );
+    },
+  });
+
+  await runCase('valid-frontmatter', {
     expectSuccess: true,
     expectedText:
       /Validated 1 skill example contract\(s\) and repository markdown links\./,
