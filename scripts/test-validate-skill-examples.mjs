@@ -194,6 +194,59 @@ async function main() {
         'references',
         'integration-notes.md',
       );
+      const skillPath = path.join(
+        fixtureRoot,
+        'skills',
+        'test-skill',
+        'SKILL.md',
+      );
+      const referenceRaw = await readFile(referencePath, 'utf8');
+      const skillRaw = await readFile(skillPath, 'utf8');
+
+      await writeFile(
+        referencePath,
+        `${referenceRaw}\nSetext Guide\n============\n\nSetext Guide\n------------\n\n<div id=unquoted-target></div>\n<div id="review&amp;approve"></div>\n<div id=&#x43A;&#x438;&#x440;&#x438;&#x43B;&#x43B;&#x438;&#x446;&#x430;></div>\n`,
+      );
+      await writeFile(
+        skillPath,
+        `${skillRaw}\nValid [first Setext heading](references/integration-notes.md#setext-guide).\nValid [repeated Setext heading](references/integration-notes.md#setext-guide-1).\nValid [unquoted ID](references/integration-notes.md#unquoted-target).\nValid [entity ID](references/integration-notes.md#review%26approve).\nValid [numeric entity ID](references/integration-notes.md#%D0%BA%D0%B8%D1%80%D0%B8%D0%BB%D0%BB%D0%B8%D1%86%D0%B0).\n`,
+      );
+    },
+  });
+
+  await runCase('valid-frontmatter', {
+    expectSuccess: false,
+    expectedText:
+      /skills\/test-skill\/references\/integration-notes\.md:\d+: explicit HTML anchor #setext-collision collides with generated heading anchor \(heading on line \d+\)[\s\S]*skills\/test-skill\/references\/integration-notes\.md:\d+: duplicate explicit HTML anchor #entity&anchor \(first declared on line \d+\)[\s\S]*skills\/test-skill\/references\/integration-notes\.md:\d+: explicit HTML anchor id must not be empty or whitespace-only/,
+    mutate: async (fixtureRoot) => {
+      const referencePath = path.join(
+        fixtureRoot,
+        'skills',
+        'test-skill',
+        'references',
+        'integration-notes.md',
+      );
+      const referenceRaw = await readFile(referencePath, 'utf8');
+
+      await writeFile(
+        referencePath,
+        `${referenceRaw}\nSetext Collision\n----------------\n<div id=setext-collision></div>\n<div id=entity&amp;anchor></div>\n<div id="entity&anchor"></div>\n<span id= ></span>\n`,
+      );
+    },
+  });
+
+  await runCase('valid-frontmatter', {
+    expectSuccess: true,
+    expectedText:
+      /Validated 1 skill example contract\(s\) and repository markdown links\./,
+    mutate: async (fixtureRoot) => {
+      const referencePath = path.join(
+        fixtureRoot,
+        'skills',
+        'test-skill',
+        'references',
+        'integration-notes.md',
+      );
       const referenceRaw = await readFile(referencePath, 'utf8');
 
       await writeFile(
@@ -258,6 +311,31 @@ async function main() {
         'skills/test-skill/SKILL.md',
         'skills/test-skill/references/integration-notes.md',
       ];
+
+      const referencePath = path.join(
+        fixtureRoot,
+        'skills',
+        'test-skill',
+        'references',
+        'integration-notes.md',
+      );
+      const skillPath = path.join(
+        fixtureRoot,
+        'skills',
+        'test-skill',
+        'SKILL.md',
+      );
+      const referenceRaw = await readFile(referencePath, 'utf8');
+      const skillRaw = await readFile(skillPath, 'utf8');
+
+      await writeFile(
+        referencePath,
+        `${referenceRaw}\n<!--\n<section\n  id=manual-checkpoint\n></section>\n-->\n\`<span id=manual-checkpoint></span>\`\n<section\n  class="fixture"\n  id=crlf-visible\n></section>\n`,
+      );
+      await writeFile(
+        skillPath,
+        `${skillRaw}\nValid [CRLF multiline anchor](references/integration-notes.md#crlf-visible).\n`,
+      );
 
       for (const relativePath of crlfPaths) {
         const markdownPath = path.join(fixtureRoot, relativePath);

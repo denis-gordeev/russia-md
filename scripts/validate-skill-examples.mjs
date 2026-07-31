@@ -3,6 +3,7 @@ import { readdir, readFile, stat } from 'fs/promises';
 import { promisify } from 'util';
 import { pathToFileURL } from 'url';
 import path from 'path';
+import { decodeHTMLAttribute } from 'entities';
 import matter from 'gray-matter';
 import YAML from 'yaml';
 
@@ -768,20 +769,38 @@ async function getMarkdownAnchorInfo(markdownPath) {
   const renderedMarkdown = maskMarkdownBlocks(content);
   const lines = renderedMarkdown.split(/\r?\n/);
 
+  function addHeadingAnchor(headingText, lineNumber) {
+    const baseSlug = createMarkdownSlug(headingText);
+
+    if (!baseSlug) {
+      return;
+    }
+
+    const nextCount = slugCounts.get(baseSlug) ?? 0;
+    const uniqueSlug = nextCount === 0 ? baseSlug : `${baseSlug}-${nextCount}`;
+
+    slugCounts.set(baseSlug, nextCount + 1);
+    anchors.add(uniqueSlug);
+    headingAnchorLines.set(uniqueSlug, lineNumber);
+  }
+
   for (const [lineIndex, line] of lines.entries()) {
     const headingMatch = line.match(/^#{1,6}\s+(.*?)\s*#*\s*$/);
     if (headingMatch) {
-      const baseSlug = createMarkdownSlug(headingMatch[1]);
+      addHeadingAnchor(headingMatch[1], bodyStartLine + lineIndex);
+      continue;
+    }
 
-      if (baseSlug) {
-        const nextCount = slugCounts.get(baseSlug) ?? 0;
-        const uniqueSlug =
-          nextCount === 0 ? baseSlug : `${baseSlug}-${nextCount}`;
+    const setextUnderlineMatch = line.match(/^ {0,3}(?:=+|-+)\s*$/);
+    const previousLine = lines[lineIndex - 1];
 
-        slugCounts.set(baseSlug, nextCount + 1);
-        anchors.add(uniqueSlug);
-        headingAnchorLines.set(uniqueSlug, bodyStartLine + lineIndex);
-      }
+    if (
+      setextUnderlineMatch &&
+      previousLine?.trim() &&
+      !/^#{1,6}\s+/.test(previousLine) &&
+      !/^ {0,3}(?:=+|-+)\s*$/.test(previousLine)
+    ) {
+      addHeadingAnchor(previousLine.trim(), bodyStartLine + lineIndex - 1);
     }
   }
 
@@ -789,9 +808,10 @@ async function getMarkdownAnchorInfo(markdownPath) {
 
   for (const htmlTag of extractHtmlTags(htmlContent)) {
     for (const idMatch of htmlTag.value.matchAll(
-      /\bid\s*=\s*(["'])(.*?)\1/gs,
+      /\bid\s*=\s*(?:(["'])(.*?)\1|([^\s"'=<>`]+)|(?=\s|>))/gis,
     )) {
-      const explicitId = idMatch[2].trim();
+      const rawExplicitId = idMatch[2] ?? idMatch[3] ?? '';
+      const explicitId = decodeHTMLAttribute(rawExplicitId).trim();
       const idIndex = htmlTag.startIndex + (idMatch.index ?? 0);
       const lineNumber = getLineNumberForIndex(
         htmlContent,
