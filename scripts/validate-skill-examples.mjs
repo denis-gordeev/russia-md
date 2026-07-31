@@ -423,6 +423,169 @@ function getLineNumberForIndex(content, index, bodyStartLine) {
   return bodyStartLine + newlineCount;
 }
 
+function maskMarkdownRange(value) {
+  return value.replace(/[^\r\n]/g, ' ');
+}
+
+function maskMarkdownBlocks(content) {
+  const masked = content.split('');
+  const linePattern = /[^\r\n]*(?:\r?\n|$)/g;
+  let activeFence = null;
+  let activeComment = false;
+
+  for (const lineMatch of content.matchAll(linePattern)) {
+    const line = lineMatch[0];
+    if (!line) {
+      continue;
+    }
+
+    const startIndex = lineMatch.index ?? 0;
+    const fenceMatch = activeComment
+      ? null
+      : line.match(/^[ \t]{0,3}(`{3,}|~{3,})/);
+    const fenceMarker = fenceMatch?.[1] ?? null;
+    const isClosingFence =
+      activeFence &&
+      fenceMarker?.[0] === activeFence.marker &&
+      fenceMarker.length >= activeFence.length;
+
+    if (activeFence || fenceMarker) {
+      for (let offset = 0; offset < line.length; offset += 1) {
+        const character = line[offset];
+        if (character !== '\r' && character !== '\n') {
+          masked[startIndex + offset] = ' ';
+        }
+      }
+    }
+
+    if (isClosingFence) {
+      activeFence = null;
+    } else if (!activeFence && fenceMarker) {
+      activeFence = {
+        marker: fenceMarker[0],
+        length: fenceMarker.length,
+      };
+    }
+
+    if (activeFence || fenceMarker) {
+      continue;
+    }
+
+    let commentSearchIndex = 0;
+    while (commentSearchIndex < line.length) {
+      const wasActiveComment = activeComment;
+      const commentStart = wasActiveComment
+        ? commentSearchIndex
+        : line.indexOf('<!--', commentSearchIndex);
+      if (commentStart === -1) {
+        break;
+      }
+
+      const commentEnd = line.indexOf(
+        '-->',
+        wasActiveComment ? commentStart : commentStart + 4,
+      );
+      const maskedEnd = commentEnd === -1 ? line.length : commentEnd + 3;
+      const maskedComment = maskMarkdownRange(
+        line.slice(commentStart, maskedEnd),
+      );
+
+      for (let offset = 0; offset < maskedComment.length; offset += 1) {
+        masked[startIndex + commentStart + offset] = maskedComment[offset];
+      }
+
+      activeComment = commentEnd === -1;
+      commentSearchIndex = maskedEnd;
+    }
+  }
+
+  return masked.join('');
+}
+
+function maskInlineCodeSpans(content) {
+  const masked = content.split('');
+  let searchIndex = 0;
+
+  while (searchIndex < content.length) {
+    const openingIndex = content.indexOf('`', searchIndex);
+    if (openingIndex === -1) {
+      break;
+    }
+
+    let delimiterLength = 1;
+    while (content[openingIndex + delimiterLength] === '`') {
+      delimiterLength += 1;
+    }
+
+    const delimiter = '`'.repeat(delimiterLength);
+    let closingIndex = content.indexOf(
+      delimiter,
+      openingIndex + delimiterLength,
+    );
+
+    while (
+      closingIndex !== -1 &&
+      (content[closingIndex - 1] === '`' ||
+        content[closingIndex + delimiterLength] === '`')
+    ) {
+      closingIndex = content.indexOf(delimiter, closingIndex + delimiterLength);
+    }
+
+    if (closingIndex === -1) {
+      searchIndex = openingIndex + delimiterLength;
+      continue;
+    }
+
+    const endIndex = closingIndex + delimiterLength;
+    for (let index = openingIndex; index < endIndex; index += 1) {
+      if (content[index] !== '\r' && content[index] !== '\n') {
+        masked[index] = ' ';
+      }
+    }
+    searchIndex = endIndex;
+  }
+
+  return masked.join('');
+}
+
+function extractHtmlTags(content) {
+  const tags = [];
+  let tagStart = -1;
+  let activeQuote = null;
+
+  for (let index = 0; index < content.length; index += 1) {
+    const character = content[index];
+
+    if (tagStart === -1) {
+      if (character === '<' && /[A-Za-z]/.test(content[index + 1] ?? '')) {
+        tagStart = index;
+      }
+      continue;
+    }
+
+    if (activeQuote) {
+      if (character === activeQuote) {
+        activeQuote = null;
+      }
+      continue;
+    }
+
+    if (character === '"' || character === "'") {
+      activeQuote = character;
+    } else if (character === '>') {
+      tags.push({
+        startIndex: tagStart,
+        value: content.slice(tagStart, index + 1),
+      });
+      tagStart = -1;
+    } else if (character === '<') {
+      tagStart = /[A-Za-z]/.test(content[index + 1] ?? '') ? index : -1;
+    }
+  }
+
+  return tags;
+}
+
 function extractLinkFragment(rawTarget) {
   const hashIndex = rawTarget.indexOf('#');
   if (hashIndex === -1) {
@@ -600,29 +763,12 @@ async function getMarkdownAnchorInfo(markdownPath) {
   const anchors = new Set();
   const errors = [];
   const explicitIdLines = new Map();
+  const headingAnchorLines = new Map();
   const slugCounts = new Map();
-  const lines = content.split(/\r?\n/);
-  let activeFence = null;
+  const renderedMarkdown = maskMarkdownBlocks(content);
+  const lines = renderedMarkdown.split(/\r?\n/);
 
   for (const [lineIndex, line] of lines.entries()) {
-    const fenceMatch = line.match(/^(```+|~~~+)/);
-
-    if (fenceMatch) {
-      const currentFence = fenceMatch[1][0];
-
-      if (activeFence === currentFence) {
-        activeFence = null;
-      } else if (!activeFence) {
-        activeFence = currentFence;
-      }
-
-      continue;
-    }
-
-    if (activeFence) {
-      continue;
-    }
-
     const headingMatch = line.match(/^#{1,6}\s+(.*?)\s*#*\s*$/);
     if (headingMatch) {
       const baseSlug = createMarkdownSlug(headingMatch[1]);
@@ -634,12 +780,32 @@ async function getMarkdownAnchorInfo(markdownPath) {
 
         slugCounts.set(baseSlug, nextCount + 1);
         anchors.add(uniqueSlug);
+        headingAnchorLines.set(uniqueSlug, bodyStartLine + lineIndex);
       }
     }
+  }
 
-    for (const idMatch of line.matchAll(/\bid=["']([^"']+)["']/g)) {
-      const explicitId = idMatch[1].trim();
-      const lineNumber = bodyStartLine + lineIndex;
+  const htmlContent = maskInlineCodeSpans(renderedMarkdown);
+
+  for (const htmlTag of extractHtmlTags(htmlContent)) {
+    for (const idMatch of htmlTag.value.matchAll(
+      /\bid\s*=\s*(["'])(.*?)\1/gs,
+    )) {
+      const explicitId = idMatch[2].trim();
+      const idIndex = htmlTag.startIndex + (idMatch.index ?? 0);
+      const lineNumber = getLineNumberForIndex(
+        htmlContent,
+        idIndex,
+        bodyStartLine,
+      );
+
+      if (!explicitId) {
+        errors.push(
+          `${path.relative(root, markdownPath)}:${lineNumber}: explicit HTML anchor id must not be empty or whitespace-only`,
+        );
+        continue;
+      }
+
       const firstLineNumber = explicitIdLines.get(explicitId);
 
       if (firstLineNumber !== undefined) {
@@ -648,6 +814,13 @@ async function getMarkdownAnchorInfo(markdownPath) {
         );
       } else {
         explicitIdLines.set(explicitId, lineNumber);
+      }
+
+      const headingLineNumber = headingAnchorLines.get(explicitId);
+      if (headingLineNumber !== undefined) {
+        errors.push(
+          `${path.relative(root, markdownPath)}:${lineNumber}: explicit HTML anchor #${explicitId} collides with generated heading anchor (heading on line ${headingLineNumber})`,
+        );
       }
 
       anchors.add(explicitId);

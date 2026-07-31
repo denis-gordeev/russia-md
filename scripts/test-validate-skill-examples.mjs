@@ -162,6 +162,92 @@ async function main() {
   });
 
   await runCase('valid-frontmatter', {
+    expectSuccess: false,
+    expectedText:
+      /skills\/test-skill\/references\/integration-notes\.md:\d+: explicit HTML anchor #integration-notes collides with generated heading anchor \(heading on line 7\)[\s\S]*skills\/test-skill\/references\/integration-notes\.md:\d+: explicit HTML anchor id must not be empty or whitespace-only[\s\S]*skills\/test-skill\/references\/integration-notes\.md:\d+: duplicate explicit HTML anchor #wrapped-anchor \(first declared on line \d+\)/,
+    mutate: async (fixtureRoot) => {
+      const referencePath = path.join(
+        fixtureRoot,
+        'skills',
+        'test-skill',
+        'references',
+        'integration-notes.md',
+      );
+      const referenceRaw = await readFile(referencePath, 'utf8');
+
+      await writeFile(
+        referencePath,
+        `${referenceRaw}\n<div id="integration-notes"></div>\n<span id="   "></span>\n<section\n  class="fixture"\n  id="wrapped-anchor"\n></section>\n<a id='wrapped-anchor'></a>\n`,
+      );
+    },
+  });
+
+  await runCase('valid-frontmatter', {
+    expectSuccess: true,
+    expectedText:
+      /Validated 1 skill example contract\(s\) and repository markdown links\./,
+    mutate: async (fixtureRoot) => {
+      const referencePath = path.join(
+        fixtureRoot,
+        'skills',
+        'test-skill',
+        'references',
+        'integration-notes.md',
+      );
+      const referenceRaw = await readFile(referencePath, 'utf8');
+
+      await writeFile(
+        referencePath,
+        `${referenceRaw}\n<!--\n\`\`\`html\n<span id="manual-checkpoint"></span>\n\`\`\`\n-->\n\`<span id="manual-checkpoint"></span>\`\n\`<span\n id="   "></span>\`\n\n\`\`\`html\n<div id="manual-checkpoint"></div>\n<div id="integration-notes"></div>\n\`\`\`\n<section\n  id="visible-after-comment"\n></section>\n`,
+      );
+
+      const skillPath = path.join(
+        fixtureRoot,
+        'skills',
+        'test-skill',
+        'SKILL.md',
+      );
+      const skillRaw = await readFile(skillPath, 'utf8');
+      await writeFile(
+        skillPath,
+        `${skillRaw}\nValid [anchor after comment](references/integration-notes.md#visible-after-comment).\n`,
+      );
+    },
+  });
+
+  await runCase('valid-frontmatter', {
+    expectSuccess: true,
+    expectedText:
+      /Validated 1 skill example contract\(s\) and repository markdown links\./,
+    mutate: async (fixtureRoot) => {
+      const referencePath = path.join(
+        fixtureRoot,
+        'skills',
+        'test-skill',
+        'references',
+        'integration-notes.md',
+      );
+      const skillPath = path.join(
+        fixtureRoot,
+        'skills',
+        'test-skill',
+        'SKILL.md',
+      );
+      const referenceRaw = await readFile(referencePath, 'utf8');
+      const skillRaw = await readFile(skillPath, 'utf8');
+
+      await writeFile(
+        referencePath,
+        `${referenceRaw}\n<section\n  class="fixture"\n  id="wrapped-target"\n></section>\n`,
+      );
+      await writeFile(
+        skillPath,
+        `${skillRaw}\nValid [multiline HTML anchor](references/integration-notes.md#wrapped-target).\n`,
+      );
+    },
+  });
+
+  await runCase('valid-frontmatter', {
     expectSuccess: true,
     expectedText:
       /Validated 1 skill example contract\(s\) and repository markdown links\./,
