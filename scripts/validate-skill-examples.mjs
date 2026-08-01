@@ -16,6 +16,7 @@ const agentMetadataSchemaPath = path.join(
   'agent-metadata.schema.json',
 );
 const markdownLinkPattern = /(?<!!)\[[^\]]+\]\(([^)\s]+)(?:\s+"[^"]*")?\)/g;
+const explicitHtmlIdPattern = /(?<![-:])\bid\s*=\s*["']([^"']+)["']/g;
 const markdownAnchorCache = new Map();
 const fullSkillValidationTriggers = [
   '.github/workflows/deploy.yml',
@@ -585,6 +586,58 @@ function formatNearestAnchorSuggestions(suggestions) {
     .join(', ')}${truncatedSuffix}`;
 }
 
+function maskAnchorLikeHtmlInMarkdownSyntax(line, state) {
+  const masked = line.split('');
+  let index = 0;
+
+  const maskRange = (start, end) => {
+    for (let maskIndex = start; maskIndex < end; maskIndex += 1) {
+      masked[maskIndex] = ' ';
+    }
+  };
+
+  while (index < line.length) {
+    if (state.inHtmlComment) {
+      const commentEnd = line.indexOf('-->', index);
+      const endIndex = commentEnd === -1 ? line.length : commentEnd + 3;
+      maskRange(index, endIndex);
+      index = endIndex;
+
+      if (commentEnd === -1) {
+        break;
+      }
+
+      state.inHtmlComment = false;
+      continue;
+    }
+
+    if (line.startsWith('<!--', index)) {
+      state.inHtmlComment = true;
+      continue;
+    }
+
+    if (line[index] === '`') {
+      let delimiterEnd = index + 1;
+
+      while (line[delimiterEnd] === '`') {
+        delimiterEnd += 1;
+      }
+
+      const delimiter = line.slice(index, delimiterEnd);
+      const closingIndex = line.indexOf(delimiter, delimiterEnd);
+      const endIndex =
+        closingIndex === -1 ? line.length : closingIndex + delimiter.length;
+      maskRange(index, endIndex);
+      index = endIndex;
+      continue;
+    }
+
+    index += 1;
+  }
+
+  return masked.join('');
+}
+
 async function getMarkdownAnchors(markdownPath) {
   const cachedAnchors = markdownAnchorCache.get(markdownPath);
 
@@ -597,10 +650,13 @@ async function getMarkdownAnchors(markdownPath) {
   const anchors = new Set();
   const slugCounts = new Map();
   const lines = content.split(/\r?\n/);
+  const ignoredSyntaxState = { inHtmlComment: false };
   let activeFence = null;
 
   for (const line of lines) {
-    const fenceMatch = line.match(/^(```+|~~~+)/);
+    const fenceMatch = ignoredSyntaxState.inHtmlComment
+      ? null
+      : line.match(/^(```+|~~~+)/);
 
     if (fenceMatch) {
       const currentFence = fenceMatch[1][0];
@@ -618,6 +674,11 @@ async function getMarkdownAnchors(markdownPath) {
       continue;
     }
 
+    const explicitAnchorLine = maskAnchorLikeHtmlInMarkdownSyntax(
+      line,
+      ignoredSyntaxState,
+    );
+
     const headingMatch = line.match(/^#{1,6}\s+(.*?)\s*#*\s*$/);
     if (headingMatch) {
       const baseSlug = createMarkdownSlug(headingMatch[1]);
@@ -632,13 +693,75 @@ async function getMarkdownAnchors(markdownPath) {
       }
     }
 
-    for (const idMatch of line.matchAll(/\bid=["']([^"']+)["']/g)) {
+    for (const idMatch of explicitAnchorLine.matchAll(explicitHtmlIdPattern)) {
       anchors.add(idMatch[1].trim());
     }
   }
 
   markdownAnchorCache.set(markdownPath, anchors);
   return anchors;
+}
+
+function findDuplicateExplicitAnchorErrors(
+  markdownPath,
+  content,
+  bodyStartLine,
+) {
+  const firstDefinitionLines = new Map();
+  const errors = [];
+  const lines = content.split(/\r?\n/);
+  const ignoredSyntaxState = { inHtmlComment: false };
+  let activeFence = null;
+
+  for (let lineIndex = 0; lineIndex < lines.length; lineIndex += 1) {
+    const line = lines[lineIndex];
+    const fenceMatch = ignoredSyntaxState.inHtmlComment
+      ? null
+      : line.match(/^(```+|~~~+)/);
+
+    if (fenceMatch) {
+      const currentFence = fenceMatch[1][0];
+
+      if (activeFence === currentFence) {
+        activeFence = null;
+      } else if (!activeFence) {
+        activeFence = currentFence;
+      }
+
+      continue;
+    }
+
+    if (activeFence) {
+      continue;
+    }
+
+    const explicitAnchorLine = maskAnchorLikeHtmlInMarkdownSyntax(
+      line,
+      ignoredSyntaxState,
+    );
+
+    for (const idMatch of explicitAnchorLine.matchAll(explicitHtmlIdPattern)) {
+      const anchor = idMatch[1].trim();
+
+      if (!anchor) {
+        continue;
+      }
+
+      const lineNumber = bodyStartLine + lineIndex;
+      const firstDefinitionLine = firstDefinitionLines.get(anchor);
+
+      if (firstDefinitionLine !== undefined) {
+        errors.push(
+          `${path.relative(root, markdownPath)}:${lineNumber}: duplicate explicit HTML anchor ${JSON.stringify(anchor)} (first defined on line ${firstDefinitionLine})`,
+        );
+        continue;
+      }
+
+      firstDefinitionLines.set(anchor, lineNumber);
+    }
+  }
+
+  return errors;
 }
 
 async function validateMarkdownLinks(markdownPath) {
@@ -648,7 +771,11 @@ async function validateMarkdownLinks(markdownPath) {
     markdownPath,
   );
   const matches = [...content.matchAll(markdownLinkPattern)];
-  const errors = [];
+  const errors = findDuplicateExplicitAnchorErrors(
+    markdownPath,
+    content,
+    bodyStartLine,
+  );
 
   for (const match of matches) {
     const rawTarget = match[1];
@@ -1317,7 +1444,10 @@ async function validateSkillDir(skillDir) {
 
   validateValue(example, schema, `${skillName}.output`);
   validateValue(agentMetadata, agentMetadataSchema, `${skillName}.agent`);
-  const markdownErrors = await validateMarkdownLinks(skillPath);
+  const markdownErrors = [
+    ...(await validateMarkdownLinks(skillPath)),
+    ...(await validateMarkdownLinks(referenceNotesPath)),
+  ];
 
   if (!skillRaw.includes('schemas/output.schema.json')) {
     fail(

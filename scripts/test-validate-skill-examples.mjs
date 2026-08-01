@@ -135,6 +135,44 @@ async function main() {
   });
 
   await runCase('valid-frontmatter', {
+    expectSuccess: false,
+    expectedText:
+      /skills\/test-skill\/references\/integration-notes\.md:19: duplicate explicit HTML anchor "duplicate-guide" \(first defined on line 17\)[\s\S]*README\.md:13: duplicate explicit HTML anchor "duplicate-readme" \(first defined on line 11\)/,
+    mutate: async (fixtureRoot) => {
+      const duplicateAnchors = [
+        [
+          'skills/test-skill/references/integration-notes.md',
+          '\n<div id="duplicate-guide"></div>\n\n<span id="duplicate-guide"></span>\n',
+        ],
+        [
+          'README.md',
+          '\n<div id = "duplicate-readme"></div>\n\n<section id="duplicate-readme"></section>\n',
+        ],
+      ];
+
+      for (const [relativePath, duplicateMarkup] of duplicateAnchors) {
+        const markdownPath = path.join(fixtureRoot, relativePath);
+        const markdownRaw = await readFile(markdownPath, 'utf8');
+        await writeFile(markdownPath, `${markdownRaw}${duplicateMarkup}`);
+      }
+    },
+  });
+
+  await runCase('valid-minimal', {
+    expectSuccess: true,
+    expectedText:
+      /Validated 1 skill example contract\(s\) and repository markdown links\./,
+    mutate: async (fixtureRoot) => {
+      const readmePath = path.join(fixtureRoot, 'README.md');
+      const readmeRaw = await readFile(readmePath, 'utf8');
+      await writeFile(
+        readmePath,
+        `${readmeRaw}\n<div data-id="not-an-anchor"></div>\n<div data-id="not-an-anchor"></div>\n\n\`<span id="not-an-anchor"></span>\`\n\`<span id="not-an-anchor"></span>\`\n\n<!-- <div id="not-an-anchor"></div>\n<div id="not-an-anchor"></div> -->\n\n\`\`\`html\n<div id="not-an-anchor"></div>\n<div id="not-an-anchor"></div>\n\`\`\`\n`,
+      );
+    },
+  });
+
+  await runCase('valid-frontmatter', {
     expectSuccess: true,
     expectedText:
       /Validated 1 skill example contract\(s\) and repository markdown links\./,
