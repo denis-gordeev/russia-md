@@ -9,6 +9,7 @@ on:
       - 'src/utils/contributors.ts'
       - 'scripts/test-frontmatter.mjs'
       - 'scripts/check-internal-references.mjs'
+      - 'scripts/test-non-ascii-git-paths.mjs'
       - 'package.json'
       - 'package-lock.json'
       - '.github/workflows/content-check.yml'
@@ -43,6 +44,9 @@ jobs:
           CONTENT_DIFF_BASE: ${{ github.event.pull_request.base.sha }}
           CONTENT_DIFF_HEAD: ${{ github.event.pull_request.head.sha }}
         run: npm run test:content:ci
+
+      - name: Validate non-ASCII Git path handling
+        run: npm run check:git-paths
 
       - name: Verify contributor metadata for active corpus
         run: npm run check:contributors

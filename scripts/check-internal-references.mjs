@@ -49,6 +49,8 @@ async function getSelectedPaths() {
 
     if (stagedMode) {
       ({ stdout } = await execFile('git', [
+        '-c',
+        'core.quotepath=false',
         'diff',
         '--cached',
         '--name-only',
@@ -80,6 +82,8 @@ async function getSelectedPaths() {
         try {
           const range = mode === 'three-dot' ? `${left}...${right}` : left;
           const diffArgs = [
+            '-c',
+            'core.quotepath=false',
             'diff',
             '--name-only',
             '--diff-filter=ACMR',

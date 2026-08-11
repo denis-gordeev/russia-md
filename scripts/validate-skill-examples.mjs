@@ -899,7 +899,15 @@ async function getChangedRepoPaths() {
   try {
     ({ stdout } = await execFile(
       'git',
-      ['status', '--porcelain', '--untracked-files=all', '--', '.'],
+      [
+        '-c',
+        'core.quotepath=false',
+        'status',
+        '--porcelain',
+        '--untracked-files=all',
+        '--',
+        '.',
+      ],
       {
         cwd: root,
       },
@@ -917,7 +925,16 @@ async function getStagedRepoPaths() {
   try {
     ({ stdout } = await execFile(
       'git',
-      ['diff', '--cached', '--name-only', '--diff-filter=ACMR', '--', '.'],
+      [
+        '-c',
+        'core.quotepath=false',
+        'diff',
+        '--cached',
+        '--name-only',
+        '--diff-filter=ACMR',
+        '--',
+        '.',
+      ],
       {
         cwd: root,
       },

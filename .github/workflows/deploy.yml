@@ -39,6 +39,8 @@ jobs:
         run: npm run check:skills
       - name: Validate skill fixtures
         run: npm run check:skills:fixtures
+      - name: Validate non-ASCII Git path handling
+        run: npm run check:git-paths
       - name: Validate content frontmatter
         env:
           CONTENT_DIFF_BASE: ${{ github.event.before }}

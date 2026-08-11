@@ -366,6 +366,31 @@ async function main() {
       /No changed skill folders or tracked repository markdown docs detected; nothing to validate\./,
   });
 
+  await runGitCase({
+    caseName: 'valid-minimal',
+    args: ['--changed'],
+    mutate: async (fixtureRoot) => {
+      await writeFile(
+        path.join(fixtureRoot, 'docs', 'руководство.md'),
+        '# Руководство\n',
+      );
+    },
+    expectedText:
+      /No changed skill folders detected; validating changed repository markdown links only\.[\s\S]*Validated 0 skill example contract\(s\) and changed repository markdown links\./,
+  });
+
+  await runGitCase({
+    caseName: 'valid-minimal',
+    args: ['--staged'],
+    mutate: async (fixtureRoot) => {
+      const relativePath = 'docs/руководство.md';
+      await writeFile(path.join(fixtureRoot, relativePath), '# Руководство\n');
+      await execFile('git', ['add', relativePath], { cwd: fixtureRoot });
+    },
+    expectedText:
+      /No changed skill folders detected; validating changed repository markdown links only\.[\s\S]*Validated 0 skill example contract\(s\) and changed repository markdown links\./,
+  });
+
   await runCase('invalid-markdown-syntax', {
     expectSuccess: true,
     expectedText:

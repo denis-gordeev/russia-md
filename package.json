@@ -22,6 +22,7 @@
     "check:skills:changed": "node scripts/validate-skill-examples.mjs --changed",
     "check:skills:staged": "node scripts/validate-skill-examples.mjs --staged",
     "check:skills:fixtures": "node scripts/test-validate-skill-examples.mjs",
+    "check:git-paths": "node scripts/test-non-ascii-git-paths.mjs",
     "check-images": "node scripts/check-images.mjs",
     "check:contributors": "node scripts/verify-contributors.mjs",
     "astro": "astro",
