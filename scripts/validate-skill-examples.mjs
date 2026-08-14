@@ -16,7 +16,7 @@ const agentMetadataSchemaPath = path.join(
   'agent-metadata.schema.json',
 );
 const markdownLinkPattern = /(?<!!)\[[^\]]+\]\(([^)\s]+)(?:\s+"[^"]*")?\)/g;
-const explicitHtmlIdPattern = /(?<![-:])\bid\s*=\s*["']([^"']+)["']/g;
+const explicitHtmlIdPattern = /(?<![-:])\bid\s*=\s*["']([^"']*)["']/g;
 const markdownAnchorCache = new Map();
 const fullSkillValidationTriggers = [
   '.github/workflows/deploy.yml',
@@ -694,7 +694,11 @@ async function getMarkdownAnchors(markdownPath) {
     }
 
     for (const idMatch of explicitAnchorLine.matchAll(explicitHtmlIdPattern)) {
-      anchors.add(idMatch[1].trim());
+      const anchor = idMatch[1].trim();
+
+      if (anchor) {
+        anchors.add(anchor);
+      }
     }
   }
 
@@ -702,12 +706,10 @@ async function getMarkdownAnchors(markdownPath) {
   return anchors;
 }
 
-function findDuplicateExplicitAnchorErrors(
-  markdownPath,
-  content,
-  bodyStartLine,
-) {
-  const firstDefinitionLines = new Map();
+function findAnchorDefinitionErrors(markdownPath, content, bodyStartLine) {
+  const explicitDefinitionLines = new Map();
+  const headingDefinitionLines = new Map();
+  const slugCounts = new Map();
   const errors = [];
   const lines = content.split(/\r?\n/);
   const ignoredSyntaxState = { inHtmlComment: false };
@@ -739,16 +741,40 @@ function findDuplicateExplicitAnchorErrors(
       line,
       ignoredSyntaxState,
     );
+    const lineNumber = bodyStartLine + lineIndex;
+    const headingMatch = line.match(/^#{1,6}\s+(.*?)\s*#*\s*$/);
+
+    if (headingMatch) {
+      const baseSlug = createMarkdownSlug(headingMatch[1]);
+
+      if (baseSlug) {
+        const nextCount = slugCounts.get(baseSlug) ?? 0;
+        const uniqueSlug =
+          nextCount === 0 ? baseSlug : `${baseSlug}-${nextCount}`;
+        const explicitDefinitionLine = explicitDefinitionLines.get(uniqueSlug);
+
+        slugCounts.set(baseSlug, nextCount + 1);
+        headingDefinitionLines.set(uniqueSlug, lineNumber);
+
+        if (explicitDefinitionLine !== undefined) {
+          errors.push(
+            `${path.relative(root, markdownPath)}:${lineNumber}: generated heading anchor ${JSON.stringify(uniqueSlug)} collides with explicit HTML anchor defined on line ${explicitDefinitionLine}`,
+          );
+        }
+      }
+    }
 
     for (const idMatch of explicitAnchorLine.matchAll(explicitHtmlIdPattern)) {
       const anchor = idMatch[1].trim();
 
       if (!anchor) {
+        errors.push(
+          `${path.relative(root, markdownPath)}:${lineNumber}: empty or whitespace-only explicit HTML anchor id`,
+        );
         continue;
       }
 
-      const lineNumber = bodyStartLine + lineIndex;
-      const firstDefinitionLine = firstDefinitionLines.get(anchor);
+      const firstDefinitionLine = explicitDefinitionLines.get(anchor);
 
       if (firstDefinitionLine !== undefined) {
         errors.push(
@@ -757,7 +783,14 @@ function findDuplicateExplicitAnchorErrors(
         continue;
       }
 
-      firstDefinitionLines.set(anchor, lineNumber);
+      explicitDefinitionLines.set(anchor, lineNumber);
+
+      const headingDefinitionLine = headingDefinitionLines.get(anchor);
+      if (headingDefinitionLine !== undefined) {
+        errors.push(
+          `${path.relative(root, markdownPath)}:${lineNumber}: explicit HTML anchor ${JSON.stringify(anchor)} collides with generated heading anchor defined on line ${headingDefinitionLine}`,
+        );
+      }
     }
   }
 
@@ -771,7 +804,7 @@ async function validateMarkdownLinks(markdownPath) {
     markdownPath,
   );
   const matches = [...content.matchAll(markdownLinkPattern)];
-  const errors = findDuplicateExplicitAnchorErrors(
+  const errors = findAnchorDefinitionErrors(
     markdownPath,
     content,
     bodyStartLine,

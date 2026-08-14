@@ -158,6 +158,64 @@ async function main() {
     },
   });
 
+  await runCase('valid-frontmatter', {
+    expectSuccess: false,
+    expectedText:
+      /skills\/test-skill\/references\/integration-notes\.md:17: empty or whitespace-only explicit HTML anchor id[\s\S]*skills\/test-skill\/references\/integration-notes\.md:19: empty or whitespace-only explicit HTML anchor id/,
+    mutate: async (fixtureRoot) => {
+      const notesPath = path.join(
+        fixtureRoot,
+        'skills',
+        'test-skill',
+        'references',
+        'integration-notes.md',
+      );
+      const notesRaw = await readFile(notesPath, 'utf8');
+      await writeFile(
+        notesPath,
+        `${notesRaw}\n<div id=""></div>\n\n<span id='   '></span>\n`,
+      );
+    },
+  });
+
+  await runCase('valid-frontmatter', {
+    expectSuccess: false,
+    expectedText:
+      /skills\/test-skill\/references\/integration-notes\.md:17: explicit HTML anchor "integration-notes" collides with generated heading anchor defined on line 7[\s\S]*skills\/test-skill\/references\/integration-notes\.md:21: generated heading anchor "manual-section" collides with explicit HTML anchor defined on line 19/,
+    mutate: async (fixtureRoot) => {
+      const notesPath = path.join(
+        fixtureRoot,
+        'skills',
+        'test-skill',
+        'references',
+        'integration-notes.md',
+      );
+      const notesRaw = await readFile(notesPath, 'utf8');
+      await writeFile(
+        notesPath,
+        `${notesRaw}\n<div id="integration-notes"></div>\n\n<span id="manual-section"></span>\n\n## Manual section\n`,
+      );
+    },
+  });
+
+  await runCase('valid-frontmatter', {
+    expectSuccess: false,
+    expectedText:
+      /skills\/test-skill\/references\/integration-notes\.md:19: duplicate explicit HTML anchor "duplicate-guide" \(first defined on line 17\)/,
+    mutate: async (fixtureRoot) => {
+      const notesPath = path.join(
+        fixtureRoot,
+        'skills',
+        'test-skill',
+        'references',
+        'integration-notes.md',
+      );
+      const notesRaw = await readFile(notesPath, 'utf8');
+      const withDuplicates = `${notesRaw}\n<div id="duplicate-guide"></div>\n\n<span id="duplicate-guide"></span>\n`;
+      await writeFile(notesPath, withDuplicates.replace(/\r?\n/g, '\r\n'));
+    },
+  });
+
   await runCase('valid-minimal', {
     expectSuccess: true,
     expectedText:
