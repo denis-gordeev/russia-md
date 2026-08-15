@@ -638,6 +638,36 @@ function maskAnchorLikeHtmlInMarkdownSyntax(line, state) {
   return masked.join('');
 }
 
+function getMarkdownHeadingDefinition(line, previousSetextHeading) {
+  const atxHeadingMatch = line.match(/^#{1,6}\s+(.*?)\s*#*\s*$/);
+
+  if (atxHeadingMatch) {
+    return { lineOffset: 0, text: atxHeadingMatch[1] };
+  }
+
+  if (/^ {0,3}(?:=+|-+)\s*$/.test(line) && previousSetextHeading) {
+    return { lineOffset: -1, text: previousSetextHeading };
+  }
+
+  return null;
+}
+
+function getSetextHeadingCandidate(line, syntaxMaskedLine, inHtmlComment) {
+  const leadingSpaces = line.length - line.trimStart().length;
+
+  if (
+    inHtmlComment ||
+    leadingSpaces > 3 ||
+    syntaxMaskedLine.trim() === '' ||
+    /^#{1,6}\s/.test(line) ||
+    /^ {0,3}(?:=+|-+)\s*$/.test(line)
+  ) {
+    return null;
+  }
+
+  return line.trim();
+}
+
 async function getMarkdownAnchors(markdownPath) {
   const cachedAnchors = markdownAnchorCache.get(markdownPath);
 
@@ -652,6 +682,7 @@ async function getMarkdownAnchors(markdownPath) {
   const lines = content.split(/\r?\n/);
   const ignoredSyntaxState = { inHtmlComment: false };
   let activeFence = null;
+  let previousSetextHeading = null;
 
   for (const line of lines) {
     const fenceMatch = ignoredSyntaxState.inHtmlComment
@@ -667,21 +698,27 @@ async function getMarkdownAnchors(markdownPath) {
         activeFence = currentFence;
       }
 
+      previousSetextHeading = null;
       continue;
     }
 
     if (activeFence) {
+      previousSetextHeading = null;
       continue;
     }
 
+    const wasInHtmlComment = ignoredSyntaxState.inHtmlComment;
     const explicitAnchorLine = maskAnchorLikeHtmlInMarkdownSyntax(
       line,
       ignoredSyntaxState,
     );
 
-    const headingMatch = line.match(/^#{1,6}\s+(.*?)\s*#*\s*$/);
-    if (headingMatch) {
-      const baseSlug = createMarkdownSlug(headingMatch[1]);
+    const headingDefinition = getMarkdownHeadingDefinition(
+      line,
+      previousSetextHeading,
+    );
+    if (headingDefinition) {
+      const baseSlug = createMarkdownSlug(headingDefinition.text);
 
       if (baseSlug) {
         const nextCount = slugCounts.get(baseSlug) ?? 0;
@@ -700,6 +737,12 @@ async function getMarkdownAnchors(markdownPath) {
         anchors.add(anchor);
       }
     }
+
+    previousSetextHeading = getSetextHeadingCandidate(
+      line,
+      explicitAnchorLine,
+      wasInHtmlComment || ignoredSyntaxState.inHtmlComment,
+    );
   }
 
   markdownAnchorCache.set(markdownPath, anchors);
@@ -714,6 +757,7 @@ function findAnchorDefinitionErrors(markdownPath, content, bodyStartLine) {
   const lines = content.split(/\r?\n/);
   const ignoredSyntaxState = { inHtmlComment: false };
   let activeFence = null;
+  let previousSetextHeading = null;
 
   for (let lineIndex = 0; lineIndex < lines.length; lineIndex += 1) {
     const line = lines[lineIndex];
@@ -730,35 +774,42 @@ function findAnchorDefinitionErrors(markdownPath, content, bodyStartLine) {
         activeFence = currentFence;
       }
 
+      previousSetextHeading = null;
       continue;
     }
 
     if (activeFence) {
+      previousSetextHeading = null;
       continue;
     }
 
+    const wasInHtmlComment = ignoredSyntaxState.inHtmlComment;
     const explicitAnchorLine = maskAnchorLikeHtmlInMarkdownSyntax(
       line,
       ignoredSyntaxState,
     );
     const lineNumber = bodyStartLine + lineIndex;
-    const headingMatch = line.match(/^#{1,6}\s+(.*?)\s*#*\s*$/);
+    const headingDefinition = getMarkdownHeadingDefinition(
+      line,
+      previousSetextHeading,
+    );
 
-    if (headingMatch) {
-      const baseSlug = createMarkdownSlug(headingMatch[1]);
+    if (headingDefinition) {
+      const baseSlug = createMarkdownSlug(headingDefinition.text);
 
       if (baseSlug) {
         const nextCount = slugCounts.get(baseSlug) ?? 0;
         const uniqueSlug =
           nextCount === 0 ? baseSlug : `${baseSlug}-${nextCount}`;
         const explicitDefinitionLine = explicitDefinitionLines.get(uniqueSlug);
+        const headingLineNumber = lineNumber + headingDefinition.lineOffset;
 
         slugCounts.set(baseSlug, nextCount + 1);
-        headingDefinitionLines.set(uniqueSlug, lineNumber);
+        headingDefinitionLines.set(uniqueSlug, headingLineNumber);
 
         if (explicitDefinitionLine !== undefined) {
           errors.push(
-            `${path.relative(root, markdownPath)}:${lineNumber}: generated heading anchor ${JSON.stringify(uniqueSlug)} collides with explicit HTML anchor defined on line ${explicitDefinitionLine}`,
+            `${path.relative(root, markdownPath)}:${headingLineNumber}: generated heading anchor ${JSON.stringify(uniqueSlug)} collides with explicit HTML anchor defined on line ${explicitDefinitionLine}`,
           );
         }
       }
@@ -792,6 +843,12 @@ function findAnchorDefinitionErrors(markdownPath, content, bodyStartLine) {
         );
       }
     }
+
+    previousSetextHeading = getSetextHeadingCandidate(
+      line,
+      explicitAnchorLine,
+      wasInHtmlComment || ignoredSyntaxState.inHtmlComment,
+    );
   }
 
   return errors;

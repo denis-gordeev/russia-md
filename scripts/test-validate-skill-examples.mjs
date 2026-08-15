@@ -199,6 +199,46 @@ async function main() {
   });
 
   await runCase('valid-frontmatter', {
+    expectSuccess: true,
+    expectedText:
+      /Validated 1 skill example contract\(s\) and repository markdown links\./,
+    mutate: async (fixtureRoot) => {
+      const notesPath = path.join(
+        fixtureRoot,
+        'skills',
+        'test-skill',
+        'references',
+        'integration-notes.md',
+      );
+      const notesRaw = await readFile(notesPath, 'utf8');
+      await writeFile(
+        notesPath,
+        `${notesRaw}\nSetext Guide\n============\n\nSee [the first heading](#setext-guide).\n\nSetext Guide\n------------\n\nSee [the repeated heading](#setext-guide-1).\n`,
+      );
+    },
+  });
+
+  await runCase('valid-frontmatter', {
+    expectSuccess: false,
+    expectedText:
+      /skills\/test-skill\/references\/integration-notes\.md:19: generated heading anchor "setext-before" collides with explicit HTML anchor defined on line 17[\s\S]*skills\/test-skill\/references\/integration-notes\.md:25: explicit HTML anchor "setext-after" collides with generated heading anchor defined on line 22/,
+    mutate: async (fixtureRoot) => {
+      const notesPath = path.join(
+        fixtureRoot,
+        'skills',
+        'test-skill',
+        'references',
+        'integration-notes.md',
+      );
+      const notesRaw = await readFile(notesPath, 'utf8');
+      await writeFile(
+        notesPath,
+        `${notesRaw}\n<div id="setext-before"></div>\n\nSetext Before\n-------------\n\nSetext After\n============\n\n<span id="setext-after"></span>\n`,
+      );
+    },
+  });
+
+  await runCase('valid-frontmatter', {
     expectSuccess: false,
     expectedText:
       /skills\/test-skill\/references\/integration-notes\.md:19: duplicate explicit HTML anchor "duplicate-guide" \(first defined on line 17\)/,
