@@ -125,6 +125,7 @@ This is still a foundation fork, not a finished editorial product. The active si
 - [x] Detect duplicate explicit HTML anchor IDs before ambiguous links reach the site build
 - [x] Add CRLF fixture coverage for duplicate explicit HTML anchor diagnostics after front matter
 - [x] Reject empty or whitespace-only explicit HTML anchor IDs with line-aware diagnostics
+- [x] Reject unencoded whitespace in HTTP(S) Markdown link destinations without flagging CommonMark angle-bracket destinations
 - [ ] Add anchor-cache invalidation coverage for validator helper imports and repeated in-process validation runs
 - [ ] Add local-link coverage for percent-encoded file paths and fragments that mix encoded and literal Unicode
 - [x] Ignore anchor-like HTML inside markdown comments and inline code while preserving real explicit IDs
@@ -138,6 +139,9 @@ This is still a foundation fork, not a finished editorial product. The active si
 
 ## Latest Round
 
+- Ported upstream's generic whitespace-in-URL guard into the local content-reference validator instead of importing Taiwan-specific article-health machinery.
+- Grouped repeated whitespace URL failures by source line so one generator defect produces one actionable diagnostic.
+- Added regression coverage for leading/trailing padding, multiple links on one line, `%20`, and CommonMark angle-bracket destinations.
 - Added generated-anchor collection for Setext-style level-one and level-two headings (`===` and `---`) alongside existing ATX headings.
 - Made local `#fragment` validation resolve Setext headings and apply the same repeated-heading suffixes (`-1`, `-2`, and so on) used for ATX headings.
 - Extended explicit HTML `id` collision detection to Setext-generated anchors in both definition orders, with diagnostics pointing to the heading text line.

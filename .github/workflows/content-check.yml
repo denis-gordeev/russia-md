@@ -9,6 +9,7 @@ on:
       - 'src/utils/contributors.ts'
       - 'scripts/test-frontmatter.mjs'
       - 'scripts/check-internal-references.mjs'
+      - 'scripts/test-content-reference-validation.mjs'
       - 'scripts/test-non-ascii-git-paths.mjs'
       - 'package.json'
       - 'package-lock.json'
@@ -47,6 +48,9 @@ jobs:
 
       - name: Validate non-ASCII Git path handling
         run: npm run check:git-paths
+
+      - name: Validate content-reference regression fixtures
+        run: npm run test:content:fixtures
 
       - name: Verify contributor metadata for active corpus
         run: npm run check:contributors

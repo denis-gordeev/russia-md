@@ -13,6 +13,7 @@
     "test:content": "node scripts/test-frontmatter.mjs && node scripts/check-internal-references.mjs",
     "test:content:ci": "node scripts/test-frontmatter.mjs --ci && node scripts/check-internal-references.mjs --ci",
     "test:content:staged": "node scripts/test-frontmatter.mjs --staged && node scripts/check-internal-references.mjs --staged",
+    "test:content:fixtures": "node scripts/test-content-reference-validation.mjs",
     "postbuild": "node scripts/post-build-check.mjs && bash scripts/verify-internal-links.sh",
     "preview": "astro preview",
     "check:hollow": "bash tools/detect-ai-hollow.sh",
