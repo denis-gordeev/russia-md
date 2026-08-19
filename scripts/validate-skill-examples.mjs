@@ -638,6 +638,57 @@ function maskAnchorLikeHtmlInMarkdownSyntax(line, state) {
   return masked.join('');
 }
 
+function getExplicitHtmlAnchorDefinitions(content, bodyStartLine = 1) {
+  const lines = content.split(/\r?\n/);
+  const maskedLines = [];
+  const ignoredSyntaxState = { inHtmlComment: false };
+  let activeFence = null;
+
+  for (const line of lines) {
+    const fenceMatch = ignoredSyntaxState.inHtmlComment
+      ? null
+      : line.match(/^(```+|~~~+)/);
+
+    if (fenceMatch) {
+      const currentFence = fenceMatch[1][0];
+
+      if (activeFence === currentFence) {
+        activeFence = null;
+      } else if (!activeFence) {
+        activeFence = currentFence;
+      }
+
+      maskedLines.push(' '.repeat(line.length));
+      continue;
+    }
+
+    if (activeFence) {
+      maskedLines.push(' '.repeat(line.length));
+      continue;
+    }
+
+    maskedLines.push(
+      maskAnchorLikeHtmlInMarkdownSyntax(line, ignoredSyntaxState),
+    );
+  }
+
+  const maskedContent = maskedLines.join('\n');
+
+  return [...maskedContent.matchAll(explicitHtmlIdPattern)].map((match) => {
+    const lineNumber = getLineNumberForIndex(
+      maskedContent,
+      match.index ?? 0,
+      bodyStartLine,
+    );
+
+    return {
+      anchor: match[1].trim(),
+      lineIndex: lineNumber - bodyStartLine,
+      lineNumber,
+    };
+  });
+}
+
 function getMarkdownHeadingDefinition(line, previousSetextHeading) {
   const atxHeadingMatch = line.match(/^#{1,6}\s+(.*?)\s*#*\s*$/);
 
@@ -678,6 +729,7 @@ async function getMarkdownAnchors(markdownPath) {
   const markdownRaw = await readFile(markdownPath, 'utf8');
   const { content } = getMarkdownBodyInfo(markdownRaw, markdownPath);
   const anchors = new Set();
+  const explicitAnchorDefinitions = getExplicitHtmlAnchorDefinitions(content);
   const slugCounts = new Map();
   const lines = content.split(/\r?\n/);
   const ignoredSyntaxState = { inHtmlComment: false };
@@ -730,14 +782,6 @@ async function getMarkdownAnchors(markdownPath) {
       }
     }
 
-    for (const idMatch of explicitAnchorLine.matchAll(explicitHtmlIdPattern)) {
-      const anchor = idMatch[1].trim();
-
-      if (anchor) {
-        anchors.add(anchor);
-      }
-    }
-
     previousSetextHeading = getSetextHeadingCandidate(
       line,
       explicitAnchorLine,
@@ -745,11 +789,30 @@ async function getMarkdownAnchors(markdownPath) {
     );
   }
 
+  for (const { anchor } of explicitAnchorDefinitions) {
+    if (anchor) {
+      anchors.add(anchor);
+    }
+  }
+
   markdownAnchorCache.set(markdownPath, anchors);
   return anchors;
 }
 
 function findAnchorDefinitionErrors(markdownPath, content, bodyStartLine) {
+  const explicitAnchorDefinitions = getExplicitHtmlAnchorDefinitions(
+    content,
+    bodyStartLine,
+  );
+  const explicitDefinitionsByLine = new Map();
+
+  for (const definition of explicitAnchorDefinitions) {
+    const definitions =
+      explicitDefinitionsByLine.get(definition.lineIndex) ?? [];
+    definitions.push(definition);
+    explicitDefinitionsByLine.set(definition.lineIndex, definitions);
+  }
+
   const explicitDefinitionLines = new Map();
   const headingDefinitionLines = new Map();
   const slugCounts = new Map();
@@ -815,12 +878,12 @@ function findAnchorDefinitionErrors(markdownPath, content, bodyStartLine) {
       }
     }
 
-    for (const idMatch of explicitAnchorLine.matchAll(explicitHtmlIdPattern)) {
-      const anchor = idMatch[1].trim();
+    for (const definition of explicitDefinitionsByLine.get(lineIndex) ?? []) {
+      const { anchor, lineNumber: explicitLineNumber } = definition;
 
       if (!anchor) {
         errors.push(
-          `${path.relative(root, markdownPath)}:${lineNumber}: empty or whitespace-only explicit HTML anchor id`,
+          `${path.relative(root, markdownPath)}:${explicitLineNumber}: empty or whitespace-only explicit HTML anchor id`,
         );
         continue;
       }
@@ -829,17 +892,17 @@ function findAnchorDefinitionErrors(markdownPath, content, bodyStartLine) {
 
       if (firstDefinitionLine !== undefined) {
         errors.push(
-          `${path.relative(root, markdownPath)}:${lineNumber}: duplicate explicit HTML anchor ${JSON.stringify(anchor)} (first defined on line ${firstDefinitionLine})`,
+          `${path.relative(root, markdownPath)}:${explicitLineNumber}: duplicate explicit HTML anchor ${JSON.stringify(anchor)} (first defined on line ${firstDefinitionLine})`,
         );
         continue;
       }
 
-      explicitDefinitionLines.set(anchor, lineNumber);
+      explicitDefinitionLines.set(anchor, explicitLineNumber);
 
       const headingDefinitionLine = headingDefinitionLines.get(anchor);
       if (headingDefinitionLine !== undefined) {
         errors.push(
-          `${path.relative(root, markdownPath)}:${lineNumber}: explicit HTML anchor ${JSON.stringify(anchor)} collides with generated heading anchor defined on line ${headingDefinitionLine}`,
+          `${path.relative(root, markdownPath)}:${explicitLineNumber}: explicit HTML anchor ${JSON.stringify(anchor)} collides with generated heading anchor defined on line ${headingDefinitionLine}`,
         );
       }
     }

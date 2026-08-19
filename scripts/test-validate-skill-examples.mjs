@@ -159,6 +159,46 @@ async function main() {
   });
 
   await runCase('valid-frontmatter', {
+    expectSuccess: true,
+    expectedText:
+      /Validated 1 skill example contract\(s\) and repository markdown links\./,
+    mutate: async (fixtureRoot) => {
+      const notesPath = path.join(
+        fixtureRoot,
+        'skills',
+        'test-skill',
+        'references',
+        'integration-notes.md',
+      );
+      const notesRaw = await readFile(notesPath, 'utf8');
+      await writeFile(
+        notesPath,
+        `${notesRaw}\n<div\n  class="checkpoint"\n  id =\n    "multiline-checkpoint"\n></div>\n\nSee [the multiline anchor](#multiline-checkpoint).\n`,
+      );
+    },
+  });
+
+  await runCase('valid-frontmatter', {
+    expectSuccess: false,
+    expectedText:
+      /skills\/test-skill\/references\/integration-notes\.md:22: duplicate explicit HTML anchor "multiline-duplicate" \(first defined on line 18\)[\s\S]*skills\/test-skill\/references\/integration-notes\.md:25: generated heading anchor "multiline-duplicate" collides with explicit HTML anchor defined on line 18/,
+    mutate: async (fixtureRoot) => {
+      const notesPath = path.join(
+        fixtureRoot,
+        'skills',
+        'test-skill',
+        'references',
+        'integration-notes.md',
+      );
+      const notesRaw = await readFile(notesPath, 'utf8');
+      await writeFile(
+        notesPath,
+        `${notesRaw}\n<div\n  id="multiline-duplicate"\n></div>\n\n<span\n  id = 'multiline-duplicate'\n></span>\n\n## Multiline duplicate\n`,
+      );
+    },
+  });
+
+  await runCase('valid-frontmatter', {
     expectSuccess: false,
     expectedText:
       /skills\/test-skill\/references\/integration-notes\.md:17: empty or whitespace-only explicit HTML anchor id[\s\S]*skills\/test-skill\/references\/integration-notes\.md:19: empty or whitespace-only explicit HTML anchor id/,
@@ -265,7 +305,7 @@ async function main() {
       const readmeRaw = await readFile(readmePath, 'utf8');
       await writeFile(
         readmePath,
-        `${readmeRaw}\n<div data-id="not-an-anchor"></div>\n<div data-id="not-an-anchor"></div>\n\n\`<span id="not-an-anchor"></span>\`\n\`<span id="not-an-anchor"></span>\`\n\n<!-- <div id="not-an-anchor"></div>\n<div id="not-an-anchor"></div> -->\n\n\`\`\`html\n<div id="not-an-anchor"></div>\n<div id="not-an-anchor"></div>\n\`\`\`\n`,
+        `${readmeRaw}\n<div data-id="not-an-anchor"></div>\n<div data-id="not-an-anchor"></div>\n\n\`<span id="not-an-anchor"></span>\`\n\`<span id="not-an-anchor"></span>\`\n\n<!-- <div id="not-an-anchor"></div>\n<div\n  id="not-an-anchor"\n></div> -->\n\n\`\`\`html\n<div id="not-an-anchor"></div>\n<div\n  id="not-an-anchor"\n></div>\n\`\`\`\n`,
       );
     },
   });
