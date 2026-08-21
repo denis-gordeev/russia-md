@@ -495,16 +495,18 @@ const skipLinkLabel =
               '<div class="search-hint">No results found</div>';
             return;
           }
-          var html = matches
-            .slice(0, 12)
+          // The result panel scrolls, so expose a useful batch instead of
+          // hiding most matches after the first screenful.
+          var visibleMatches = matches.slice(0, 30);
+          var html = visibleMatches
             .map(function (item, idx) {
               return _renderResult(item, idx, q);
             })
             .join('');
-          if (matches.length > 12) {
+          if (matches.length > visibleMatches.length) {
             html +=
               '<div class="search-hint">...and ' +
-              (matches.length - 12) +
+              (matches.length - visibleMatches.length) +
               ' more</div>';
           }
           results.innerHTML = html;
