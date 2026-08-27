@@ -16,7 +16,6 @@ const agentMetadataSchemaPath = path.join(
   'agent-metadata.schema.json',
 );
 const markdownLinkPattern = /(?<!!)\[[^\]]+\]\(([^)\s]+)(?:\s+"[^"]*")?\)/g;
-const explicitHtmlIdPattern = /(?<![-:])\bid\s*=\s*["']([^"']*)["']/g;
 const markdownAnchorCache = new Map();
 const fullSkillValidationTriggers = [
   '.github/workflows/deploy.yml',
@@ -674,19 +673,87 @@ function getExplicitHtmlAnchorDefinitions(content, bodyStartLine = 1) {
 
   const maskedContent = maskedLines.join('\n');
 
-  return [...maskedContent.matchAll(explicitHtmlIdPattern)].map((match) => {
-    const lineNumber = getLineNumberForIndex(
-      maskedContent,
-      match.index ?? 0,
-      bodyStartLine,
-    );
+  const definitions = [];
+  const openingTagPattern = /<([A-Za-z][\w:-]*)\b/g;
 
-    return {
-      anchor: match[1].trim(),
-      lineIndex: lineNumber - bodyStartLine,
-      lineNumber,
-    };
-  });
+  for (const tagMatch of maskedContent.matchAll(openingTagPattern)) {
+    const tagStart = tagMatch.index ?? 0;
+    let quote = null;
+    let tagEnd = -1;
+
+    for (
+      let index = tagStart + tagMatch[0].length;
+      index < maskedContent.length;
+      index += 1
+    ) {
+      const character = maskedContent[index];
+
+      if (quote) {
+        if (character === quote) {
+          quote = null;
+        }
+        continue;
+      }
+
+      if (character === '"' || character === "'") {
+        quote = character;
+      } else if (character === '>') {
+        tagEnd = index;
+        break;
+      } else if (character === '<') {
+        break;
+      } else if (character === '\n' && maskedContent[index + 1] === '\n') {
+        break;
+      }
+    }
+
+    if (tagEnd === -1) {
+      continue;
+    }
+
+    const tagText = maskedContent.slice(tagStart, tagEnd + 1);
+    const attributePattern =
+      /\s+([^\s"'<>/=]+)(?:\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s"'=<>`]+)))?/gy;
+    attributePattern.lastIndex = tagMatch[0].length;
+
+    for (
+      let attributeMatch = attributePattern.exec(tagText);
+      attributeMatch;
+      attributeMatch = attributePattern.exec(tagText)
+    ) {
+      const attributeName = attributeMatch[1].toLowerCase();
+      const anchor = attributeMatch[2] ?? attributeMatch[3];
+      const isExplicitAnchor =
+        attributeName === 'id' ||
+        (tagMatch[1].toLowerCase() === 'a' && attributeName === 'name');
+
+      if (!isExplicitAnchor || anchor === undefined) {
+        continue;
+      }
+
+      const attributeIndex =
+        tagStart +
+        (attributeMatch.index ?? 0) +
+        attributeMatch[0].indexOf(attributeMatch[1]);
+      const lineNumber = getLineNumberForIndex(
+        maskedContent,
+        attributeIndex,
+        bodyStartLine,
+      );
+
+      definitions.push({
+        anchor: anchor.trim(),
+        attributeName,
+        lineIndex: lineNumber - bodyStartLine,
+        lineNumber,
+      });
+    }
+  }
+
+  return definitions.sort(
+    (left, right) =>
+      left.lineIndex - right.lineIndex || left.lineNumber - right.lineNumber,
+  );
 }
 
 function getMarkdownHeadingDefinition(line, previousSetextHeading) {
@@ -879,11 +946,15 @@ function findAnchorDefinitionErrors(markdownPath, content, bodyStartLine) {
     }
 
     for (const definition of explicitDefinitionsByLine.get(lineIndex) ?? []) {
-      const { anchor, lineNumber: explicitLineNumber } = definition;
+      const {
+        anchor,
+        attributeName,
+        lineNumber: explicitLineNumber,
+      } = definition;
 
       if (!anchor) {
         errors.push(
-          `${path.relative(root, markdownPath)}:${explicitLineNumber}: empty or whitespace-only explicit HTML anchor id`,
+          `${path.relative(root, markdownPath)}:${explicitLineNumber}: empty or whitespace-only explicit HTML anchor ${attributeName}`,
         );
         continue;
       }

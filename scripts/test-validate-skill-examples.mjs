@@ -199,6 +199,86 @@ async function main() {
   });
 
   await runCase('valid-frontmatter', {
+    expectSuccess: true,
+    expectedText:
+      /Validated 1 skill example contract\(s\) and repository markdown links\./,
+    mutate: async (fixtureRoot) => {
+      const notesPath = path.join(
+        fixtureRoot,
+        'skills',
+        'test-skill',
+        'references',
+        'integration-notes.md',
+      );
+      const notesRaw = await readFile(notesPath, 'utf8');
+      await writeFile(
+        notesPath,
+        `${notesRaw}\n<a\n  class="checkpoint"\n  name = "legacy-checkpoint"\n></a>\n\nSee [the legacy anchor](#legacy-checkpoint).\n\n<div name="not-an-anchor"></div>\n`,
+      );
+    },
+  });
+
+  await runCase('valid-frontmatter', {
+    expectSuccess: false,
+    expectedText:
+      /skills\/test-skill\/references\/integration-notes\.md:19: duplicate explicit HTML anchor "legacy-duplicate" \(first defined on line 17\)[\s\S]*skills\/test-skill\/references\/integration-notes\.md:21: empty or whitespace-only explicit HTML anchor name[\s\S]*skills\/test-skill\/references\/integration-notes\.md:25: generated heading anchor "legacy-heading" collides with explicit HTML anchor defined on line 23/,
+    mutate: async (fixtureRoot) => {
+      const notesPath = path.join(
+        fixtureRoot,
+        'skills',
+        'test-skill',
+        'references',
+        'integration-notes.md',
+      );
+      const notesRaw = await readFile(notesPath, 'utf8');
+      await writeFile(
+        notesPath,
+        `${notesRaw}\n<a name="legacy-duplicate"></a>\n\n<a name='legacy-duplicate'></a>\n\n<a name="  "></a>\n\n<a name="legacy-heading"></a>\n\n## Legacy heading\n`,
+      );
+    },
+  });
+
+  await runCase('valid-frontmatter', {
+    expectSuccess: false,
+    expectedText:
+      /skills\/test-skill\/references\/integration-notes\.md:21: generated heading anchor "guide-1" collides with explicit HTML anchor defined on line 17[\s\S]*skills\/test-skill\/references\/integration-notes\.md:27: explicit HTML anchor "guide-after-1" collides with generated heading anchor defined on line 25/,
+    mutate: async (fixtureRoot) => {
+      const notesPath = path.join(
+        fixtureRoot,
+        'skills',
+        'test-skill',
+        'references',
+        'integration-notes.md',
+      );
+      const notesRaw = await readFile(notesPath, 'utf8');
+      await writeFile(
+        notesPath,
+        `${notesRaw}\n<a name="guide-1"></a>\n\n## Guide\n\n## Guide\n\n## Guide after\n\n## Guide after\n\n<div id="guide-after-1"></div>\n`,
+      );
+    },
+  });
+
+  await runCase('valid-frontmatter', {
+    expectSuccess: true,
+    expectedText:
+      /Validated 1 skill example contract\(s\) and repository markdown links\./,
+    mutate: async (fixtureRoot) => {
+      const notesPath = path.join(
+        fixtureRoot,
+        'skills',
+        'test-skill',
+        'references',
+        'integration-notes.md',
+      );
+      const notesRaw = await readFile(notesPath, 'utf8');
+      await writeFile(
+        notesPath,
+        `${notesRaw}\n<div\n  class="unfinished"\n\nAdjacent prose mentions id="not-an-anchor" and later uses > punctuation.\n\n## Still a heading\n`,
+      );
+    },
+  });
+
+  await runCase('valid-frontmatter', {
     expectSuccess: false,
     expectedText:
       /skills\/test-skill\/references\/integration-notes\.md:17: empty or whitespace-only explicit HTML anchor id[\s\S]*skills\/test-skill\/references\/integration-notes\.md:19: empty or whitespace-only explicit HTML anchor id/,
@@ -305,7 +385,7 @@ async function main() {
       const readmeRaw = await readFile(readmePath, 'utf8');
       await writeFile(
         readmePath,
-        `${readmeRaw}\n<div data-id="not-an-anchor"></div>\n<div data-id="not-an-anchor"></div>\n\n\`<span id="not-an-anchor"></span>\`\n\`<span id="not-an-anchor"></span>\`\n\n<!-- <div id="not-an-anchor"></div>\n<div\n  id="not-an-anchor"\n></div> -->\n\n\`\`\`html\n<div id="not-an-anchor"></div>\n<div\n  id="not-an-anchor"\n></div>\n\`\`\`\n`,
+        `${readmeRaw}\n<div data-id="not-an-anchor"></div>\n<div data-id="not-an-anchor"></div>\n<div title='prose id="not-an-anchor"'></div>\n<div title='more prose id="not-an-anchor"'></div>\n\n\`<span id="not-an-anchor"></span>\`\n\`<span id="not-an-anchor"></span>\`\n\n<!-- <div id="not-an-anchor"></div>\n<div\n  id="not-an-anchor"\n></div> -->\n\n\`\`\`html\n<div id="not-an-anchor"></div>\n<div\n  id="not-an-anchor"\n></div>\n\`\`\`\n`,
       );
     },
   });
