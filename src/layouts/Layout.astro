@@ -1,5 +1,6 @@
 ---
 import SEO from '../components/SEO.astro';
+import { categoryFolderMapping } from '../utils/categoryConfig';
 
 interface Props {
   title: string;
@@ -654,7 +655,7 @@ const skipLinkLabel =
       .md
     </a>
 
-    <script is:inline>
+    <script is:inline define:vars={{ categoryFolderMapping }}>
       // Set .md button href based on current path
       const btn = document.getElementById('md-btn');
       const pathname = window.location.pathname;
@@ -679,19 +680,15 @@ const skipLinkLabel =
         const parts = cleanPath.split('/');
 
         if (parts.length > 0 && parts[0]) {
-          const cat = parts[0];
-          // Capitalize first letter of category (history -> History)
-          const catFolder = cat.charAt(0).toUpperCase() + cat.slice(1);
+          const category = decodeURIComponent(parts[0]);
+          const categoryFolder = categoryFolderMapping[category];
 
-          const prefix = '/russia-knowledge';
-
-          if (parts.length === 1) {
-            // Category Hub: knowledge/History/_History Hub.md
-            target = `${prefix}/${catFolder}/_${catFolder} Hub.md`;
-          } else {
-            // Article: knowledge/History/article-name.md
+          if (categoryFolder && parts.length === 1) {
+            // Russia.md has no category Hub files; link to the route source.
+            target = '/src/pages/[category]/index.astro';
+          } else if (categoryFolder) {
             const slug = decodeURIComponent(parts.slice(1).join('/'));
-            target = `${prefix}/${catFolder}/${slug}.md`;
+            target = `/russia-knowledge/${categoryFolder}/${slug}.md`;
           }
         }
       }
