@@ -139,17 +139,17 @@ This is still a foundation fork, not a finished editorial product. The active si
 - [x] Recognize legacy `<a name="...">` anchors with the same duplicate and collision safeguards as `id="..."`
 - [ ] Add structured JSON diagnostics for CI annotations and editor integrations
 - [x] Add malformed multi-line HTML tag fixtures so incomplete attributes cannot leak into adjacent Markdown
-- [ ] Add fixtures for `>` characters inside quoted HTML attributes and mixed `id`/`name` anchors on one `<a>` element
-- [ ] Support unquoted legacy `<a name=...>` anchors without accepting partial or malformed attributes
+- [x] Add fixtures for `>` characters inside quoted HTML attributes and mixed `id`/`name` anchors on one `<a>` element
+- [x] Support unquoted legacy `<a name=...>` anchors without accepting partial or malformed attributes
 - [ ] Add an exported anchor-parser helper test suite so HTML-tag edge cases can run without fixture-repository setup
+- [ ] Add entity-decoding coverage for explicit HTML anchors and fragments such as `&amp;`
+- [ ] Add self-closing and void-element anchor fixtures so tag termination stays stable across HTML styles
 
 ## Latest Round
 
-- Replaced free-floating `id=` matching with tag-aware parsing of complete single- and multi-line HTML opening tags.
-- Added legacy `<a name="...">` anchors to fragment resolution, empty-anchor checks, duplicate detection, and generated-heading collision checks.
-- Prevented incomplete multi-line tags from leaking anchor-like attributes out of adjacent Markdown prose.
-- Added regression coverage for valid multi-line legacy anchors, ignored `name=` attributes on non-anchor elements, empty and duplicate legacy names, and `id`/`name` collisions with headings.
-- Added collision fixtures for repeated generated heading suffixes such as `guide-1` in both definition orders.
+- Added unquoted legacy `<a name=...>` anchors to fragment resolution while continuing to reject missing, backtick-delimited, and unterminated values.
+- Locked in quote-aware tag termination so `>` inside single- or double-quoted attributes cannot hide following `id` or `name` anchors.
+- Added regression coverage for distinct `id` and `name` anchors on one `<a>` element and duplicate detection when both attributes declare the same anchor.
 
 ## Development
 

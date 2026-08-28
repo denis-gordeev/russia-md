@@ -179,6 +179,46 @@ async function main() {
   });
 
   await runCase('valid-frontmatter', {
+    expectSuccess: true,
+    expectedText:
+      /Validated 1 skill example contract\(s\) and repository markdown links\./,
+    mutate: async (fixtureRoot) => {
+      const notesPath = path.join(
+        fixtureRoot,
+        'skills',
+        'test-skill',
+        'references',
+        'integration-notes.md',
+      );
+      const notesRaw = await readFile(notesPath, 'utf8');
+      await writeFile(
+        notesPath,
+        `${notesRaw}\n<a title="1 > 0" id="quoted-angle-id" name=unquoted-legacy></a>\n\nSee [the id anchor](#quoted-angle-id) and [the legacy anchor](#unquoted-legacy).\n\n<a id="mixed-id" name="mixed-name"></a>\n\nSee [the mixed id](#mixed-id) and [the mixed name](#mixed-name).\n\n<a name=></a>\n<a name=\`malformed></a>\n<a name='unterminated></a>\n`,
+      );
+    },
+  });
+
+  await runCase('valid-frontmatter', {
+    expectSuccess: false,
+    expectedText:
+      /skills\/test-skill\/references\/integration-notes\.md:17: duplicate explicit HTML anchor "same-anchor" \(first defined on line 17\)/,
+    mutate: async (fixtureRoot) => {
+      const notesPath = path.join(
+        fixtureRoot,
+        'skills',
+        'test-skill',
+        'references',
+        'integration-notes.md',
+      );
+      const notesRaw = await readFile(notesPath, 'utf8');
+      await writeFile(
+        notesPath,
+        `${notesRaw}\n<a title='next > previous' id="same-anchor" name=same-anchor></a>\n`,
+      );
+    },
+  });
+
+  await runCase('valid-frontmatter', {
     expectSuccess: false,
     expectedText:
       /skills\/test-skill\/references\/integration-notes\.md:22: duplicate explicit HTML anchor "multiline-duplicate" \(first defined on line 18\)[\s\S]*skills\/test-skill\/references\/integration-notes\.md:25: generated heading anchor "multiline-duplicate" collides with explicit HTML anchor defined on line 18/,

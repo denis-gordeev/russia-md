@@ -722,10 +722,16 @@ function getExplicitHtmlAnchorDefinitions(content, bodyStartLine = 1) {
       attributeMatch = attributePattern.exec(tagText)
     ) {
       const attributeName = attributeMatch[1].toLowerCase();
-      const anchor = attributeMatch[2] ?? attributeMatch[3];
+      const quotedAnchor = attributeMatch[2] ?? attributeMatch[3];
+      const unquotedAnchor = attributeMatch[4];
       const isExplicitAnchor =
         attributeName === 'id' ||
         (tagMatch[1].toLowerCase() === 'a' && attributeName === 'name');
+      const anchor =
+        quotedAnchor ??
+        (tagMatch[1].toLowerCase() === 'a' && attributeName === 'name'
+          ? unquotedAnchor
+          : undefined);
 
       if (!isExplicitAnchor || anchor === undefined) {
         continue;
