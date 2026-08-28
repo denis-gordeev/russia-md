@@ -3,6 +3,7 @@ import { readdir, readFile, stat } from 'fs/promises';
 import { promisify } from 'util';
 import { pathToFileURL } from 'url';
 import path from 'path';
+import { decodeHTMLAttribute } from 'entities';
 import matter from 'gray-matter';
 import YAML from 'yaml';
 
@@ -637,7 +638,7 @@ function maskAnchorLikeHtmlInMarkdownSyntax(line, state) {
   return masked.join('');
 }
 
-function getExplicitHtmlAnchorDefinitions(content, bodyStartLine = 1) {
+export function getExplicitHtmlAnchorDefinitions(content, bodyStartLine = 1) {
   const lines = content.split(/\r?\n/);
   const maskedLines = [];
   const ignoredSyntaxState = { inHtmlComment: false };
@@ -748,7 +749,7 @@ function getExplicitHtmlAnchorDefinitions(content, bodyStartLine = 1) {
       );
 
       definitions.push({
-        anchor: anchor.trim(),
+        anchor: decodeHTMLAttribute(anchor.trim()),
         attributeName,
         lineIndex: lineNumber - bodyStartLine,
         lineNumber,

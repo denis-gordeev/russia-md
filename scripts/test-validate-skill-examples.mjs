@@ -4,7 +4,10 @@ import { mkdtemp, cp, readFile, writeFile } from 'fs/promises';
 import os from 'os';
 import path from 'path';
 import { promisify } from 'util';
-import { getNearestAnchorSuggestions } from './validate-skill-examples.mjs';
+import {
+  getExplicitHtmlAnchorDefinitions,
+  getNearestAnchorSuggestions,
+} from './validate-skill-examples.mjs';
 
 const execFile = promisify(execFileCallback);
 const repoRoot = process.cwd();
@@ -115,6 +118,25 @@ async function runGitCase({ caseName, args = [], mutate, expectedText }) {
 
 async function main() {
   assert.deepEqual(
+    getExplicitHtmlAnchorDefinitions(
+      '<hr id="void-anchor">\n<a name=self-closing-anchor />\n<input id="encoded&amp;anchor" />',
+    ).map(({ anchor, attributeName, lineNumber }) => ({
+      anchor,
+      attributeName,
+      lineNumber,
+    })),
+    [
+      { anchor: 'void-anchor', attributeName: 'id', lineNumber: 1 },
+      {
+        anchor: 'self-closing-anchor',
+        attributeName: 'name',
+        lineNumber: 2,
+      },
+      { anchor: 'encoded&anchor', attributeName: 'id', lineNumber: 3 },
+    ],
+  );
+
+  assert.deepEqual(
     getNearestAnchorSuggestions(
       'guidee',
       new Set(['guide', 'guides', 'guide-2', 'guide-20', 'guide-1']),
@@ -132,6 +154,46 @@ async function main() {
     expectSuccess: true,
     expectedText:
       /Validated 1 skill example contract\(s\) and repository markdown links\./,
+  });
+
+  await runCase('valid-frontmatter', {
+    expectSuccess: true,
+    expectedText:
+      /Validated 1 skill example contract\(s\) and repository markdown links\./,
+    mutate: async (fixtureRoot) => {
+      const notesPath = path.join(
+        fixtureRoot,
+        'skills',
+        'test-skill',
+        'references',
+        'integration-notes.md',
+      );
+      const notesRaw = await readFile(notesPath, 'utf8');
+      await writeFile(
+        notesPath,
+        `${notesRaw}\n<hr id="void&amp;anchor">\n<a name=self-closing&amp;anchor />\n\nSee [the void anchor](#void%26anchor) and [the self-closing anchor](#self-closing%26anchor).\n`,
+      );
+    },
+  });
+
+  await runCase('valid-frontmatter', {
+    expectSuccess: false,
+    expectedText:
+      /skills\/test-skill\/references\/integration-notes\.md:19: duplicate explicit HTML anchor "entity&duplicate" \(first defined on line 17\)/,
+    mutate: async (fixtureRoot) => {
+      const notesPath = path.join(
+        fixtureRoot,
+        'skills',
+        'test-skill',
+        'references',
+        'integration-notes.md',
+      );
+      const notesRaw = await readFile(notesPath, 'utf8');
+      await writeFile(
+        notesPath,
+        `${notesRaw}\n<div id="entity&amp;duplicate" />\n\n<span id="entity&#38;duplicate"></span>\n`,
+      );
+    },
   });
 
   await runCase('valid-frontmatter', {
