@@ -144,14 +144,16 @@ This is still a foundation fork, not a finished editorial product. The active si
 - [x] Add an exported anchor-parser helper test suite so HTML-tag edge cases can run without fixture-repository setup
 - [x] Add entity-decoding coverage for explicit HTML anchors and fragments such as `&amp;`
 - [x] Add self-closing and void-element anchor fixtures so tag termination stays stable across HTML styles
-- [ ] Add malformed and semicolon-less named-entity fixtures for ambiguous HTML attribute sequences
-- [ ] Add direct anchor-parser helper coverage for ignored Markdown syntax and multi-line line-number offsets
+- [x] Add malformed and semicolon-less named-entity fixtures for ambiguous HTML attribute sequences
+- [x] Add direct anchor-parser helper coverage for ignored Markdown syntax and multi-line line-number offsets
+- [ ] Add mixed-newline fixtures for explicit-anchor parsing across LF, CRLF, and lone-CR inputs
+- [ ] Add a deterministic fuzz corpus for HTML tag, quote, and entity boundary combinations
 
 ## Latest Round
 
-- Decode HTML named and numeric character references in explicit `id` and legacy `<a name>` anchors before fragment resolution and duplicate checks.
-- Exported the explicit-anchor parser and added a focused helper test covering void, self-closing, quoted, and unquoted legacy anchor forms without fixture-repository setup.
-- Added end-to-end fixtures for percent-encoded links to entity-backed anchors and for duplicate detection when different entity spellings resolve to the same browser-visible ID.
+- Added direct parser-helper coverage proving that inline code, HTML comments, and fenced code remain ignored while real multi-line anchors retain physical source offsets.
+- Added end-to-end fixtures for malformed named references, ambiguous semicolon-less references in attribute context, and valid legacy semicolon-less references.
+- Confirmed that ambiguous `&amp=` text remains literal while a permitted `&copy!` reference decodes to its browser-visible anchor before fragment resolution.
 
 ## Development
 

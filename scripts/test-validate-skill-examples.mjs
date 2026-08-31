@@ -137,6 +137,53 @@ async function main() {
   );
 
   assert.deepEqual(
+    getExplicitHtmlAnchorDefinitions(
+      [
+        '`<span id="inline-code"></span>`',
+        '<!--',
+        '<div id="commented-anchor"></div>',
+        '-->',
+        '```html',
+        '<div id="fenced-anchor"></div>',
+        '```',
+        '<section',
+        '  class="checkpoint"',
+        '  id="real-multiline-anchor"',
+        '></section>',
+        '<a name=real-legacy-anchor></a>',
+      ].join('\n'),
+      20,
+    ).map(({ anchor, attributeName, lineNumber }) => ({
+      anchor,
+      attributeName,
+      lineNumber,
+    })),
+    [
+      {
+        anchor: 'real-multiline-anchor',
+        attributeName: 'id',
+        lineNumber: 29,
+      },
+      {
+        anchor: 'real-legacy-anchor',
+        attributeName: 'name',
+        lineNumber: 31,
+      },
+    ],
+  );
+
+  assert.deepEqual(
+    getExplicitHtmlAnchorDefinitions(
+      [
+        '<div id="malformed&bogus;anchor"></div>',
+        '<div id="ambiguous&amp=anchor"></div>',
+        '<div id="semicolonless&copy!anchor"></div>',
+      ].join('\n'),
+    ).map(({ anchor }) => anchor),
+    ['malformed&bogus;anchor', 'ambiguous&amp=anchor', 'semicolonless©!anchor'],
+  );
+
+  assert.deepEqual(
     getNearestAnchorSuggestions(
       'guidee',
       new Set(['guide', 'guides', 'guide-2', 'guide-20', 'guide-1']),
@@ -172,6 +219,26 @@ async function main() {
       await writeFile(
         notesPath,
         `${notesRaw}\n<hr id="void&amp;anchor">\n<a name=self-closing&amp;anchor />\n\nSee [the void anchor](#void%26anchor) and [the self-closing anchor](#self-closing%26anchor).\n`,
+      );
+    },
+  });
+
+  await runCase('valid-frontmatter', {
+    expectSuccess: true,
+    expectedText:
+      /Validated 1 skill example contract\(s\) and repository markdown links\./,
+    mutate: async (fixtureRoot) => {
+      const notesPath = path.join(
+        fixtureRoot,
+        'skills',
+        'test-skill',
+        'references',
+        'integration-notes.md',
+      );
+      const notesRaw = await readFile(notesPath, 'utf8');
+      await writeFile(
+        notesPath,
+        `${notesRaw}\n<div id="malformed&bogus;anchor"></div>\n<div id="ambiguous&amp=anchor"></div>\n<div id="ambiguous&=anchor"></div>\n<div id="semicolonless&copy!anchor"></div>\n\nSee [the malformed entity anchor](#malformed%26bogus%3Banchor), [the ambiguous entity anchor](#ambiguous%26amp%3Danchor), [the literal ampersand anchor](#ambiguous%26%3Danchor), and [the semicolon-less entity anchor](#semicolonless%C2%A9!anchor).\n`,
       );
     },
   });
