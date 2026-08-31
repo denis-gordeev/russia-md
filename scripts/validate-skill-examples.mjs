@@ -390,8 +390,20 @@ function normalizeLinkTarget(rawTarget) {
   return targetWithoutHash.replace(/\\/g, '/');
 }
 
+function decodeLinkPath(target) {
+  try {
+    return decodeURIComponent(target);
+  } catch {
+    return null;
+  }
+}
+
 function countNewlines(value) {
-  return (value.match(/\r?\n/g) ?? []).length;
+  return (value.match(/\r\n|[\n\r]/g) ?? []).length;
+}
+
+function splitMarkdownLines(value) {
+  return value.split(/\r\n|[\n\r]/);
 }
 
 function getMarkdownBodyInfo(markdownRaw, markdownPath) {
@@ -639,7 +651,7 @@ function maskAnchorLikeHtmlInMarkdownSyntax(line, state) {
 }
 
 export function getExplicitHtmlAnchorDefinitions(content, bodyStartLine = 1) {
-  const lines = content.split(/\r?\n/);
+  const lines = splitMarkdownLines(content);
   const maskedLines = [];
   const ignoredSyntaxState = { inHtmlComment: false };
   let activeFence = null;
@@ -805,7 +817,7 @@ async function getMarkdownAnchors(markdownPath) {
   const anchors = new Set();
   const explicitAnchorDefinitions = getExplicitHtmlAnchorDefinitions(content);
   const slugCounts = new Map();
-  const lines = content.split(/\r?\n/);
+  const lines = splitMarkdownLines(content);
   const ignoredSyntaxState = { inHtmlComment: false };
   let activeFence = null;
   let previousSetextHeading = null;
@@ -891,7 +903,7 @@ function findAnchorDefinitionErrors(markdownPath, content, bodyStartLine) {
   const headingDefinitionLines = new Map();
   const slugCounts = new Map();
   const errors = [];
-  const lines = content.split(/\r?\n/);
+  const lines = splitMarkdownLines(content);
   const ignoredSyntaxState = { inHtmlComment: false };
   let activeFence = null;
   let previousSetextHeading = null;
@@ -1021,9 +1033,17 @@ async function validateMarkdownLinks(markdownPath) {
     }
 
     const normalizedTarget = normalizeLinkTarget(rawTarget);
+    const decodedTarget = decodeLinkPath(normalizedTarget);
 
-    const resolvedTarget = normalizedTarget
-      ? resolveRepoPath(markdownPath, normalizedTarget)
+    if (decodedTarget === null) {
+      errors.push(
+        `${path.relative(root, markdownPath)}:${lineNumber}: malformed percent-encoding in local path ${JSON.stringify(rawTarget)} (path ${JSON.stringify(normalizedTarget)})`,
+      );
+      continue;
+    }
+
+    const resolvedTarget = decodedTarget
+      ? resolveRepoPath(markdownPath, decodedTarget)
       : markdownPath;
 
     if (!(await pathExists(resolvedTarget))) {

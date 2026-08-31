@@ -138,6 +138,22 @@ async function main() {
 
   assert.deepEqual(
     getExplicitHtmlAnchorDefinitions(
+      '<div id="lf-anchor"></div>\n<section\r\n  id="crlf-anchor"\r\n></section>\r<a name=cr-anchor></a>',
+      10,
+    ).map(({ anchor, attributeName, lineNumber }) => ({
+      anchor,
+      attributeName,
+      lineNumber,
+    })),
+    [
+      { anchor: 'lf-anchor', attributeName: 'id', lineNumber: 10 },
+      { anchor: 'crlf-anchor', attributeName: 'id', lineNumber: 12 },
+      { anchor: 'cr-anchor', attributeName: 'name', lineNumber: 14 },
+    ],
+  );
+
+  assert.deepEqual(
+    getExplicitHtmlAnchorDefinitions(
       [
         '`<span id="inline-code"></span>`',
         '<!--',
@@ -545,6 +561,26 @@ async function main() {
     },
   });
 
+  await runCase('valid-frontmatter', {
+    expectSuccess: false,
+    expectedText:
+      /skills\/test-skill\/references\/integration-notes\.md:19: duplicate explicit HTML anchor "mixed-newline-guide" \(first defined on line 17\)/,
+    mutate: async (fixtureRoot) => {
+      const notesPath = path.join(
+        fixtureRoot,
+        'skills',
+        'test-skill',
+        'references',
+        'integration-notes.md',
+      );
+      const notesRaw = await readFile(notesPath, 'utf8');
+      await writeFile(
+        notesPath,
+        `${notesRaw}\r<div id="mixed-newline-guide"></div>\r\n\r<span id="mixed-newline-guide"></span>\n`,
+      );
+    },
+  });
+
   await runCase('valid-minimal', {
     expectSuccess: true,
     expectedText:
@@ -619,6 +655,41 @@ async function main() {
       await writeFile(
         skillPath,
         `${skillRaw}\nBroken [encoded anchor](references/integration-notes.md#%ZZ-invalid).\nBroken [following anchor](references/integration-notes.md#missing-after-malformed).\n`,
+      );
+    },
+  });
+
+  await runCase('valid-frontmatter', {
+    expectSuccess: true,
+    expectedText:
+      /Validated 1 skill example contract\(s\) and repository markdown links\./,
+    mutate: async (fixtureRoot) => {
+      const unicodeGuidePath = path.join(
+        fixtureRoot,
+        'docs',
+        'Руководство 東京.md',
+      );
+      await writeFile(unicodeGuidePath, '# Секция 東京\n');
+
+      const readmePath = path.join(fixtureRoot, 'README.md');
+      const readmeRaw = await readFile(readmePath, 'utf8');
+      await writeFile(
+        readmePath,
+        `${readmeRaw}\nSee the [mixed encoded Unicode guide](docs/%D0%A0%D1%83%D0%BA%D0%BE%D0%B2%D0%BE%D0%B4%D1%81%D1%82%D0%B2%D0%BE%20東京.md#%D1%81%D0%B5%D0%BA%D1%86%D0%B8%D1%8F-%E6%9D%B1%E4%BA%AC).\n`,
+      );
+    },
+  });
+
+  await runCase('valid-frontmatter', {
+    expectSuccess: false,
+    expectedText:
+      /README\.md:11: malformed percent-encoding in local path "docs\/%ZZ-guide\.md" \(path "docs\/%ZZ-guide\.md"\)/,
+    mutate: async (fixtureRoot) => {
+      const readmePath = path.join(fixtureRoot, 'README.md');
+      const readmeRaw = await readFile(readmePath, 'utf8');
+      await writeFile(
+        readmePath,
+        `${readmeRaw}\nSee the [malformed encoded path](docs/%ZZ-guide.md).\n`,
       );
     },
   });
