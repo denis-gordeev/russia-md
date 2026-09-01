@@ -1,12 +1,13 @@
 import { execFile as execFileCallback } from 'child_process';
 import assert from 'assert/strict';
-import { mkdtemp, cp, readFile, writeFile } from 'fs/promises';
+import { mkdtemp, cp, readFile, rm, writeFile } from 'fs/promises';
 import os from 'os';
 import path from 'path';
 import { promisify } from 'util';
 import {
   getExplicitHtmlAnchorDefinitions,
   getNearestAnchorSuggestions,
+  validateMarkdownLinks,
 } from './validate-skill-examples.mjs';
 
 const execFile = promisify(execFileCallback);
@@ -117,6 +118,24 @@ async function runGitCase({ caseName, args = [], mutate, expectedText }) {
 }
 
 async function main() {
+  const cacheFixtureRoot = await mkdtemp(
+    path.join(os.tmpdir(), 'skill-validator-anchor-cache-'),
+  );
+  const cacheFixturePath = path.join(cacheFixtureRoot, 'cache.md');
+
+  try {
+    await writeFile(cacheFixturePath, '# Alpha\n\n[Jump](#alpha)\n');
+    assert.deepEqual(await validateMarkdownLinks(cacheFixturePath), []);
+
+    await writeFile(cacheFixturePath, '# Bravo\n\n[Jump](#bravo)\n');
+    assert.deepEqual(await validateMarkdownLinks(cacheFixturePath), []);
+
+    await writeFile(cacheFixturePath, '# Alpha\n\n[Jump](#alpha)\n');
+    assert.deepEqual(await validateMarkdownLinks(cacheFixturePath), []);
+  } finally {
+    await rm(cacheFixtureRoot, { recursive: true, force: true });
+  }
+
   assert.deepEqual(
     getExplicitHtmlAnchorDefinitions(
       '<hr id="void-anchor">\n<a name=self-closing-anchor />\n<input id="encoded&amp;anchor" />',

@@ -806,13 +806,13 @@ function getSetextHeadingCandidate(line, syntaxMaskedLine, inHtmlComment) {
 }
 
 async function getMarkdownAnchors(markdownPath) {
+  const markdownRaw = await readFile(markdownPath, 'utf8');
   const cachedAnchors = markdownAnchorCache.get(markdownPath);
 
-  if (cachedAnchors) {
-    return cachedAnchors;
+  if (cachedAnchors?.markdownRaw === markdownRaw) {
+    return cachedAnchors.anchors;
   }
 
-  const markdownRaw = await readFile(markdownPath, 'utf8');
   const { content } = getMarkdownBodyInfo(markdownRaw, markdownPath);
   const anchors = new Set();
   const explicitAnchorDefinitions = getExplicitHtmlAnchorDefinitions(content);
@@ -881,7 +881,7 @@ async function getMarkdownAnchors(markdownPath) {
     }
   }
 
-  markdownAnchorCache.set(markdownPath, anchors);
+  markdownAnchorCache.set(markdownPath, { anchors, markdownRaw });
   return anchors;
 }
 
@@ -1007,7 +1007,7 @@ function findAnchorDefinitionErrors(markdownPath, content, bodyStartLine) {
   return errors;
 }
 
-async function validateMarkdownLinks(markdownPath) {
+export async function validateMarkdownLinks(markdownPath) {
   const markdownRaw = await readFile(markdownPath, 'utf8');
   const { content, bodyStartLine } = getMarkdownBodyInfo(
     markdownRaw,
