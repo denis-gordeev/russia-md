@@ -32,7 +32,8 @@ export default defineConfig({
     sitemap({
       changefreq: 'weekly',
       priority: 0.7,
-      customPages: ['https://russia-md.ru/?changefreq=daily&priority=1.0'],
+      // @astrojs/sitemap treats customPages as literal URLs; query parameters
+      // here would publish a non-existent URL instead of configuring priority.
       serialize(item) {
         const lastmod = getLastmodForUrl(item.url);
         return lastmod ? { ...item, lastmod } : item;
