@@ -49,6 +49,8 @@ async function getSelectedPaths() {
 
     if (stagedMode) {
       ({ stdout } = await execFile('git', [
+        '-c',
+        'core.quotepath=false',
         'diff',
         '--cached',
         '--name-only',
@@ -80,6 +82,8 @@ async function getSelectedPaths() {
         try {
           const range = mode === 'three-dot' ? `${left}...${right}` : left;
           const diffArgs = [
+            '-c',
+            'core.quotepath=false',
             'diff',
             '--name-only',
             '--diff-filter=ACMR',
@@ -177,6 +181,36 @@ function collectMarkdownLinkErrors({
   }
 }
 
+function collectLinkDestinationWhitespaceErrors({
+  body,
+  relativePath,
+  errors,
+}) {
+  // Bare whitespace is not part of an HTTP(S) URL: it must be removed or
+  // percent-encoded. Keep angle-bracket destinations untouched because
+  // CommonMark explicitly permits spaces in `](<https://example.test/a b>)`.
+  const whitespaceUrlPattern =
+    /\]\((?:\s+https?:\/\/[^)<>]*|https?:\/\/[^)<>]*\s+[^)<>]*)\)/g;
+  const errorsByLine = new Map();
+
+  for (const match of body.matchAll(whitespaceUrlPattern)) {
+    const { line, column } = lineAndColumn(body, match.index);
+    const existing = errorsByLine.get(line);
+
+    if (existing) {
+      existing.count += 1;
+    } else {
+      errorsByLine.set(line, { column, count: 1 });
+    }
+  }
+
+  for (const [line, { column, count }] of errorsByLine) {
+    errors.push(
+      `${relativePath}:${line}:${column}: ${count} HTTP(S) markdown link destination(s) contain unencoded whitespace; remove padding or encode intentional spaces as %20`,
+    );
+  }
+}
+
 function collectWikilinkErrors({
   body,
   relativePath,
@@ -254,6 +288,11 @@ for (const article of allArticles) {
     body: article.body,
     relativePath: article.relativePath,
     validRoutes,
+    errors,
+  });
+  collectLinkDestinationWhitespaceErrors({
+    body: article.body,
+    relativePath: article.relativePath,
     errors,
   });
   collectWikilinkErrors({

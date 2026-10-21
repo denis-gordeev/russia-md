@@ -1,10 +1,14 @@
 import { execFile as execFileCallback } from 'child_process';
 import assert from 'assert/strict';
-import { mkdtemp, cp, readFile, writeFile } from 'fs/promises';
+import { mkdtemp, cp, readFile, rm, writeFile } from 'fs/promises';
 import os from 'os';
 import path from 'path';
 import { promisify } from 'util';
-import { getNearestAnchorSuggestions } from './validate-skill-examples.mjs';
+import {
+  getExplicitHtmlAnchorDefinitions,
+  getNearestAnchorSuggestions,
+  validateMarkdownLinks,
+} from './validate-skill-examples.mjs';
 
 const execFile = promisify(execFileCallback);
 const repoRoot = process.cwd();
@@ -114,6 +118,106 @@ async function runGitCase({ caseName, args = [], mutate, expectedText }) {
 }
 
 async function main() {
+  const cacheFixtureRoot = await mkdtemp(
+    path.join(os.tmpdir(), 'skill-validator-anchor-cache-'),
+  );
+  const cacheFixturePath = path.join(cacheFixtureRoot, 'cache.md');
+
+  try {
+    await writeFile(cacheFixturePath, '# Alpha\n\n[Jump](#alpha)\n');
+    assert.deepEqual(await validateMarkdownLinks(cacheFixturePath), []);
+
+    await writeFile(cacheFixturePath, '# Bravo\n\n[Jump](#bravo)\n');
+    assert.deepEqual(await validateMarkdownLinks(cacheFixturePath), []);
+
+    await writeFile(cacheFixturePath, '# Alpha\n\n[Jump](#alpha)\n');
+    assert.deepEqual(await validateMarkdownLinks(cacheFixturePath), []);
+  } finally {
+    await rm(cacheFixtureRoot, { recursive: true, force: true });
+  }
+
+  assert.deepEqual(
+    getExplicitHtmlAnchorDefinitions(
+      '<hr id="void-anchor">\n<a name=self-closing-anchor />\n<input id="encoded&amp;anchor" />',
+    ).map(({ anchor, attributeName, lineNumber }) => ({
+      anchor,
+      attributeName,
+      lineNumber,
+    })),
+    [
+      { anchor: 'void-anchor', attributeName: 'id', lineNumber: 1 },
+      {
+        anchor: 'self-closing-anchor',
+        attributeName: 'name',
+        lineNumber: 2,
+      },
+      { anchor: 'encoded&anchor', attributeName: 'id', lineNumber: 3 },
+    ],
+  );
+
+  assert.deepEqual(
+    getExplicitHtmlAnchorDefinitions(
+      '<div id="lf-anchor"></div>\n<section\r\n  id="crlf-anchor"\r\n></section>\r<a name=cr-anchor></a>',
+      10,
+    ).map(({ anchor, attributeName, lineNumber }) => ({
+      anchor,
+      attributeName,
+      lineNumber,
+    })),
+    [
+      { anchor: 'lf-anchor', attributeName: 'id', lineNumber: 10 },
+      { anchor: 'crlf-anchor', attributeName: 'id', lineNumber: 12 },
+      { anchor: 'cr-anchor', attributeName: 'name', lineNumber: 14 },
+    ],
+  );
+
+  assert.deepEqual(
+    getExplicitHtmlAnchorDefinitions(
+      [
+        '`<span id="inline-code"></span>`',
+        '<!--',
+        '<div id="commented-anchor"></div>',
+        '-->',
+        '```html',
+        '<div id="fenced-anchor"></div>',
+        '```',
+        '<section',
+        '  class="checkpoint"',
+        '  id="real-multiline-anchor"',
+        '></section>',
+        '<a name=real-legacy-anchor></a>',
+      ].join('\n'),
+      20,
+    ).map(({ anchor, attributeName, lineNumber }) => ({
+      anchor,
+      attributeName,
+      lineNumber,
+    })),
+    [
+      {
+        anchor: 'real-multiline-anchor',
+        attributeName: 'id',
+        lineNumber: 29,
+      },
+      {
+        anchor: 'real-legacy-anchor',
+        attributeName: 'name',
+        lineNumber: 31,
+      },
+    ],
+  );
+
+  assert.deepEqual(
+    getExplicitHtmlAnchorDefinitions(
+      [
+        '<div id="malformed&bogus;anchor"></div>',
+        '<div id="ambiguous&amp=anchor"></div>',
+        '<div id="semicolonless&copy!anchor"></div>',
+      ].join('\n'),
+    ).map(({ anchor }) => anchor),
+    ['malformed&bogus;anchor', 'ambiguous&amp=anchor', 'semicolonless©!anchor'],
+  );
+
   assert.deepEqual(
     getNearestAnchorSuggestions(
       'guidee',
@@ -132,6 +236,66 @@ async function main() {
     expectSuccess: true,
     expectedText:
       /Validated 1 skill example contract\(s\) and repository markdown links\./,
+  });
+
+  await runCase('valid-frontmatter', {
+    expectSuccess: true,
+    expectedText:
+      /Validated 1 skill example contract\(s\) and repository markdown links\./,
+    mutate: async (fixtureRoot) => {
+      const notesPath = path.join(
+        fixtureRoot,
+        'skills',
+        'test-skill',
+        'references',
+        'integration-notes.md',
+      );
+      const notesRaw = await readFile(notesPath, 'utf8');
+      await writeFile(
+        notesPath,
+        `${notesRaw}\n<hr id="void&amp;anchor">\n<a name=self-closing&amp;anchor />\n\nSee [the void anchor](#void%26anchor) and [the self-closing anchor](#self-closing%26anchor).\n`,
+      );
+    },
+  });
+
+  await runCase('valid-frontmatter', {
+    expectSuccess: true,
+    expectedText:
+      /Validated 1 skill example contract\(s\) and repository markdown links\./,
+    mutate: async (fixtureRoot) => {
+      const notesPath = path.join(
+        fixtureRoot,
+        'skills',
+        'test-skill',
+        'references',
+        'integration-notes.md',
+      );
+      const notesRaw = await readFile(notesPath, 'utf8');
+      await writeFile(
+        notesPath,
+        `${notesRaw}\n<div id="malformed&bogus;anchor"></div>\n<div id="ambiguous&amp=anchor"></div>\n<div id="ambiguous&=anchor"></div>\n<div id="semicolonless&copy!anchor"></div>\n\nSee [the malformed entity anchor](#malformed%26bogus%3Banchor), [the ambiguous entity anchor](#ambiguous%26amp%3Danchor), [the literal ampersand anchor](#ambiguous%26%3Danchor), and [the semicolon-less entity anchor](#semicolonless%C2%A9!anchor).\n`,
+      );
+    },
+  });
+
+  await runCase('valid-frontmatter', {
+    expectSuccess: false,
+    expectedText:
+      /skills\/test-skill\/references\/integration-notes\.md:19: duplicate explicit HTML anchor "entity&duplicate" \(first defined on line 17\)/,
+    mutate: async (fixtureRoot) => {
+      const notesPath = path.join(
+        fixtureRoot,
+        'skills',
+        'test-skill',
+        'references',
+        'integration-notes.md',
+      );
+      const notesRaw = await readFile(notesPath, 'utf8');
+      await writeFile(
+        notesPath,
+        `${notesRaw}\n<div id="entity&amp;duplicate" />\n\n<span id="entity&#38;duplicate"></span>\n`,
+      );
+    },
   });
 
   await runCase('valid-frontmatter', {
@@ -158,6 +322,284 @@ async function main() {
     },
   });
 
+  await runCase('valid-frontmatter', {
+    expectSuccess: true,
+    expectedText:
+      /Validated 1 skill example contract\(s\) and repository markdown links\./,
+    mutate: async (fixtureRoot) => {
+      const notesPath = path.join(
+        fixtureRoot,
+        'skills',
+        'test-skill',
+        'references',
+        'integration-notes.md',
+      );
+      const notesRaw = await readFile(notesPath, 'utf8');
+      await writeFile(
+        notesPath,
+        `${notesRaw}\n<div\n  class="checkpoint"\n  id =\n    "multiline-checkpoint"\n></div>\n\nSee [the multiline anchor](#multiline-checkpoint).\n`,
+      );
+    },
+  });
+
+  await runCase('valid-frontmatter', {
+    expectSuccess: true,
+    expectedText:
+      /Validated 1 skill example contract\(s\) and repository markdown links\./,
+    mutate: async (fixtureRoot) => {
+      const notesPath = path.join(
+        fixtureRoot,
+        'skills',
+        'test-skill',
+        'references',
+        'integration-notes.md',
+      );
+      const notesRaw = await readFile(notesPath, 'utf8');
+      await writeFile(
+        notesPath,
+        `${notesRaw}\n<a title="1 > 0" id="quoted-angle-id" name=unquoted-legacy></a>\n\nSee [the id anchor](#quoted-angle-id) and [the legacy anchor](#unquoted-legacy).\n\n<a id="mixed-id" name="mixed-name"></a>\n\nSee [the mixed id](#mixed-id) and [the mixed name](#mixed-name).\n\n<a name=></a>\n<a name=\`malformed></a>\n<a name='unterminated></a>\n`,
+      );
+    },
+  });
+
+  await runCase('valid-frontmatter', {
+    expectSuccess: false,
+    expectedText:
+      /skills\/test-skill\/references\/integration-notes\.md:17: duplicate explicit HTML anchor "same-anchor" \(first defined on line 17\)/,
+    mutate: async (fixtureRoot) => {
+      const notesPath = path.join(
+        fixtureRoot,
+        'skills',
+        'test-skill',
+        'references',
+        'integration-notes.md',
+      );
+      const notesRaw = await readFile(notesPath, 'utf8');
+      await writeFile(
+        notesPath,
+        `${notesRaw}\n<a title='next > previous' id="same-anchor" name=same-anchor></a>\n`,
+      );
+    },
+  });
+
+  await runCase('valid-frontmatter', {
+    expectSuccess: false,
+    expectedText:
+      /skills\/test-skill\/references\/integration-notes\.md:22: duplicate explicit HTML anchor "multiline-duplicate" \(first defined on line 18\)[\s\S]*skills\/test-skill\/references\/integration-notes\.md:25: generated heading anchor "multiline-duplicate" collides with explicit HTML anchor defined on line 18/,
+    mutate: async (fixtureRoot) => {
+      const notesPath = path.join(
+        fixtureRoot,
+        'skills',
+        'test-skill',
+        'references',
+        'integration-notes.md',
+      );
+      const notesRaw = await readFile(notesPath, 'utf8');
+      await writeFile(
+        notesPath,
+        `${notesRaw}\n<div\n  id="multiline-duplicate"\n></div>\n\n<span\n  id = 'multiline-duplicate'\n></span>\n\n## Multiline duplicate\n`,
+      );
+    },
+  });
+
+  await runCase('valid-frontmatter', {
+    expectSuccess: true,
+    expectedText:
+      /Validated 1 skill example contract\(s\) and repository markdown links\./,
+    mutate: async (fixtureRoot) => {
+      const notesPath = path.join(
+        fixtureRoot,
+        'skills',
+        'test-skill',
+        'references',
+        'integration-notes.md',
+      );
+      const notesRaw = await readFile(notesPath, 'utf8');
+      await writeFile(
+        notesPath,
+        `${notesRaw}\n<a\n  class="checkpoint"\n  name = "legacy-checkpoint"\n></a>\n\nSee [the legacy anchor](#legacy-checkpoint).\n\n<div name="not-an-anchor"></div>\n`,
+      );
+    },
+  });
+
+  await runCase('valid-frontmatter', {
+    expectSuccess: false,
+    expectedText:
+      /skills\/test-skill\/references\/integration-notes\.md:19: duplicate explicit HTML anchor "legacy-duplicate" \(first defined on line 17\)[\s\S]*skills\/test-skill\/references\/integration-notes\.md:21: empty or whitespace-only explicit HTML anchor name[\s\S]*skills\/test-skill\/references\/integration-notes\.md:25: generated heading anchor "legacy-heading" collides with explicit HTML anchor defined on line 23/,
+    mutate: async (fixtureRoot) => {
+      const notesPath = path.join(
+        fixtureRoot,
+        'skills',
+        'test-skill',
+        'references',
+        'integration-notes.md',
+      );
+      const notesRaw = await readFile(notesPath, 'utf8');
+      await writeFile(
+        notesPath,
+        `${notesRaw}\n<a name="legacy-duplicate"></a>\n\n<a name='legacy-duplicate'></a>\n\n<a name="  "></a>\n\n<a name="legacy-heading"></a>\n\n## Legacy heading\n`,
+      );
+    },
+  });
+
+  await runCase('valid-frontmatter', {
+    expectSuccess: false,
+    expectedText:
+      /skills\/test-skill\/references\/integration-notes\.md:21: generated heading anchor "guide-1" collides with explicit HTML anchor defined on line 17[\s\S]*skills\/test-skill\/references\/integration-notes\.md:27: explicit HTML anchor "guide-after-1" collides with generated heading anchor defined on line 25/,
+    mutate: async (fixtureRoot) => {
+      const notesPath = path.join(
+        fixtureRoot,
+        'skills',
+        'test-skill',
+        'references',
+        'integration-notes.md',
+      );
+      const notesRaw = await readFile(notesPath, 'utf8');
+      await writeFile(
+        notesPath,
+        `${notesRaw}\n<a name="guide-1"></a>\n\n## Guide\n\n## Guide\n\n## Guide after\n\n## Guide after\n\n<div id="guide-after-1"></div>\n`,
+      );
+    },
+  });
+
+  await runCase('valid-frontmatter', {
+    expectSuccess: true,
+    expectedText:
+      /Validated 1 skill example contract\(s\) and repository markdown links\./,
+    mutate: async (fixtureRoot) => {
+      const notesPath = path.join(
+        fixtureRoot,
+        'skills',
+        'test-skill',
+        'references',
+        'integration-notes.md',
+      );
+      const notesRaw = await readFile(notesPath, 'utf8');
+      await writeFile(
+        notesPath,
+        `${notesRaw}\n<div\n  class="unfinished"\n\nAdjacent prose mentions id="not-an-anchor" and later uses > punctuation.\n\n## Still a heading\n`,
+      );
+    },
+  });
+
+  await runCase('valid-frontmatter', {
+    expectSuccess: false,
+    expectedText:
+      /skills\/test-skill\/references\/integration-notes\.md:17: empty or whitespace-only explicit HTML anchor id[\s\S]*skills\/test-skill\/references\/integration-notes\.md:19: empty or whitespace-only explicit HTML anchor id/,
+    mutate: async (fixtureRoot) => {
+      const notesPath = path.join(
+        fixtureRoot,
+        'skills',
+        'test-skill',
+        'references',
+        'integration-notes.md',
+      );
+      const notesRaw = await readFile(notesPath, 'utf8');
+      await writeFile(
+        notesPath,
+        `${notesRaw}\n<div id=""></div>\n\n<span id='   '></span>\n`,
+      );
+    },
+  });
+
+  await runCase('valid-frontmatter', {
+    expectSuccess: false,
+    expectedText:
+      /skills\/test-skill\/references\/integration-notes\.md:17: explicit HTML anchor "integration-notes" collides with generated heading anchor defined on line 7[\s\S]*skills\/test-skill\/references\/integration-notes\.md:21: generated heading anchor "manual-section" collides with explicit HTML anchor defined on line 19/,
+    mutate: async (fixtureRoot) => {
+      const notesPath = path.join(
+        fixtureRoot,
+        'skills',
+        'test-skill',
+        'references',
+        'integration-notes.md',
+      );
+      const notesRaw = await readFile(notesPath, 'utf8');
+      await writeFile(
+        notesPath,
+        `${notesRaw}\n<div id="integration-notes"></div>\n\n<span id="manual-section"></span>\n\n## Manual section\n`,
+      );
+    },
+  });
+
+  await runCase('valid-frontmatter', {
+    expectSuccess: true,
+    expectedText:
+      /Validated 1 skill example contract\(s\) and repository markdown links\./,
+    mutate: async (fixtureRoot) => {
+      const notesPath = path.join(
+        fixtureRoot,
+        'skills',
+        'test-skill',
+        'references',
+        'integration-notes.md',
+      );
+      const notesRaw = await readFile(notesPath, 'utf8');
+      await writeFile(
+        notesPath,
+        `${notesRaw}\nSetext Guide\n============\n\nSee [the first heading](#setext-guide).\n\nSetext Guide\n------------\n\nSee [the repeated heading](#setext-guide-1).\n`,
+      );
+    },
+  });
+
+  await runCase('valid-frontmatter', {
+    expectSuccess: false,
+    expectedText:
+      /skills\/test-skill\/references\/integration-notes\.md:19: generated heading anchor "setext-before" collides with explicit HTML anchor defined on line 17[\s\S]*skills\/test-skill\/references\/integration-notes\.md:25: explicit HTML anchor "setext-after" collides with generated heading anchor defined on line 22/,
+    mutate: async (fixtureRoot) => {
+      const notesPath = path.join(
+        fixtureRoot,
+        'skills',
+        'test-skill',
+        'references',
+        'integration-notes.md',
+      );
+      const notesRaw = await readFile(notesPath, 'utf8');
+      await writeFile(
+        notesPath,
+        `${notesRaw}\n<div id="setext-before"></div>\n\nSetext Before\n-------------\n\nSetext After\n============\n\n<span id="setext-after"></span>\n`,
+      );
+    },
+  });
+
+  await runCase('valid-frontmatter', {
+    expectSuccess: false,
+    expectedText:
+      /skills\/test-skill\/references\/integration-notes\.md:19: duplicate explicit HTML anchor "duplicate-guide" \(first defined on line 17\)/,
+    mutate: async (fixtureRoot) => {
+      const notesPath = path.join(
+        fixtureRoot,
+        'skills',
+        'test-skill',
+        'references',
+        'integration-notes.md',
+      );
+      const notesRaw = await readFile(notesPath, 'utf8');
+      const withDuplicates = `${notesRaw}\n<div id="duplicate-guide"></div>\n\n<span id="duplicate-guide"></span>\n`;
+      await writeFile(notesPath, withDuplicates.replace(/\r?\n/g, '\r\n'));
+    },
+  });
+
+  await runCase('valid-frontmatter', {
+    expectSuccess: false,
+    expectedText:
+      /skills\/test-skill\/references\/integration-notes\.md:19: duplicate explicit HTML anchor "mixed-newline-guide" \(first defined on line 17\)/,
+    mutate: async (fixtureRoot) => {
+      const notesPath = path.join(
+        fixtureRoot,
+        'skills',
+        'test-skill',
+        'references',
+        'integration-notes.md',
+      );
+      const notesRaw = await readFile(notesPath, 'utf8');
+      await writeFile(
+        notesPath,
+        `${notesRaw}\r<div id="mixed-newline-guide"></div>\r\n\r<span id="mixed-newline-guide"></span>\n`,
+      );
+    },
+  });
+
   await runCase('valid-minimal', {
     expectSuccess: true,
     expectedText:
@@ -167,7 +609,7 @@ async function main() {
       const readmeRaw = await readFile(readmePath, 'utf8');
       await writeFile(
         readmePath,
-        `${readmeRaw}\n<div data-id="not-an-anchor"></div>\n<div data-id="not-an-anchor"></div>\n\n\`<span id="not-an-anchor"></span>\`\n\`<span id="not-an-anchor"></span>\`\n\n<!-- <div id="not-an-anchor"></div>\n<div id="not-an-anchor"></div> -->\n\n\`\`\`html\n<div id="not-an-anchor"></div>\n<div id="not-an-anchor"></div>\n\`\`\`\n`,
+        `${readmeRaw}\n<div data-id="not-an-anchor"></div>\n<div data-id="not-an-anchor"></div>\n<div title='prose id="not-an-anchor"'></div>\n<div title='more prose id="not-an-anchor"'></div>\n\n\`<span id="not-an-anchor"></span>\`\n\`<span id="not-an-anchor"></span>\`\n\n<!-- <div id="not-an-anchor"></div>\n<div\n  id="not-an-anchor"\n></div> -->\n\n\`\`\`html\n<div id="not-an-anchor"></div>\n<div\n  id="not-an-anchor"\n></div>\n\`\`\`\n`,
       );
     },
   });
@@ -232,6 +674,41 @@ async function main() {
       await writeFile(
         skillPath,
         `${skillRaw}\nBroken [encoded anchor](references/integration-notes.md#%ZZ-invalid).\nBroken [following anchor](references/integration-notes.md#missing-after-malformed).\n`,
+      );
+    },
+  });
+
+  await runCase('valid-frontmatter', {
+    expectSuccess: true,
+    expectedText:
+      /Validated 1 skill example contract\(s\) and repository markdown links\./,
+    mutate: async (fixtureRoot) => {
+      const unicodeGuidePath = path.join(
+        fixtureRoot,
+        'docs',
+        'Руководство 東京.md',
+      );
+      await writeFile(unicodeGuidePath, '# Секция 東京\n');
+
+      const readmePath = path.join(fixtureRoot, 'README.md');
+      const readmeRaw = await readFile(readmePath, 'utf8');
+      await writeFile(
+        readmePath,
+        `${readmeRaw}\nSee the [mixed encoded Unicode guide](docs/%D0%A0%D1%83%D0%BA%D0%BE%D0%B2%D0%BE%D0%B4%D1%81%D1%82%D0%B2%D0%BE%20東京.md#%D1%81%D0%B5%D0%BA%D1%86%D0%B8%D1%8F-%E6%9D%B1%E4%BA%AC).\n`,
+      );
+    },
+  });
+
+  await runCase('valid-frontmatter', {
+    expectSuccess: false,
+    expectedText:
+      /README\.md:11: malformed percent-encoding in local path "docs\/%ZZ-guide\.md" \(path "docs\/%ZZ-guide\.md"\)/,
+    mutate: async (fixtureRoot) => {
+      const readmePath = path.join(fixtureRoot, 'README.md');
+      const readmeRaw = await readFile(readmePath, 'utf8');
+      await writeFile(
+        readmePath,
+        `${readmeRaw}\nSee the [malformed encoded path](docs/%ZZ-guide.md).\n`,
       );
     },
   });
@@ -364,6 +841,31 @@ async function main() {
     },
     expectedText:
       /No changed skill folders or tracked repository markdown docs detected; nothing to validate\./,
+  });
+
+  await runGitCase({
+    caseName: 'valid-minimal',
+    args: ['--changed'],
+    mutate: async (fixtureRoot) => {
+      await writeFile(
+        path.join(fixtureRoot, 'docs', 'руководство.md'),
+        '# Руководство\n',
+      );
+    },
+    expectedText:
+      /No changed skill folders detected; validating changed repository markdown links only\.[\s\S]*Validated 0 skill example contract\(s\) and changed repository markdown links\./,
+  });
+
+  await runGitCase({
+    caseName: 'valid-minimal',
+    args: ['--staged'],
+    mutate: async (fixtureRoot) => {
+      const relativePath = 'docs/руководство.md';
+      await writeFile(path.join(fixtureRoot, relativePath), '# Руководство\n');
+      await execFile('git', ['add', relativePath], { cwd: fixtureRoot });
+    },
+    expectedText:
+      /No changed skill folders detected; validating changed repository markdown links only\.[\s\S]*Validated 0 skill example contract\(s\) and changed repository markdown links\./,
   });
 
   await runCase('invalid-markdown-syntax', {

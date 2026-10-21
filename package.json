@@ -13,6 +13,7 @@
     "test:content": "node scripts/test-frontmatter.mjs && node scripts/check-internal-references.mjs",
     "test:content:ci": "node scripts/test-frontmatter.mjs --ci && node scripts/check-internal-references.mjs --ci",
     "test:content:staged": "node scripts/test-frontmatter.mjs --staged && node scripts/check-internal-references.mjs --staged",
+    "test:content:fixtures": "node scripts/test-content-reference-validation.mjs",
     "postbuild": "node scripts/post-build-check.mjs && bash scripts/verify-internal-links.sh",
     "preview": "astro preview",
     "check:hollow": "bash tools/detect-ai-hollow.sh",
@@ -22,6 +23,7 @@
     "check:skills:changed": "node scripts/validate-skill-examples.mjs --changed",
     "check:skills:staged": "node scripts/validate-skill-examples.mjs --staged",
     "check:skills:fixtures": "node scripts/test-validate-skill-examples.mjs",
+    "check:git-paths": "node scripts/test-non-ascii-git-paths.mjs",
     "check-images": "node scripts/check-images.mjs",
     "check:contributors": "node scripts/verify-contributors.mjs",
     "astro": "astro",
@@ -32,6 +34,7 @@
   "dependencies": {
     "@astrojs/sitemap": "^3.7.1",
     "astro": "^6.2.1",
+    "entities": "^6.0.1",
     "gray-matter": "^4.0.3",
     "marked": "^17.0.4",
     "rehype-external-links": "^3.0.0",
