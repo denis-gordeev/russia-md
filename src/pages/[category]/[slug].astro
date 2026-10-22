@@ -1170,9 +1170,11 @@ const processedContent = marked.parse(resolvedContent, {
 
   /* 圖片 */
   .content :global(img) {
+    width: auto;
     max-width: 100%;
-    max-height: 450px;
-    object-fit: cover;
+    height: auto;
+    max-height: min(75vh, 450px);
+    object-fit: contain;
     border-radius: 8px;
     margin: 2.5rem auto;
     display: block;
