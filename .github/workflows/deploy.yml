@@ -31,7 +31,7 @@ jobs:
         uses: actions/setup-node@v5
         with:
           # Keep CI aligned with the repo baseline pinned in .nvmrc.
-          node-version: 24
+          node-version-file: .nvmrc
           cache: npm
       - name: Install dependencies
         run: npm ci --prefer-offline --no-audit

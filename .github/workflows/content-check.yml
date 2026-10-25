@@ -11,6 +11,7 @@ on:
       - 'scripts/check-internal-references.mjs'
       - 'scripts/test-content-reference-validation.mjs'
       - 'scripts/test-non-ascii-git-paths.mjs'
+      - '.nvmrc'
       - 'package.json'
       - 'package-lock.json'
       - '.github/workflows/content-check.yml'
@@ -33,8 +34,8 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v5
         with:
-          # Keep content validation on the same CI Node baseline as deploy.
-          node-version: 24
+          # Use the repository Node baseline, shared with deploy and local development.
+          node-version-file: .nvmrc
           cache: npm
 
       - name: Install dependencies
