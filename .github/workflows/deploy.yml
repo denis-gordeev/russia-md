@@ -47,6 +47,8 @@ jobs:
         run: npm run test:content:ci
       - name: Verify contributor metadata for active corpus
         run: npm run check:contributors
+      - name: Validate rendered-link checker regression fixtures
+        run: python3 scripts/test-verify-internal-links.py
       - name: Build
         run: npm run build
       - name: Upload artifact

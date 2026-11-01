@@ -17,12 +17,18 @@ class LinkExtractor(html.parser.HTMLParser):
     def __init__(self):
         super().__init__()
         self.links = []
+        self.anchors = set()
 
     def handle_starttag(self, tag, attrs):
+        attrs = dict(attrs)
+        if attrs.get("id"):
+            self.anchors.add(attrs["id"])
+        if tag == "a" and attrs.get("name"):
+            self.anchors.add(attrs["name"])
         if tag != "a":
             return
-        href = dict(attrs).get("href", "")
-        if href.startswith("/"):
+        href = attrs.get("href", "") or ""
+        if href.startswith(("/", "#")):
             self.links.append(href)
 
 
@@ -61,7 +67,14 @@ def scan_chunk(files):
                 continue
             seen.add(href)
             checked += 1
-            if not href_exists(href_cache, href):
+            # Check rendered IDs rather than guessing the Markdown renderer's
+            # heading slugs. This also covers explicit anchors and footnotes.
+            if href.startswith("#"):
+                fragment = unquote(href[1:])
+                exists = not fragment or fragment in parser.anchors
+            else:
+                exists = href_exists(href_cache, href)
+            if not exists:
                 broken.append((html_file.relative_to(DIST_DIR).as_posix(), href))
 
     return checked, broken
