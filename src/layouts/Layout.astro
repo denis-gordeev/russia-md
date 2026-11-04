@@ -1,5 +1,6 @@
 ---
 import SEO from '../components/SEO.astro';
+import { withBrand } from '../utils/pageTitle';
 import { categoryFolderMapping } from '../utils/categoryConfig';
 
 interface Props {
@@ -105,7 +106,7 @@ const skipLinkLabel =
       href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@400;600;700&display=swap"
       rel="stylesheet"
     />
-    <title>{title} | Russia.md</title>
+    <title>{withBrand(title)}</title>
     <SEO
       title={title}
       description={description}
@@ -327,6 +328,7 @@ const skipLinkLabel =
     </div>
     <script is:inline>
       var _searchIdx = null;
+      var _searchIdxPromise = null;
       function _setSearchOpen(open) {
         var modal = document.getElementById('search-modal');
         var input = document.getElementById('search-input');
@@ -354,13 +356,18 @@ const skipLinkLabel =
 
       async function _loadSearchIndex() {
         if (_searchIdx) return _searchIdx;
-        try {
-          var res = await fetch('/api/search-index.json');
-          _searchIdx = res.ok ? await res.json() : [];
-        } catch (e) {
-          _searchIdx = [];
+        if (!_searchIdxPromise) {
+          _searchIdxPromise = (async function () {
+            try {
+              var res = await fetch('/api/search-index.json');
+              _searchIdx = res.ok ? await res.json() : [];
+            } catch (e) {
+              _searchIdx = [];
+            }
+            return _searchIdx;
+          })();
         }
-        return _searchIdx;
+        return _searchIdxPromise;
       }
 
       function initSearch() {
@@ -372,7 +379,9 @@ const skipLinkLabel =
         var emptyStateHTML = results.innerHTML;
         var keyboardIndex = -1;
 
-        _loadSearchIndex();
+        // Fetch the index only when the reader reaches the search box.
+        input.addEventListener('focus', _loadSearchIndex, { once: true });
+        if (document.activeElement === input) _loadSearchIndex();
 
         function _escHtml(s) {
           return String(s).replace(/[&<>\"']/g, function (c) {
@@ -476,6 +485,7 @@ const skipLinkLabel =
             return;
           }
           var idx = await _loadSearchIndex();
+          if (input.value.trim() !== q) return;
           var matches = idx.filter(function (item) {
             return (
               item.t.toLowerCase().indexOf(qLower) !== -1 ||
